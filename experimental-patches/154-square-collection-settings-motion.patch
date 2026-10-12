@@ -1,0 +1,12 @@
+--- a/com/aspiro/wamp/mycollectionscreen/presentation/MyCollectionScreenKt.smali
++++ b/com/aspiro/wamp/mycollectionscreen/presentation/MyCollectionScreenKt.smali
+@@ -628,6 +628,9 @@
+ 
+     .line 272
+     const/4 v14, 0x0
++
++    invoke-static {v9, v1, v12, v13}, Ldev/nino/squareglass/IconMotion;->settingsResource(Landroidx/compose/ui/Modifier;ILandroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++    move-result-object v9
+ 
+     .line 273
+     invoke-static/range {v7 .. v14}, Landroidx/compose/material3/IconKt;->Icon-ww6aTOc(Landroidx/compose/ui/graphics/painter/Painter;Ljava/lang/String;Landroidx/compose/ui/Modifier;JLandroidx/compose/runtime/Composer;II)V

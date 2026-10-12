@@ -1,0 +1,33 @@
+# rl-locals: com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali e( 80
+--- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
+@@ -5755,6 +5755,20 @@
+ 
+     const/4 v8, 0x0
+ 
++    invoke-static {}, Landroidx/compose/ui/platform/CompositionLocalsKt;->getLocalLayoutDirection()Landroidx/compose/runtime/ProvidableCompositionLocal;    # layout-direction local
++
++    move-result-object v77    # the local
++
++    sget-object v78, Landroidx/compose/ui/unit/LayoutDirection;->Rtl:Landroidx/compose/ui/unit/LayoutDirection;    # right-to-left value
++
++    invoke-virtual/range {v77 .. v78}, Landroidx/compose/runtime/ProvidableCompositionLocal;->provides(Ljava/lang/Object;)Landroidx/compose/runtime/ProvidedValue;    # provide Rtl to local
++
++    move-result-object v77    # the provided value
++
++    move-object/from16 v76, v7    # composer
++
++    invoke-interface/range {v76 .. v77}, Landroidx/compose/runtime/Composer;->startProvider(Landroidx/compose/runtime/ProvidedValue;)V    # open Rtl scope (mirror row)
++
+     .line 335
+     invoke-static {v1, v8, v14, v3}, Landroidx/compose/foundation/layout/SizeKt;->fillMaxWidth$default(Landroidx/compose/ui/Modifier;FILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+ 
+@@ -6221,6 +6235,8 @@
+     .line 393
+     invoke-interface {v7}, Landroidx/compose/runtime/Composer;->endNode()V
+ 
++    invoke-interface {v7}, Landroidx/compose/runtime/Composer;->endProvider()V    # close Rtl scope (end mirror)
++
+     .line 394
+     invoke-static/range {v41 .. v41}, Landroidx/compose/ui/unit/Dp;->constructor-impl(F)F
+ 

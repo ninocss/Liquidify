@@ -1,0 +1,37 @@
+{
+  "apkSha256": "18807fa8a192d223635df7dabe388f404767b09b0a3e6dbdeed53cbb800f8311",
+  "types": {
+    "Lkotlin/Unit;": "Lkotlin/u;",
+    "Lkotlin/coroutines/Continuation;": "Lkotlin/coroutines/e;",
+    "Lkotlin/jvm/functions/Function0;": "Lam0/a;",
+    "Lkotlin/jvm/functions/Function1;": "Lam0/l;",
+    "Lkotlin/jvm/functions/Function2;": "Lam0/p;",
+    "Lkotlin/jvm/functions/Function4;": "Lam0/q;",
+    "Lkotlin/collections/SetsKt;": "Ldev/nino/squareglass/HostCompat;",
+    "Lkotlin/io/ByteStreamsKt;": "Ldev/nino/squareglass/HostCompat;",
+    "Lkotlin/io/CloseableKt;": "Ldev/nino/squareglass/HostCompat;",
+    "Lkotlin/text/Charsets;": "Ldev/nino/squareglass/HostCompat;",
+    "Lkotlin/text/StringsKt;": "Ldev/nino/squareglass/HostCompat;",
+    "Lkotlin/jvm/internal/Intrinsics;": "Ldev/nino/squareglass/HostCompat;",
+    "Lkotlin/ranges/RangesKt;": "Ldev/nino/squareglass/HostCompat;",
+    "Lkotlin/coroutines/CoroutineContext;": "Lkotlin/coroutines/h;",
+    "Lkotlin/ResultKt;": "Lkotlin/k;",
+    "Lkotlin/enums/EnumEntries;": "Lkotlin/enums/a;",
+    "Lkotlin/enums/EnumEntriesKt;": "Lkotlin/enums/b;",
+    "Lkotlin/collections/CollectionsKt;": "Ldev/nino/squareglass/HostCompat;",
+    "Lkotlin/coroutines/intrinsics/IntrinsicsKt;": "Ldev/nino/squareglass/HostCompat;",
+    "Lkotlin/coroutines/jvm/internal/Boxing;": "Ldev/nino/squareglass/HostCompat;",
+    "Lkotlin/coroutines/jvm/internal/SpillingKt;": "Ldev/nino/squareglass/HostCompat;",
+    "Lkotlin/math/MathKt;": "Ldev/nino/squareglass/HostCompat;",
+    "Lkotlin/ranges/ClosedFloatingPointRange;": "Lfm0/d;"
+  },
+  "members": {
+    "Lkotlin/Unit;->INSTANCE:Lkotlin/Unit;": "Lkotlin/u;->a:Lkotlin/u;",
+    "Lkotlin/ResultKt;->throwOnFailure(Ljava/lang/Object;)V": "Lkotlin/k;->b(Ljava/lang/Object;)V",
+    "Lkotlin/enums/EnumEntriesKt;->enumEntries([Ljava/lang/Enum;)Lkotlin/enums/EnumEntries;": "Lkotlin/enums/b;->a([Ljava/lang/Enum;)Lkotlin/enums/a;"
+  },
+  "stripAnnotations": [
+    "Lkotlin/jvm/JvmStatic;",
+    "Lkotlin/coroutines/jvm/internal/DebugMetadata;"
+  ]
+}

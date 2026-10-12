@@ -1,0 +1,483 @@
+package com.meowarex.rlmobile.pebble
+
+import android.app.Service
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.media.MediaMetadata
+import android.media.session.MediaController
+import android.media.session.MediaSession
+import android.media.session.PlaybackState
+import android.os.Build
+import android.os.Handler
+import android.os.IBinder
+import android.os.Looper
+import android.os.Message
+import android.os.Messenger
+import android.os.SystemClock
+import android.util.Log
+import androidx.core.os.BundleCompat
+import com.meowarex.rlmobile.BuildConfig
+import io.rebble.pebblekit2.client.DefaultPebbleSender
+import io.rebble.pebblekit2.common.model.PebbleDictionary
+import io.rebble.pebblekit2.common.model.TransmissionResult
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import java.util.zip.CRC32
+import kotlin.math.abs
+
+// Relays patched TIDAL playback and lyrics to the watch
+class PebbleRelayService : Service() {
+    private val main = Handler(Looper.getMainLooper())
+    private val messenger = Messenger(Handler(Looper.getMainLooper()) { handleBridgeMessage(it); true })
+    private val scope = MainScope()
+    private val senderLazy = lazy { DefaultPebbleSender(this) }
+    private val sender by senderLazy
+
+    // Reported by the watchapp
+    private val prefs by lazy { getSharedPreferences("pebble_relay", MODE_PRIVATE) }
+    private var autoOpen: Boolean
+        get() = prefs.getBoolean(PREF_AUTO_OPEN, true)
+        set(value) = prefs.edit().putBoolean(PREF_AUTO_OPEN, value).apply()
+    private var tidalPackage: String? = null
+    private var controller: MediaController? = null
+
+    // Track
+    private var mediaId: String? = null
+    private var trackId = 0L
+    private var title = ""
+    private var artist = ""
+    private var durationMs = 0L
+    private var status = WatchProtocol.STATUS_IDLE
+    private var lines: List<WatchProtocol.Line> = emptyList()
+    private var openedFor: Long = -1
+
+    // May arrive before the metadata
+    private var lyrics: LyricsPayload? = null
+
+    // Playback
+    private var playing = false
+    private var sample: PositionSample? = null
+
+    // Watch
+    private var watchReady = true
+    private var watchConfirmed = false
+    private var inboxSize = 1024
+    private val queue = ArrayDeque<Outgoing>()
+    private var inFlight: Outgoing? = null
+
+    // Last clock sent to the watch
+    private var sentPosition = -1L
+    private var sentTime = 0L
+    private var sentPlaying = false
+
+    private class PositionSample(val mediaId: String?, val position: Long, val time: Long, val playing: Boolean)
+    private class LyricsPayload(val key: String, val title: String?, val body: String?, val failed: Boolean)
+
+    private class Outgoing(val kind: Int, val trackId: Long, val build: () -> PebbleDictionary) {
+        var attempts = 0
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        current = this
+        if (PebbleWatchListenerService.watchappOpen) {
+            watchConfirmed = true
+            watchReady = true
+        }
+    }
+
+    override fun onBind(intent: Intent?): IBinder = messenger.binder
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        // TIDAL stopped
+        releaseController()
+        resetTrack()
+        if (autoOpen) {
+            closeWatchApp()
+        } else {
+            enqueue(Outgoing(WatchProtocol.CMD_STATUS, ANY_TRACK) { WatchProtocol.status(0, WatchProtocol.STATUS_IDLE) })
+        }
+        return false
+    }
+
+    override fun onDestroy() {
+        if (current === this) current = null
+        releaseController()
+        main.removeCallbacksAndMessages(null)
+        scope.cancel()
+        if (senderLazy.isInitialized()) sender.close()
+        super.onDestroy()
+    }
+
+    private fun handleBridgeMessage(msg: Message) {
+        val data = msg.data ?: return
+        data.classLoader = MediaSession.Token::class.java.classLoader
+        if (msg.what != MSG_SESSION && controller == null) return
+
+        when (msg.what) {
+            MSG_SESSION -> {
+                val pkg = data.getString("package") ?: return
+                if (!isTrustedTidal(pkg, msg)) {
+                    Log.w(BuildConfig.TAG, "Pebble relay: rejected session from $pkg")
+                    return
+                }
+                val token = BundleCompat.getParcelable(data, "token", MediaSession.Token::class.java) ?: return
+                attach(pkg, token)
+            }
+
+            MSG_POSITION -> {
+                val next = PositionSample(
+                    mediaId = data.getString("mediaId"),
+                    position = data.getLong("position"),
+                    time = data.getLong("elapsedRealtime"),
+                    playing = data.getBoolean("playing"),
+                )
+                if (next.mediaId != null && next.mediaId != mediaId) return
+                sample = next
+                playing = next.playing
+                syncWatchClock()
+            }
+
+            MSG_LYRICS -> {
+                val key = data.getString("key") ?: return
+                lyrics = LyricsPayload(key, data.getString("title"), data.getString("body"), data.getBoolean("failed"))
+                applyLyrics()
+            }
+        }
+    }
+
+    // Patched TIDAL only
+    private fun isTrustedTidal(pkg: String, msg: Message): Boolean = try {
+        val info = packageManager.getApplicationInfo(pkg, PackageManager.GET_META_DATA)
+        val patched = info.metaData?.containsKey("isRadiantLyrics") == true
+        val uidOk = Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || msg.sendingUid == -1 || msg.sendingUid == info.uid
+        patched && uidOk
+    } catch (_: PackageManager.NameNotFoundException) {
+        false
+    }
+
+    private fun attach(pkg: String, token: MediaSession.Token) {
+        if (controller?.sessionToken == token && pkg == tidalPackage) return
+        releaseController()
+        tidalPackage = pkg
+        controller = MediaController(this, token).also {
+            it.registerCallback(controllerCallback, main)
+            onMetadata(it.metadata)
+            onPlaybackState(it.playbackState)
+        }
+    }
+
+    private fun releaseController() {
+        controller?.unregisterCallback(controllerCallback)
+        controller = null
+    }
+
+    private val controllerCallback = object : MediaController.Callback() {
+        override fun onMetadataChanged(metadata: MediaMetadata?) = onMetadata(metadata)
+        override fun onPlaybackStateChanged(state: PlaybackState?) = onPlaybackState(state)
+        override fun onSessionDestroyed() {
+            releaseController()
+        }
+    }
+
+    private fun resetTrack() {
+        main.removeCallbacks(lyricsTimeout)
+        mediaId = null
+        trackId = 0
+        title = ""
+        artist = ""
+        durationMs = 0
+        lines = emptyList()
+        status = WatchProtocol.STATUS_IDLE
+        playing = false
+        sample = null
+        sentPosition = -1
+    }
+
+    private fun onMetadata(metadata: MediaMetadata?) {
+        metadata ?: return
+        val newTitle = metadata.getString(MediaMetadata.METADATA_KEY_TITLE).orEmpty()
+        val newArtist = metadata.getString(MediaMetadata.METADATA_KEY_ARTIST)
+            ?: metadata.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST).orEmpty()
+        val newDuration = metadata.getLong(MediaMetadata.METADATA_KEY_DURATION)
+        val id = metadata.getString(MediaMetadata.METADATA_KEY_MEDIA_ID) ?: "$newTitle\u0000$newArtist"
+        if (newTitle.isBlank()) return
+
+        if (id == mediaId) {
+            if (newDuration > 0 && newDuration != durationMs) {
+                durationMs = newDuration
+                sendTrack()
+            }
+            return
+        }
+
+        mediaId = id
+        trackId = CRC32().run { update(id.toByteArray()); value }.takeIf { it != 0L } ?: 1L
+        title = newTitle
+        artist = newArtist
+        durationMs = newDuration
+        lines = emptyList()
+        status = WatchProtocol.STATUS_LOADING
+        sample = null
+        sentPosition = -1
+        watchReady = true
+        queue.removeAll { it.trackId != ANY_TRACK }
+
+        sendTrack()
+        sendState()
+        if (!applyLyrics()) {
+            main.removeCallbacks(lyricsTimeout)
+            main.postDelayed(lyricsTimeout, LYRICS_TIMEOUT_MS)
+        }
+    }
+
+    // Apply lyrics if they match the track
+    private fun applyLyrics(): Boolean {
+        val payload = lyrics ?: return false
+        if (trackId == 0L) return false
+        val matches = payload.key == mediaId || (payload.title != null && payload.title.equals(title, ignoreCase = true))
+        if (!matches) return false
+
+        main.removeCallbacks(lyricsTimeout)
+        lines = payload.body?.let {
+            runCatching { WatchProtocol.shape(it) }
+                .onFailure { e -> Log.w(BuildConfig.TAG, "Pebble lyrics parse failed", e) }
+                .getOrNull()
+        }.orEmpty()
+        status = when {
+            payload.failed -> WatchProtocol.STATUS_ERROR
+            lines.isEmpty() -> WatchProtocol.STATUS_NO_LYRICS
+            else -> WatchProtocol.STATUS_READY
+        }
+        sendTrack()
+        sendLines()
+        sendState()
+        updateWatchApp()
+        return true
+    }
+
+    // Open with timed lyrics, close without
+    private fun updateWatchApp() {
+        if (!autoOpen || trackId == 0L) return
+        when (status) {
+            WatchProtocol.STATUS_READY -> if (openedFor != trackId) {
+                // Once per track so manual closes stick
+                openedFor = trackId
+                if (!watchConfirmed) scope.launch { sender.startAppOnTheWatch(WatchProtocol.APP_UUID) }
+            }
+
+            WatchProtocol.STATUS_NO_LYRICS, WatchProtocol.STATUS_ERROR -> closeWatchApp()
+        }
+    }
+
+    private fun closeWatchApp() {
+        if (!watchConfirmed) return
+        scope.launch { sender.stopAppOnTheWatch(WatchProtocol.APP_UUID) }
+        watchConfirmed = false
+        watchReady = false
+        queue.clear()
+    }
+
+    private val lyricsTimeout = Runnable {
+        if (status == WatchProtocol.STATUS_LOADING && trackId != 0L) {
+            // Lyrics worker never reported
+            status = WatchProtocol.STATUS_ERROR
+            sendTrack()
+            updateWatchApp()
+        }
+    }
+
+    private fun onPlaybackState(state: PlaybackState?) {
+        state ?: return
+        val nowPlaying = state.state == PlaybackState.STATE_PLAYING
+        if (nowPlaying == playing) return
+        playing = nowPlaying
+        syncWatchClock()
+    }
+
+    // Latest position and phone time, not extrapolated
+    private fun reference(): Pair<Long, Long> {
+        val now = SystemClock.elapsedRealtime()
+        val s = sample
+        if (s != null && (s.mediaId == null || s.mediaId == mediaId) && (!playing || now - s.time < SAMPLE_STALE_MS)) {
+            return s.position to s.time
+        }
+        // Casting has no player readings
+        val state = controller?.playbackState ?: return 0L to now
+        return state.position.coerceAtLeast(0) to (state.lastPositionUpdateTime.takeIf { it > 0 } ?: now)
+    }
+
+    // Resend state only on drift
+    private fun syncWatchClock() {
+        if (trackId == 0L) return
+        val (position, time) = reference()
+        val believed = if (sentPlaying) sentPosition + (time - sentTime) else sentPosition
+        if (sentPosition < 0 || sentPlaying != playing || abs(believed - position) > DRIFT_TOLERANCE_MS) {
+            sendState()
+        }
+    }
+
+    private fun sendTrack() {
+        if (trackId == 0L) return
+        val id = trackId
+        queue.removeAll { it.kind == WatchProtocol.CMD_TRACK }
+        enqueue(Outgoing(WatchProtocol.CMD_TRACK, id) {
+            WatchProtocol.track(
+                trackId = id,
+                title = title,
+                artist = artist,
+                durationMs = durationMs,
+                status = status,
+                lineCount = lines.size,
+            )
+        })
+    }
+
+    private fun sendLines() {
+        if (lines.isEmpty()) return
+        val id = trackId
+        queue.removeAll { it.kind == WatchProtocol.CMD_LINES }
+        val budget = (inboxSize - 64).coerceIn(256, 2000)
+        for ((first, blob) in WatchProtocol.chunks(lines, budget)) {
+            enqueue(Outgoing(WatchProtocol.CMD_LINES, id) { WatchProtocol.lines(id, first, blob) })
+        }
+    }
+
+    private fun sendState() {
+        if (trackId == 0L) return
+        queue.removeAll { it.kind == WatchProtocol.CMD_STATE }
+        val id = trackId
+        // Built at send time for freshness
+        enqueue(Outgoing(WatchProtocol.CMD_STATE, id) {
+            val (position, time) = reference()
+            sentPosition = position
+            sentTime = time
+            sentPlaying = playing
+            WatchProtocol.state(id, playing, position, time)
+        })
+    }
+
+    private fun enqueue(item: Outgoing, first: Boolean = false) {
+        if (first) queue.addFirst(item) else queue.addLast(item)
+        pump()
+    }
+
+    private fun pump() {
+        if (inFlight != null) return
+        if (!watchReady) {
+            queue.clear()
+            return
+        }
+        // Drop stale tracks
+        while (queue.firstOrNull()?.let { it.trackId != ANY_TRACK && it.trackId != trackId } == true) {
+            queue.removeFirst()
+        }
+        val item = queue.removeFirstOrNull() ?: return
+        inFlight = item
+        item.attempts++
+        scope.launch {
+            val results = runCatching { sender.sendDataToPebble(WatchProtocol.APP_UUID, item.build()) }
+                .onFailure { Log.w(BuildConfig.TAG, "Pebble send failed", it) }
+                .getOrNull()
+            onSent(item, results?.values.orEmpty())
+        }
+    }
+
+    private fun onSent(item: Outgoing, results: Collection<TransmissionResult>) {
+        inFlight = null
+        when {
+            results.any { it == TransmissionResult.Success } -> {
+                watchConfirmed = true
+                pump()
+            }
+
+            results.any { it == TransmissionResult.FailedWatchNacked || it == TransmissionResult.FailedTimeout } -> {
+                if (item.attempts < 3) {
+                    queue.addFirst(item)
+                } else if (item.kind == WatchProtocol.CMD_STATE) {
+                    sentPosition = -1
+                }
+                main.postDelayed({ pump() }, 150)
+            }
+
+            else -> {
+                // Watchapp not open, wait for it
+                if (item.kind == WatchProtocol.CMD_STATE) sentPosition = -1
+                watchReady = false
+                watchConfirmed = false
+                queue.clear()
+            }
+        }
+    }
+
+    fun onWatchappOpened() {
+        watchConfirmed = true
+        watchReady = true
+    }
+
+    fun onWatchappClosed() {
+        watchConfirmed = false
+        watchReady = false
+        queue.clear()
+    }
+
+    fun onWatchMessage(values: Map<Int, Long>, receivedAt: Long) {
+        watchConfirmed = true
+        watchReady = true
+        when (values[WatchProtocol.KEY_CMD]?.toInt()) {
+            WatchProtocol.CMD_SYNC_REQ -> {
+                val watchTime = values[WatchProtocol.KEY_WATCH_TIME] ?: return
+                // Front of queue, stamped at send
+                enqueue(Outgoing(WatchProtocol.CMD_SYNC, ANY_TRACK) {
+                    WatchProtocol.sync(watchTime, receivedAt, SystemClock.elapsedRealtime())
+                }, first = true)
+            }
+
+            WatchProtocol.CMD_SETTINGS -> {
+                values[WatchProtocol.KEY_SET_AUTO_OPEN]?.let { autoOpen = it != 0L }
+            }
+
+            WatchProtocol.CMD_HELLO -> {
+                values[WatchProtocol.KEY_SET_AUTO_OPEN]?.let { autoOpen = it != 0L }
+                values[WatchProtocol.KEY_INBOX_SIZE]?.let { inboxSize = it.toInt().coerceIn(256, 8192) }
+                queue.removeAll { it.kind != WatchProtocol.CMD_SYNC }
+                sentPosition = -1
+                if (trackId != 0L) {
+                    sendTrack()
+                    sendLines()
+                    sendState()
+                } else {
+                    enqueue(Outgoing(WatchProtocol.CMD_STATUS, ANY_TRACK) {
+                        WatchProtocol.status(0, WatchProtocol.STATUS_IDLE)
+                    })
+                }
+            }
+
+            WatchProtocol.CMD_PLAY_PAUSE -> controller?.transportControls?.let {
+                if (playing) it.pause() else it.play()
+            }
+
+            WatchProtocol.CMD_NEXT -> controller?.transportControls?.skipToNext()
+            WatchProtocol.CMD_PREV -> controller?.transportControls?.skipToPrevious()
+        }
+    }
+
+    companion object {
+        // Keep in sync with radiant.PebbleBridge
+        const val MSG_SESSION = 1
+        const val MSG_POSITION = 2
+        const val MSG_LYRICS = 3
+
+        // Used by PebbleWatchListenerService
+        @Volatile
+        var current: PebbleRelayService? = null
+            private set
+
+        private const val ANY_TRACK = -1L
+        private const val PREF_AUTO_OPEN = "auto_open"
+        private const val DRIFT_TOLERANCE_MS = 10L
+        private const val SAMPLE_STALE_MS = 8_000L
+        private const val LYRICS_TIMEOUT_MS = 90_000L
+    }
+}

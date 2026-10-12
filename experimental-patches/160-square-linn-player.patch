@@ -1,0 +1,13 @@
+--- a/com/aspiro/wamp/player/d.smali
++++ b/com/aspiro/wamp/player/d.smali
+@@ -872,6 +872,10 @@
+ 
+     .line 13
+     check-cast p1, Lcom/aspiro/wamp/player/k0;
++    invoke-static {p1}, Ldev/nino/squareglass/LinnProvider;->override(Ljava/lang/Object;)Ljava/lang/Object;
++    move-result-object p1
++    check-cast p1, Lcom/aspiro/wamp/player/k0;
++
+ 
+     .line 14
+     .line 15

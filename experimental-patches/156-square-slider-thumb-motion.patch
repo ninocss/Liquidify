@@ -1,0 +1,12 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/z4.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/z4.smali
+@@ -246,7 +246,8 @@
+     const/4 v4, 0x0
+ 
+     .line 99
+-    invoke-static/range {v0 .. v7}, Landroidx/compose/animation/core/AnimateAsStateKt;->animateFloatAsState(FLandroidx/compose/animation/core/AnimationSpec;FLjava/lang/String;Lam0/l;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/State;
++    const/4 v6, 0x0
++    invoke-static {v0, v5, v6}, Ldev/nino/squareglass/SliderMotion;->nativeScale(FLandroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/State;
+ 
+     .line 100
+     .line 101

@@ -1,0 +1,36 @@
+--- a/com/tidal/android/feature/playerscreen/ui/PlayerViewModel$observeLyricsProgress$1$a.smali
++++ b/com/tidal/android/feature/playerscreen/ui/PlayerViewModel$observeLyricsProgress$1$a.smali
+@@ -58,6 +58,8 @@
+     .line 5
+     int-to-long p1, p1
+ 
++    invoke-static {p1, p2}, Lradiant/WordLyrics;->onProgress(J)V
++
+     .line 6
+     iget-object v0, p0, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel$observeLyricsProgress$1$a;->a:Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;
+ 
+@@ -191,6 +193,13 @@
+ 
+     .line 67
+     :cond_3
++    sget-boolean v6, Lradiant/RLAPILyricsHook;->isRlState:Z
++
++    if-eqz v6, :radiant_skip
++
++    const/4 v5, -0x1
++
++    :radiant_skip
+     if-gez v4, :cond_4
+ 
+     .line 68
+@@ -203,6 +212,10 @@
+ 
+     .line 71
+     :goto_1
++    invoke-static {v5}, Lradiant/WordLyrics;->primaryLine(I)I    # stick to the first overlapping line
++
++    move-result v5
++
+     iget v4, v2, Lcom/tidal/android/feature/playerscreen/ui/g$c;->c:I
+ 
+     .line 72

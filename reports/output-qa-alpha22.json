@@ -1,0 +1,89 @@
+{
+  "version": "0.1.9-alpha22-linn",
+  "scope": "Real Majik DSM hardware, muted transport and PC emulator runtime acceptance; integration alpha",
+  "finalZipSha256": "6e501c7ffe58375beff22991695fdc04dff71b96c008d9f87f1109b19ba52420",
+  "build": {
+    "helpers": 601,
+    "unitTestsPassed": 25,
+    "strictManagerPatchesPassed": 96,
+    "exactHostLinkagePassed": true
+  },
+  "hardware": {
+    "model": "Majik DSM/4 (2020)",
+    "firmware": "4.118.607",
+    "tracksMax": 1000,
+    "transport": "OpenHome renderer-owned online TIDAL queue",
+    "rendererAuthentication": "Existing valid renderer TIDAL authorization; no credential mutation",
+    "muteConfirmedBeforePlayback": true,
+    "volumePreserved": 40,
+    "audibleSoundAssessed": false,
+    "integratedQueueEntries": 25,
+    "playPauseNextPreviousSeekPassed": true,
+    "volumeKeysNoUnmutePassed": true,
+    "nativeQueueRemovalPassed": true,
+    "nativeQueueReorderPassed": true,
+    "shuffleAndRepeatAllPassed": true,
+    "repeatSingleDeviceLoopPassed": true,
+    "repeatSingleManualNextFollowsNativeRepeatOff": true,
+    "repeatSingleManualPreviousFollowsNativeRepeatOff": true,
+    "appAbsentScreenAsleep": {
+      "automaticTrackTransitions": 2,
+      "observationSeconds": 353,
+      "processAbsentAllSamples": true,
+      "hardwareMuteAllSamples": true,
+      "deviceQueueUnchanged": true
+    },
+    "reattachWithoutRemoteQueueOverwritePassed": true,
+    "pausedThisPhoneTitleAndPositionHandoffPassed": true,
+    "sleepTimerEndOfTrack": {
+      "pausedRenderer": true,
+      "observedSecondsIntoNextTitle": 2,
+      "limitation": "Controller polling latency; not a precise renderer-side boundary timer; requires live Android process"
+    },
+    "originalDeviceStateRestored": true,
+    "singleManualPreviousFinalHardwareConfirmed": true,
+    "finalPausedHandbackSeconds": 2,
+    "transientEmulatorNetworkLoss": {
+      "localAutoplay": false,
+      "refreshRecovered": true
+    },
+    "restorationVerified": {
+      "queueEntries": 148,
+      "allQueueUrisAndMetadataCompared": true,
+      "sourceRestored": true,
+      "shuffleAndRepeatRestored": true,
+      "volumeRestored": true,
+      "muteRestored": true,
+      "transportStopped": true
+    }
+  },
+  "popup": {
+    "anchoredOutputPopupInspected": true,
+    "activeLinnListedOnce": true,
+    "thisPhoneSelectionAndReconnectPassed": true,
+    "refreshBackAndOutsideDismissPassed": true,
+    "lightAndDarkInspected": true,
+    "largeFontScaleInspected": 1.35,
+    "finalFontScale": 1.0,
+    "nativeVolumeModelCrashFixed": true
+  },
+  "finalCorrectionAcceptance": {
+    "shuffledRestartPreservesOccurrenceOrder": true,
+    "pausedProgressRefresh": true,
+    "finalManagerArtifactReadback": true
+  },
+  "remainingAcceptance": [
+    "Audible output and acoustic quality deliberately excluded",
+    "Physical Android Doze and TalkBack",
+    "Alternate Cast, Sonos and TIDAL Connect receiver hardware",
+    "Network-loss and changing-address stress under real phone networking",
+    "Exhaustive catalog add/remove, duplicate queue and media-session edge cases"
+  ],
+  "privacy": "Raw device addresses, account identifiers, stream URLs, private backups and screenshots are excluded from release archives",
+  "finalManagerInstalledApkSha256": "584b64b24930d96fd2150d53729c1960cc14505ece92d067d1d6861f63c5f1c0",
+  "testDatesLocal": [
+    "2026-10-11",
+    "2026-10-12"
+  ],
+  "finalRuntimeCrashBufferEmpty": true
+}

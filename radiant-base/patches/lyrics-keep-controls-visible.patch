@@ -1,0 +1,33 @@
+--- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt$PlayerScreenPortrait$2$1.smali
++++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt$PlayerScreenPortrait$2$1.smali
+@@ -231,7 +231,7 @@
+ 
+     .line 25
+     .line 26
+-    if-eqz p1, :cond_3
++    goto :cond_3    # skip auto-hide branch
+ 
+     .line 27
+     .line 28
+--- a/com/tidal/android/feature/playerscreen/ui/PlayerViewModel.smali
++++ b/com/tidal/android/feature/playerscreen/ui/PlayerViewModel.smali
+@@ -1382,6 +1382,19 @@
+     .line 109
+     .line 110
+     move-result v1
++    sget v4, Lradiant/LyricsReinitGuard;->lastMediaId:I
++    if-ne v1, v4, :rl_reinit_store
++    sget-object v4, Lradiant/LyricsReinitGuard;->lastVm:Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;
++    if-ne v0, v4, :rl_reinit_store
++    goto :rl_skip_reinit    # only suppress duplicate initialization on the same ViewModel
++    :rl_reinit_store
++    sput v1, Lradiant/LyricsReinitGuard;->lastMediaId:I
++    sput-object v0, Lradiant/LyricsReinitGuard;->lastVm:Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;
++    goto :rl_reinit_ok
++    :rl_skip_reinit
++    sget-object v4, Lkotlin/u;->a:Lkotlin/u;
++    return-object v4
++    :rl_reinit_ok
+ 
+     .line 111
+     invoke-static {v1}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;

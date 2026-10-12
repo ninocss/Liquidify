@@ -1,0 +1,12 @@
+--- a/com/tidal/android/feature/search/ui/composables/c0.smali
++++ b/com/tidal/android/feature/search/ui/composables/c0.smali
+@@ -760,6 +760,9 @@
+ 
+     move-object/from16 v15, p4
+ 
++    invoke-static {}, Ldev/nino/squareglass/SearchChrome;->cursor()Landroidx/compose/ui/graphics/Brush;
++    move-result-object v22
++
+     .line 45
+     invoke-static/range {v8 .. v27}, Landroidx/compose/foundation/text/BasicTextFieldKt;->BasicTextField(Landroidx/compose/ui/text/input/TextFieldValue;Lam0/l;Landroidx/compose/ui/Modifier;ZZLandroidx/compose/ui/text/TextStyle;Landroidx/compose/foundation/text/KeyboardOptions;Landroidx/compose/foundation/text/KeyboardActions;ZIILandroidx/compose/ui/text/input/VisualTransformation;Lam0/l;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/ui/graphics/Brush;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+ 

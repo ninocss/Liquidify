@@ -1,0 +1,15 @@
+--- a/u6/d.smali
++++ b/u6/d.smali
+@@ -812,6 +812,12 @@
+     .line 392
+     invoke-virtual {v4, v1}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
+ 
++    move-object/from16 v0, p2
++
++    iget-object v0, v0, Landroidx/recyclerview/widget/RecyclerView$ViewHolder;->itemView:Landroid/view/View;
++
++    invoke-static {v0}, Ldev/nino/squareglass/SquareDetails;->albumHeader(Landroid/view/View;)V
++
+     .line 393
+     .line 394
+     .line 395

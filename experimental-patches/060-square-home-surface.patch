@@ -1,0 +1,11 @@
+--- a/com/tidal/android/feature/home/ui/k.smali
++++ b/com/tidal/android/feature/home/ui/k.smali
+@@ -322,7 +322,7 @@
+     move-result-object v8
+ 
+     .line 131
+-    invoke-virtual {v8}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->q0()Lf20/a;
++    invoke-virtual {v8}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->C0()Lf20/a;
+ 
+     .line 132
+     .line 133

@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "version": "1.0.0-beta",
+  "launcherLabel": "Liquidify Manager",
+  "repository": "ninocss/liquidify",
+  "variant": "debug",
+  "apkSha256": "5a7371e4ed40074224d11feb35862bd3af77e736c30c9f7f889e456a47967f03",
+  "testsPassed": 5,
+  "bundledManifestExact": true,
+  "signatureVerified": true,
+  "releaseSigningIdentity": false
+}

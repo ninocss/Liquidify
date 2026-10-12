@@ -1,0 +1,40 @@
+--- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
+@@ -4613,8 +4613,8 @@
+ 
+     move-object/from16 v25, v10
+ 
+     .line 171
+-    invoke-static/range {v16 .. v26}, Lcom/tidal/android/feature/playerscreen/ui/composables/p3;->b(Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;JILjava/lang/String;ZZLam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
++    invoke-static/range {v16 .. v26}, Lradiant/Kawarp;->b(Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;JILjava/lang/String;ZZLam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
+ 
+     const/4 v4, 0x0
+ 
+--- a/com/tidal/android/core/ui/composable/c0.smali
++++ b/com/tidal/android/core/ui/composable/c0.smali
+@@ -16,7 +16,9 @@
+     move-result p0
+ 
+     .line 5
+-    invoke-virtual {p2, p0}, Landroid/view/Window;->setNavigationBarColor(I)V
++    const/4 v3, 0x0    # RL: force transparent nav bar so the AGSL backdrop shows through (was p0 = extracted BG color; luminance below still uses p0 for icon light/dark)
++
++    invoke-virtual {p2, v3}, Landroid/view/Window;->setNavigationBarColor(I)V
+ 
+     .line 6
+     .line 7
+--- a/radiant/HomeBackdrop.smali
++++ b/radiant/HomeBackdrop.smali
+@@ -358,11 +358,7 @@
+ 
+     const/4 v12, 0x0    # v12 = progress callback = null (unused while not seeking)
+ 
+-    move-object v14, v0    # v14 = composer
+-
+-    const/4 v15, 0x0    # v15 = changed flags
+-
+-    invoke-static/range {v8 .. v15}, Lcom/tidal/android/feature/playerscreen/ui/composables/p3;->a(ILjava/lang/String;ZZLam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
++    invoke-static {v8, v9, v10, v13, v0}, Lradiant/Kawarp;->render(ILjava/lang/String;ZLandroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;)V    # RL: Radiant AGSL backdrop
+ 
+     :skip
+     invoke-interface {v0}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V

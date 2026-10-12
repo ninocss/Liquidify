@@ -1,0 +1,27 @@
+{
+  "format": 1,
+  "tidal": {
+    "versionName": "2.200.0",
+    "versionCode": 10004,
+    "url": "https://github.com/meowarex/rl-mobile/releases/download/v1.1.8/tidal-stock.apk",
+    "sha256": "18807fa8a192d223635df7dabe388f404767b09b0a3e6dbdeed53cbb800f8311",
+    "composeUi": "1.9.2",
+    "composeRuntime": "1.10.2",
+    "material3": "1.3.2"
+  },
+  "radiant": {
+    "repository": "https://github.com/meowarex/rl-mobile",
+    "tag": "v1.1.8",
+    "commit": "2cb7100baef6f9c05a79a761fa51dfe898708d9b"
+  },
+  "square": {
+    "repository": "https://github.com/Lelonio/Square",
+    "commit": "34c96f19728fd4e7434f0e53f7111a41b41271b5"
+  },
+  "androidLiquidGlass": {
+    "repository": "https://github.com/Kyant0/AndroidLiquidGlass",
+    "tag": "2.0.0",
+    "commit": "bebb11a91bd97bf1dabde479f3b332ad9898731f",
+    "source": "Square's vendored Android adaptation; see extension/src/main/kotlin/dev/nino/squareglass/backdrop"
+  }
+}

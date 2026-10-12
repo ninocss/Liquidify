@@ -1,0 +1,409 @@
+--- a/al0/a.smali
++++ b/al0/a.smali
+@@ -3149,6 +3149,406 @@
+ 
+     .line 1592
+     .line 1593
++    iget-wide v1, v0, Lal0/a;->c:J
++
++    const-string v3, "opacityAccentDarkUltraThick"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->c:J
++
++    iget-wide v1, v0, Lal0/a;->d:J
++
++    const-string v3, "opacityAccentDarkestUltraThick"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->d:J
++
++    iget-wide v1, v0, Lal0/a;->e:J
++
++    const-string v3, "opacityAccentFillRegular"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->e:J
++
++    iget-wide v1, v0, Lal0/a;->f:J
++
++    const-string v3, "opacityAccentFillThin"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->f:J
++
++    iget-wide v1, v0, Lal0/a;->g:J
++
++    const-string v3, "opacityAccentFillUltraThick"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->g:J
++
++    iget-wide v1, v0, Lal0/a;->h:J
++
++    const-string v3, "opacityAccentFillUltraThin"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->h:J
++
++    iget-wide v1, v0, Lal0/a;->i:J
++
++    const-string v3, "opacityBaseBrightThick"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->i:J
++
++    iget-wide v1, v0, Lal0/a;->j:J
++
++    const-string v3, "opacityBaseBrightThin"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->j:J
++
++    iget-wide v1, v0, Lal0/a;->k:J
++
++    const-string v3, "opacityBaseBrightTransparent"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->k:J
++
++    iget-wide v1, v0, Lal0/a;->l:J
++
++    const-string v3, "opacityBaseBrightUltraThick"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->l:J
++
++    iget-wide v1, v0, Lal0/a;->m:J
++
++    const-string v3, "opacityBaseBrighterUltraThick"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->m:J
++
++    iget-wide v1, v0, Lal0/a;->n:J
++
++    const-string v3, "opacityBaseBrightestRegular"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->n:J
++
++    iget-wide v1, v0, Lal0/a;->o:J
++
++    const-string v3, "opacityBaseBrightestThin"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->o:J
++
++    iget-wide v1, v0, Lal0/a;->p:J
++
++    const-string v3, "opacityBaseBrightestUltraThin"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->p:J
++
++    iget-wide v1, v0, Lal0/a;->q:J
++
++    const-string v3, "opacityBaseFillRegular"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->q:J
++
++    iget-wide v1, v0, Lal0/a;->r:J
++
++    const-string v3, "opacityBaseFillThick"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->r:J
++
++    iget-wide v1, v0, Lal0/a;->s:J
++
++    const-string v3, "opacityBaseFillThin"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->s:J
++
++    iget-wide v1, v0, Lal0/a;->t:J
++
++    const-string v3, "opacityBaseFillTransparent"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->t:J
++
++    iget-wide v1, v0, Lal0/a;->u:J
++
++    const-string v3, "opacityBaseFillUltraThick"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->u:J
++
++    iget-wide v1, v0, Lal0/a;->v:J
++
++    const-string v3, "opacityBaseFillUltraThin"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->v:J
++
++    iget-wide v1, v0, Lal0/a;->w:J
++
++    const-string v3, "opacityContrastFillRegular"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->w:J
++
++    iget-wide v1, v0, Lal0/a;->x:J
++
++    const-string v3, "opacityContrastFillThick"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->x:J
++
++    iget-wide v1, v0, Lal0/a;->y:J
++
++    const-string v3, "opacityContrastFillThin"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->y:J
++
++    iget-wide v1, v0, Lal0/a;->z:J
++
++    const-string v3, "opacityContrastFillTransparent"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->z:J
++
++    iget-wide v1, v0, Lal0/a;->A:J
++
++    const-string v3, "opacityContrastFillUltraThick"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->A:J
++
++    iget-wide v1, v0, Lal0/a;->B:J
++
++    const-string v3, "opacityContrastFillUltraThin"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->B:J
++
++    iget-wide v1, v0, Lal0/a;->m0:J
++
++    const-string v3, "solidAccentBright"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->m0:J
++
++    iget-wide v1, v0, Lal0/a;->n0:J
++
++    const-string v3, "solidAccentBrighter"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->n0:J
++
++    iget-wide v1, v0, Lal0/a;->o0:J
++
++    const-string v3, "solidAccentDark"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->o0:J
++
++    iget-wide v1, v0, Lal0/a;->p0:J
++
++    const-string v3, "solidAccentDarker"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->p0:J
++
++    iget-wide v1, v0, Lal0/a;->q0:J
++
++    const-string v3, "solidAccentDarkest"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->q0:J
++
++    iget-wide v1, v0, Lal0/a;->r0:J
++
++    const-string v3, "solidAccentFill"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->r0:J
++
++    iget-wide v1, v0, Lal0/a;->s0:J
++
++    const-string v3, "solidBaseBright"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->s0:J
++
++    iget-wide v1, v0, Lal0/a;->t0:J
++
++    const-string v3, "solidBaseBrighter"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->t0:J
++
++    iget-wide v1, v0, Lal0/a;->u0:J
++
++    const-string v3, "solidBaseBrightest"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->u0:J
++
++    iget-wide v1, v0, Lal0/a;->v0:J
++
++    const-string v3, "solidBaseFill"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->v0:J
++
++    iget-wide v1, v0, Lal0/a;->w0:J
++
++    const-string v3, "solidContrastDark"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->w0:J
++
++    iget-wide v1, v0, Lal0/a;->x0:J
++
++    const-string v3, "solidContrastDarker"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->x0:J
++
++    iget-wide v1, v0, Lal0/a;->y0:J
++
++    const-string v3, "solidContrastDarkest"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->y0:J
++
++    iget-wide v1, v0, Lal0/a;->z0:J
++
++    const-string v3, "solidContrastFill"
++
++    invoke-static {v1, v2, v3}, Ldev/nino/squareglass/SquarePalette;->wave(JLjava/lang/String;)J
++
++    move-result-wide v1
++
++    iput-wide v1, v0, Lal0/a;->z0:J
++
+     return-void
+ .end method
+ 

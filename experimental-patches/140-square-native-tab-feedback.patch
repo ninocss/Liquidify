@@ -1,0 +1,22 @@
+--- a/com/tidal/android/feature/appscaffold/ui/composable/x.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/x.smali
+@@ -1073,6 +1073,8 @@
+     move/from16 v3, p1
+ 
+     .line 15
++    const/4 v5, 0x0
++
+     invoke-static/range {v2 .. v10}, Landroidx/compose/foundation/selection/SelectableKt;->selectable-O2vRcR0$default(Landroidx/compose/ui/Modifier;ZLandroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/foundation/Indication;ZLandroidx/compose/ui/semantics/Role;Lam0/a;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+ 
+     move-result-object v2
+@@ -1092,9 +1094,7 @@
+ 
+     const/4 v6, 0x0
+ 
+-    invoke-static/range {v3 .. v8}, Landroidx/compose/foundation/BackgroundKt;->background-bw27NRU$default(Landroidx/compose/ui/Modifier;JLandroidx/compose/ui/graphics/Shape;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+-
+-    move-result-object v3
++
+ 
+     goto :goto_6
+ 

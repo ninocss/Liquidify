@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "apkSha256": "63bf8e367809aeab719809bbaed1c59e3b240dbeb7db46b43720ed1d1b303f62",
+  "zipSha256": "c26215163dd34e7f46439e7375d4b36d6bc65d974ecfc79ae565438cf5a663cb",
+  "package": "com.aspiro.tidal",
+  "minSdk": 33,
+  "helpers": 606,
+  "patchedInstructions": 9444,
+  "fingerprintedResources": 20,
+  "paletteExact": true,
+  "signatureVerified": true,
+  "evidence": "Manager ZIP import, patch, signing, installation and APK readback on emulator; no authenticated playback proof"
+}

@@ -1,0 +1,11 @@
+--- a/com/tidal/android/feature/home/ui/composables/shortcutlist/m.smali
++++ b/com/tidal/android/feature/home/ui/composables/shortcutlist/m.smali
+@@ -213,7 +213,7 @@
+     move-result-object v10
+ 
+     .line 83
+-    const/16 v1, 0x20
++    const/16 v1, 0x6
+ 
+     .line 84
+     .line 85

@@ -1,0 +1,46 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/CoverPagerKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/CoverPagerKt.smali
+@@ -278,9 +278,7 @@
+     const-wide/16 v21, 0x0
+ 
+     .line 12
+-    invoke-static/range {v15 .. v24}, Landroidx/compose/ui/draw/ShadowKt;->shadow-s4CzXII$default(Landroidx/compose/ui/Modifier;FLandroidx/compose/ui/graphics/Shape;ZJJILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+-
+-    move-result-object v5
++    move-object v5, v15
+ 
+     move-object/from16 v6, v17
+ 
+@@ -309,7 +307,9 @@
+ 
+     move-result-wide v13
+ 
+-    invoke-static {v5, v9, v13, v14, v6}, Landroidx/compose/foundation/BorderKt;->border-xT4_qwU(Landroidx/compose/ui/Modifier;FJLandroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;
++    const/4 v13, 0x0
++
++    invoke-static {v5, v12, v13}, Ldev/nino/squareglass/PlayerArtwork;->cover(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
+ 
+     move-result-object v13
+ 
+@@ -617,9 +617,7 @@
+     const-wide/16 v19, 0x0
+ 
+     .line 7
+-    invoke-static/range {v13 .. v22}, Landroidx/compose/ui/draw/ShadowKt;->shadow-s4CzXII$default(Landroidx/compose/ui/Modifier;FLandroidx/compose/ui/graphics/Shape;ZJJILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+-
+-    move-result-object v6
++    move-object v6, v13
+ 
+     .line 8
+     invoke-static {v6, v15}, Landroidx/compose/ui/draw/ClipKt;->clip(Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;
+@@ -646,7 +644,9 @@
+ 
+     move-result-wide v8
+ 
+-    invoke-static {v6, v7, v8, v9, v15}, Landroidx/compose/foundation/BorderKt;->border-xT4_qwU(Landroidx/compose/ui/Modifier;FJLandroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;
++    const/4 v7, 0x0
++
++    invoke-static {v6, v10, v7}, Ldev/nino/squareglass/PlayerArtwork;->cover(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
+ 
+     move-result-object v6
+ 

@@ -1,0 +1,15 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/p3.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/p3.smali
+@@ -861,7 +861,11 @@
+     :cond_11
+     sget-object v0, Lcom/tidal/android/feature/playerscreen/ui/composables/p3$a;->a:[I
+ 
+-    invoke-virtual/range {p0 .. p0}, Ljava/lang/Enum;->ordinal()I
++    invoke-static/range {p0 .. p0}, Ldev/nino/squareglass/NativePlayerPaint;->style(Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;)Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;
++
++    move-result-object v11
++
++    invoke-virtual {v11}, Ljava/lang/Enum;->ordinal()I
+ 
+     move-result v11
+ 

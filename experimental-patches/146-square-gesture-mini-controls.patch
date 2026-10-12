@@ -1,0 +1,23 @@
+--- a/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
+@@ -2178,6 +2178,12 @@
+ 
+     check-cast v5, Lam0/a;
+ 
++    invoke-static {}, Ldev/nino/squareglass/NativeMiniGestures;->showSkip()Z
++
++    move-result v4
++
++    if-eqz v4, :square_no_skip
++
+     .line 156
+     sget v4, Lcom/tidal/android/strings/R$string;->play_next:I
+ 
+@@ -2236,6 +2242,7 @@
+ 
+     move-object v12, v15
+ 
++    :square_no_skip
+     .line 162
+     invoke-interface {v12}, Landroidx/compose/runtime/Composer;->endNode()V
+ 

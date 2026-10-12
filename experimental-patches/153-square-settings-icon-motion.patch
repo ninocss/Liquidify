@@ -1,0 +1,13 @@
+--- a/com/tidal/android/feature/home/ui/composables/g.smali
++++ b/com/tidal/android/feature/home/ui/composables/g.smali
+@@ -472,6 +472,10 @@
+     .line 204
+     const/4 v12, 0x0
+ 
++    const/4 v14, 0x0
++    invoke-static {v8, v13, v14}, Ldev/nino/squareglass/IconMotion;->settings(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++    move-result-object v8
++
+     .line 205
+     move-object v6, v0
+ 

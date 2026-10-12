@@ -1,0 +1,48 @@
+{
+  "package": "dev.nino.tidalglass.test",
+  "systemApkSha256": "484bc5ad78d066302c6a5cf9c7f273210c8cb02c0ca042da6c37fd08fe1f21d3",
+  "physicalDevice": "Pixel 8 Android 17",
+  "authenticated": true,
+  "notVerified": [
+    "Final alpha4 forced Light/Dark full device acceptance and uninterrupted contextual action dispatch",
+    "Settings end-padding and final toggle cards on physical hardware",
+    "Audible audio output",
+    "Downloads and offline playback",
+    "TalkBack, all-screen theme parity, frame timing and battery",
+    "Large-font and landscape layout on physical hardware",
+    "Offline category explanation under a real connection loss"
+  ],
+  "knownVisualLimitations": [
+    "Remaining native page layouts and Home/New/Radio route redesign are incomplete"
+  ],
+  "evidence": "Visual UI and native state on physical test app; private screenshots excluded from distribution",
+  "priorAlpha2Observations": [
+    "Home, search, artist details, library, settings, artist Radio list",
+    "Radio play dispatch, advancing playback position, native FLAC quality display",
+    "Native synchronized lyrics highlight and automatic scrolling",
+    "Light and dark player surfaces, controls and seekbar contrast",
+    "26dp player artwork, light/dark system bars in separate player window",
+    "Player disposal restores native page backdrop and navigation",
+    "Final system-mode build installed with session preserved; playback left paused",
+    "Lyrics viewport follows animated content padding without painting over header/footer; 24dp edge fade reviewed in light and dark"
+  ],
+  "priorAlpha3Observations": [
+    "Alpha3 Home and library grid visually reviewed in light and dark on the authenticated physical test app",
+    "Neutral Home filters load native Staff Picks and For you content",
+    "My Tracks shortcut opens native track list; playlist long press opens native action sheet",
+    "Library grid opens native Playlists and Mixes & Radio; Downloads opens native empty state",
+    "Native Home Settings symbol remains readable in forced dark mode",
+    "Final System build installed with session preserved; native UI reports Play (paused)",
+    "Final System player artwork, controls and seekbar visually reviewed; returned Home with native Play action visible (paused)"
+  ],
+  "version": "0.1.3-alpha4",
+  "preparedDarkApkSha256": "accffae22467372822f33d309427fdfcfb0c018eef7b9d1f8c6dc5b0dbe54a46",
+  "observed": [
+    "Intermediate alpha4: light Explore headings and capsule search field visually reviewed",
+    "Intermediate alpha4: rounded settings links and visible white checked switch thumb reviewed without changing preferences",
+    "Intermediate alpha4: short native mix action list repeatedly opened as an anchored popup with readable light surface, text and icons",
+    "Final alpha4 System APK installed with authenticated session retained; Home and paused native player visible",
+    "Final alpha4: long native playlist track action list remains a readable dark sheet"
+  ],
+  "qaLimit": "Physical automation paused when the device switched to other foreground apps; no input outside the authorized test app"
+}

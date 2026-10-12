@@ -1,0 +1,11 @@
+--- a/com/aspiro/wamp/logout/service/a.smali
++++ b/com/aspiro/wamp/logout/service/a.smali
+@@ -9,6 +9,8 @@
+ # virtual methods
+ .method public final call()Ljava/lang/Object;
+     .locals 2
++
++    invoke-static {}, Ldev/nino/squareglass/NativePlayback;->logout()V
+ 
+     .line 1
+     :try_start_0

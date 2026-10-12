@@ -1,0 +1,6 @@
+[
+  {"target":"res/color/primary_text_selector.xml","attributeId":"010101a5","expectedType":1,"fromResource":"7f060524","toResource":"7f0600b0","expectedCount":1},
+  {"target":"res/color/primary_playback_title_text_selector.xml","attributeId":"010101a5","expectedType":1,"fromResource":"7f060524","toResource":"7f0600b0","expectedCount":1},
+  {"target":"res/layout/launcher_activity_view.xml","attributeId":"010100d4","expectedType":1,"fromResource":"7f06003e","toResource":"7f060039","expectedCount":1},
+  {"target":"res/color/vector_tint_theme_color.xml","attributeId":"010101a5","expectedType":2,"fromResource":"01010435","toResource":"7f0600b0","expectedCount":1}
+]

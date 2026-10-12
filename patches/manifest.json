@@ -1,0 +1,2004 @@
+{
+  "version": 1,
+  "patches": [
+    {
+      "id": "LiquidifyCore",
+      "source": "liquidify",
+      "order": -30,
+      "fileNames": [
+        "000-square-glass-host.patch",
+        "010-square-glass-native-tabs.patch",
+        "020-square-glass-native-backdrop.patch",
+        "030-square-glass-native-shell.patch",
+        "040-square-glass-native-mini-player.patch"
+      ],
+      "extensionFiles": [
+        "dev/nino/squareglass/AccessoryGlass$0.smali",
+        "dev/nino/squareglass/AccessoryGlass$1.smali",
+        "dev/nino/squareglass/AccessoryGlass$2.smali",
+        "dev/nino/squareglass/AccessoryGlass.smali",
+        "dev/nino/squareglass/ArtworkLoader.smali",
+        "dev/nino/squareglass/ComposableSingletons$DesignEntryKt$0.smali",
+        "dev/nino/squareglass/ComposableSingletons$DesignEntryKt.smali",
+        "dev/nino/squareglass/ComposableSingletons$SearchChromeKt$0.smali",
+        "dev/nino/squareglass/ComposableSingletons$SearchChromeKt.smali",
+        "dev/nino/squareglass/CoverColors.smali",
+        "dev/nino/squareglass/CoverLoader$0.smali",
+        "dev/nino/squareglass/CoverLoader$1.smali",
+        "dev/nino/squareglass/CoverLoader.smali",
+        "dev/nino/squareglass/DesignEntry$0.smali",
+        "dev/nino/squareglass/DesignEntry$1.smali",
+        "dev/nino/squareglass/DesignEntry$10.smali",
+        "dev/nino/squareglass/DesignEntry$11.smali",
+        "dev/nino/squareglass/DesignEntry$12.smali",
+        "dev/nino/squareglass/DesignEntry$13.smali",
+        "dev/nino/squareglass/DesignEntry$14.smali",
+        "dev/nino/squareglass/DesignEntry$15.smali",
+        "dev/nino/squareglass/DesignEntry$16.smali",
+        "dev/nino/squareglass/DesignEntry$17.smali",
+        "dev/nino/squareglass/DesignEntry$18.smali",
+        "dev/nino/squareglass/DesignEntry$19.smali",
+        "dev/nino/squareglass/DesignEntry$2.smali",
+        "dev/nino/squareglass/DesignEntry$20.smali",
+        "dev/nino/squareglass/DesignEntry$21.smali",
+        "dev/nino/squareglass/DesignEntry$22.smali",
+        "dev/nino/squareglass/DesignEntry$3.smali",
+        "dev/nino/squareglass/DesignEntry$4.smali",
+        "dev/nino/squareglass/DesignEntry$5.smali",
+        "dev/nino/squareglass/DesignEntry$6.smali",
+        "dev/nino/squareglass/DesignEntry$7.smali",
+        "dev/nino/squareglass/DesignEntry$8.smali",
+        "dev/nino/squareglass/DesignEntry$9.smali",
+        "dev/nino/squareglass/DesignEntry.smali",
+        "dev/nino/squareglass/DesignState.smali",
+        "dev/nino/squareglass/GlassFrame.smali",
+        "dev/nino/squareglass/GlassHost$0.smali",
+        "dev/nino/squareglass/GlassHost$1.smali",
+        "dev/nino/squareglass/GlassHost.smali",
+        "dev/nino/squareglass/GlassPanels$0.smali",
+        "dev/nino/squareglass/GlassPanels$1.smali",
+        "dev/nino/squareglass/GlassPanels$2.smali",
+        "dev/nino/squareglass/GlassPanels$3.smali",
+        "dev/nino/squareglass/GlassPanels$4.smali",
+        "dev/nino/squareglass/GlassPanels$panel$source$1.smali",
+        "dev/nino/squareglass/GlassPanels.smali",
+        "dev/nino/squareglass/GlassProbe$0.smali",
+        "dev/nino/squareglass/GlassProbe$1.smali",
+        "dev/nino/squareglass/GlassProbe$2.smali",
+        "dev/nino/squareglass/GlassProbe$3.smali",
+        "dev/nino/squareglass/GlassProbe$4.smali",
+        "dev/nino/squareglass/GlassProbe$5.smali",
+        "dev/nino/squareglass/GlassProbe$6.smali",
+        "dev/nino/squareglass/GlassProbe$7.smali",
+        "dev/nino/squareglass/GlassProbe$8.smali",
+        "dev/nino/squareglass/GlassProbe.smali",
+        "dev/nino/squareglass/HeaderFade.smali",
+        "dev/nino/squareglass/HeaderProgress.smali",
+        "dev/nino/squareglass/HostCompat.smali",
+        "dev/nino/squareglass/IconMotion$0.smali",
+        "dev/nino/squareglass/IconMotion$1.smali",
+        "dev/nino/squareglass/IconMotion$2.smali",
+        "dev/nino/squareglass/IconMotion$3.smali",
+        "dev/nino/squareglass/IconMotion$4.smali",
+        "dev/nino/squareglass/IconMotion$5.smali",
+        "dev/nino/squareglass/IconMotion$6.smali",
+        "dev/nino/squareglass/IconMotion$7.smali",
+        "dev/nino/squareglass/IconMotion$Entry.smali",
+        "dev/nino/squareglass/IconMotion$decorate$2$1.smali",
+        "dev/nino/squareglass/IconMotion$decorate$3$1.smali",
+        "dev/nino/squareglass/IconMotion$decorate$4$1.smali",
+        "dev/nino/squareglass/IconMotion$decorate$6$1$1.smali",
+        "dev/nino/squareglass/IconMotion$decorate$6$1.smali",
+        "dev/nino/squareglass/IconMotion$decorate$lambda$20$0$$inlined$onDispose$1.smali",
+        "dev/nino/squareglass/IconMotion$tick$1.smali",
+        "dev/nino/squareglass/IconMotion$watch$1$1.smali",
+        "dev/nino/squareglass/IconMotion$watch$1.smali",
+        "dev/nino/squareglass/IconMotion.smali",
+        "dev/nino/squareglass/LinnEvents$0.smali",
+        "dev/nino/squareglass/LinnEvents$1.smali",
+        "dev/nino/squareglass/LinnEvents$2.smali",
+        "dev/nino/squareglass/LinnEvents$3.smali",
+        "dev/nino/squareglass/LinnEvents.smali",
+        "dev/nino/squareglass/LinnNativeVolume$0.smali",
+        "dev/nino/squareglass/LinnNativeVolume.smali",
+        "dev/nino/squareglass/LinnPlayer$0.smali",
+        "dev/nino/squareglass/LinnPlayer$1$0.smali",
+        "dev/nino/squareglass/LinnPlayer$1$1.smali",
+        "dev/nino/squareglass/LinnPlayer$1.smali",
+        "dev/nino/squareglass/LinnPlayer$10.smali",
+        "dev/nino/squareglass/LinnPlayer$11.smali",
+        "dev/nino/squareglass/LinnPlayer$12.smali",
+        "dev/nino/squareglass/LinnPlayer$13.smali",
+        "dev/nino/squareglass/LinnPlayer$14.smali",
+        "dev/nino/squareglass/LinnPlayer$15.smali",
+        "dev/nino/squareglass/LinnPlayer$16.smali",
+        "dev/nino/squareglass/LinnPlayer$17.smali",
+        "dev/nino/squareglass/LinnPlayer$18.smali",
+        "dev/nino/squareglass/LinnPlayer$19.smali",
+        "dev/nino/squareglass/LinnPlayer$2$0.smali",
+        "dev/nino/squareglass/LinnPlayer$2$1.smali",
+        "dev/nino/squareglass/LinnPlayer$2.smali",
+        "dev/nino/squareglass/LinnPlayer$20.smali",
+        "dev/nino/squareglass/LinnPlayer$3.smali",
+        "dev/nino/squareglass/LinnPlayer$4.smali",
+        "dev/nino/squareglass/LinnPlayer$5.smali",
+        "dev/nino/squareglass/LinnPlayer$6.smali",
+        "dev/nino/squareglass/LinnPlayer$7.smali",
+        "dev/nino/squareglass/LinnPlayer$8.smali",
+        "dev/nino/squareglass/LinnPlayer$9.smali",
+        "dev/nino/squareglass/LinnPlayer$Action.smali",
+        "dev/nino/squareglass/LinnPlayer.smali",
+        "dev/nino/squareglass/LinnProvider$0.smali",
+        "dev/nino/squareglass/LinnProvider$1.smali",
+        "dev/nino/squareglass/LinnProvider$10.smali",
+        "dev/nino/squareglass/LinnProvider$11.smali",
+        "dev/nino/squareglass/LinnProvider$12.smali",
+        "dev/nino/squareglass/LinnProvider$13.smali",
+        "dev/nino/squareglass/LinnProvider$14.smali",
+        "dev/nino/squareglass/LinnProvider$15.smali",
+        "dev/nino/squareglass/LinnProvider$16.smali",
+        "dev/nino/squareglass/LinnProvider$17.smali",
+        "dev/nino/squareglass/LinnProvider$2.smali",
+        "dev/nino/squareglass/LinnProvider$3.smali",
+        "dev/nino/squareglass/LinnProvider$4.smali",
+        "dev/nino/squareglass/LinnProvider$5.smali",
+        "dev/nino/squareglass/LinnProvider$6.smali",
+        "dev/nino/squareglass/LinnProvider$7.smali",
+        "dev/nino/squareglass/LinnProvider$8.smali",
+        "dev/nino/squareglass/LinnProvider$9.smali",
+        "dev/nino/squareglass/LinnProvider$Device.smali",
+        "dev/nino/squareglass/LinnProvider.smali",
+        "dev/nino/squareglass/LinnQueuePlan.smali",
+        "dev/nino/squareglass/LiquidMenuSurface$0.smali",
+        "dev/nino/squareglass/LiquidMenuSurface$1.smali",
+        "dev/nino/squareglass/LiquidMenuSurface$2.smali",
+        "dev/nino/squareglass/LiquidMenuSurface$3.smali",
+        "dev/nino/squareglass/LiquidMenuSurface$4.smali",
+        "dev/nino/squareglass/LiquidMenuSurface$5.smali",
+        "dev/nino/squareglass/LiquidMenuSurface$6.smali",
+        "dev/nino/squareglass/LiquidMenuSurface$7.smali",
+        "dev/nino/squareglass/LiquidMenuSurface$WindowBackdrop.smali",
+        "dev/nino/squareglass/LiquidMenuSurface$paint$1.smali",
+        "dev/nino/squareglass/LiquidMenuSurface$paint$2.smali",
+        "dev/nino/squareglass/LiquidMenuSurface.smali",
+        "dev/nino/squareglass/MiniProgress$0.smali",
+        "dev/nino/squareglass/MiniProgress$decorate$1$1.smali",
+        "dev/nino/squareglass/MiniProgress.smali",
+        "dev/nino/squareglass/MotionPolicy.smali",
+        "dev/nino/squareglass/NativeArtworkBridge.smali",
+        "dev/nino/squareglass/NativeBackdrop$0.smali",
+        "dev/nino/squareglass/NativeBackdrop$1.smali",
+        "dev/nino/squareglass/NativeBackdrop$2.smali",
+        "dev/nino/squareglass/NativeBackdrop$3.smali",
+        "dev/nino/squareglass/NativeBackdrop$4.smali",
+        "dev/nino/squareglass/NativeBackdrop$capture$lambda$1$0$$inlined$onDispose$1.smali",
+        "dev/nino/squareglass/NativeBackdrop$capturePlayer$lambda$0$0$$inlined$onDispose$1.smali",
+        "dev/nino/squareglass/NativeBackdrop$capturePlayer$lambda$1$0$$inlined$onDispose$1.smali",
+        "dev/nino/squareglass/NativeBackdrop.smali",
+        "dev/nino/squareglass/NativeGlass$0.smali",
+        "dev/nino/squareglass/NativeGlass$1.smali",
+        "dev/nino/squareglass/NativeGlass$2.smali",
+        "dev/nino/squareglass/NativeGlass$3.smali",
+        "dev/nino/squareglass/NativeGlass$4.smali",
+        "dev/nino/squareglass/NativeGlass.smali",
+        "dev/nino/squareglass/NativeIconMotion$0.smali",
+        "dev/nino/squareglass/NativeIconMotion$State$0.smali",
+        "dev/nino/squareglass/NativeIconMotion$State.smali",
+        "dev/nino/squareglass/NativeIconMotion.smali",
+        "dev/nino/squareglass/NativeLinnBridge.smali",
+        "dev/nino/squareglass/NativeMiniGestures$0.smali",
+        "dev/nino/squareglass/NativeMiniGestures$1.smali",
+        "dev/nino/squareglass/NativeMiniGestures$2.smali",
+        "dev/nino/squareglass/NativeMiniGestures$3.smali",
+        "dev/nino/squareglass/NativeMiniGestures$decorate$2$1$1.smali",
+        "dev/nino/squareglass/NativeMiniGestures$decorate$2$1.smali",
+        "dev/nino/squareglass/NativeMiniGestures.smali",
+        "dev/nino/squareglass/NativeOutputBridge.smali",
+        "dev/nino/squareglass/NativePlayback$0.smali",
+        "dev/nino/squareglass/NativePlayback$1.smali",
+        "dev/nino/squareglass/NativePlayback$2.smali",
+        "dev/nino/squareglass/NativePlayback$3.smali",
+        "dev/nino/squareglass/NativePlayback$4.smali",
+        "dev/nino/squareglass/NativePlayback$5.smali",
+        "dev/nino/squareglass/NativePlayback$6.smali",
+        "dev/nino/squareglass/NativePlayback$7.smali",
+        "dev/nino/squareglass/NativePlayback$Entry.smali",
+        "dev/nino/squareglass/NativePlayback.smali",
+        "dev/nino/squareglass/NativePlayerPaint.smali",
+        "dev/nino/squareglass/NativePlaylistBridge.smali",
+        "dev/nino/squareglass/NativeTabs$0.smali",
+        "dev/nino/squareglass/NativeTabs$1.smali",
+        "dev/nino/squareglass/NativeTabs$2.smali",
+        "dev/nino/squareglass/NativeTabs$3.smali",
+        "dev/nino/squareglass/NativeTabs$4.smali",
+        "dev/nino/squareglass/NativeTabs$5.smali",
+        "dev/nino/squareglass/NativeTabs$6.smali",
+        "dev/nino/squareglass/NativeTabs$7.smali",
+        "dev/nino/squareglass/NativeTabs$8.smali",
+        "dev/nino/squareglass/NativeTabs.smali",
+        "dev/nino/squareglass/NativeTheme.smali",
+        "dev/nino/squareglass/NativeViewBackdrop$0.smali",
+        "dev/nino/squareglass/NativeViewBackdrop.smali",
+        "dev/nino/squareglass/OpenHome$Service.smali",
+        "dev/nino/squareglass/OpenHome.smali",
+        "dev/nino/squareglass/OutputAnchor$0.smali",
+        "dev/nino/squareglass/OutputAnchor$1.smali",
+        "dev/nino/squareglass/OutputAnchor$watch$lambda$0$0$$inlined$onDispose$1.smali",
+        "dev/nino/squareglass/OutputAnchor.smali",
+        "dev/nino/squareglass/OutputConsumer.smali",
+        "dev/nino/squareglass/OutputListener.smali",
+        "dev/nino/squareglass/OutputSelection.smali",
+        "dev/nino/squareglass/PageCoordinator$1.smali",
+        "dev/nino/squareglass/PageCoordinator$HeroDecoration.smali",
+        "dev/nino/squareglass/PageCoordinator$HeroSnapshot.smali",
+        "dev/nino/squareglass/PageCoordinator$HeroView.smali",
+        "dev/nino/squareglass/PageCoordinator$Page$0.smali",
+        "dev/nino/squareglass/PageCoordinator$Page.smali",
+        "dev/nino/squareglass/PageCoordinator-IA.smali",
+        "dev/nino/squareglass/PageCoordinator.smali",
+        "dev/nino/squareglass/PageGlass$0.smali",
+        "dev/nino/squareglass/PageGlass$1.smali",
+        "dev/nino/squareglass/PageGlass$2.smali",
+        "dev/nino/squareglass/PageGlass$3.smali",
+        "dev/nino/squareglass/PageGlass$install$1.smali",
+        "dev/nino/squareglass/PageGlass.smali",
+        "dev/nino/squareglass/PageInsets.smali",
+        "dev/nino/squareglass/PageMaterial.smali",
+        "dev/nino/squareglass/PlaybackProgress.smali",
+        "dev/nino/squareglass/PlayerArtwork$0.smali",
+        "dev/nino/squareglass/PlayerArtwork$1.smali",
+        "dev/nino/squareglass/PlayerArtwork$10.smali",
+        "dev/nino/squareglass/PlayerArtwork$11.smali",
+        "dev/nino/squareglass/PlayerArtwork$12.smali",
+        "dev/nino/squareglass/PlayerArtwork$13.smali",
+        "dev/nino/squareglass/PlayerArtwork$14.smali",
+        "dev/nino/squareglass/PlayerArtwork$15.smali",
+        "dev/nino/squareglass/PlayerArtwork$2.smali",
+        "dev/nino/squareglass/PlayerArtwork$3.smali",
+        "dev/nino/squareglass/PlayerArtwork$4.smali",
+        "dev/nino/squareglass/PlayerArtwork$5.smali",
+        "dev/nino/squareglass/PlayerArtwork$6.smali",
+        "dev/nino/squareglass/PlayerArtwork$7.smali",
+        "dev/nino/squareglass/PlayerArtwork$8.smali",
+        "dev/nino/squareglass/PlayerArtwork$9.smali",
+        "dev/nino/squareglass/PlayerArtwork$Background$1$1$1.smali",
+        "dev/nino/squareglass/PlayerArtwork$Background$1$1.smali",
+        "dev/nino/squareglass/PlayerArtwork$Frame.smali",
+        "dev/nino/squareglass/PlayerArtwork$frame$lambda$0$0$$inlined$onDispose$1.smali",
+        "dev/nino/squareglass/PlayerArtwork.smali",
+        "dev/nino/squareglass/PlayerWindow$MenuAction$0.smali",
+        "dev/nino/squareglass/PlayerWindow$MenuAction.smali",
+        "dev/nino/squareglass/PlayerWindow$Snapshot$1.smali",
+        "dev/nino/squareglass/PlayerWindow$Snapshot.smali",
+        "dev/nino/squareglass/PlayerWindow.smali",
+        "dev/nino/squareglass/ProbeDiagnostics$1.smali",
+        "dev/nino/squareglass/ProbeDiagnostics$2.smali",
+        "dev/nino/squareglass/ProbeDiagnostics.smali",
+        "dev/nino/squareglass/QueueGlass$0.smali",
+        "dev/nino/squareglass/QueueGlass$1.smali",
+        "dev/nino/squareglass/QueueGlass$2.smali",
+        "dev/nino/squareglass/QueueGlass.smali",
+        "dev/nino/squareglass/RecommendationUpdates$Pending$1.smali",
+        "dev/nino/squareglass/RecommendationUpdates$Pending.smali",
+        "dev/nino/squareglass/RecommendationUpdates$Revision.smali",
+        "dev/nino/squareglass/RecommendationUpdates.smali",
+        "dev/nino/squareglass/SearchChrome.smali",
+        "dev/nino/squareglass/SleepDeadline.smali",
+        "dev/nino/squareglass/SleepTimer$0.smali",
+        "dev/nino/squareglass/SleepTimer$1.smali",
+        "dev/nino/squareglass/SleepTimer$10.smali",
+        "dev/nino/squareglass/SleepTimer$11.smali",
+        "dev/nino/squareglass/SleepTimer$12.smali",
+        "dev/nino/squareglass/SleepTimer$13.smali",
+        "dev/nino/squareglass/SleepTimer$14.smali",
+        "dev/nino/squareglass/SleepTimer$15.smali",
+        "dev/nino/squareglass/SleepTimer$16.smali",
+        "dev/nino/squareglass/SleepTimer$17.smali",
+        "dev/nino/squareglass/SleepTimer$18.smali",
+        "dev/nino/squareglass/SleepTimer$19.smali",
+        "dev/nino/squareglass/SleepTimer$2.smali",
+        "dev/nino/squareglass/SleepTimer$20.smali",
+        "dev/nino/squareglass/SleepTimer$3.smali",
+        "dev/nino/squareglass/SleepTimer$4.smali",
+        "dev/nino/squareglass/SleepTimer$5.smali",
+        "dev/nino/squareglass/SleepTimer$6.smali",
+        "dev/nino/squareglass/SleepTimer$7.smali",
+        "dev/nino/squareglass/SleepTimer$8.smali",
+        "dev/nino/squareglass/SleepTimer$9.smali",
+        "dev/nino/squareglass/SleepTimer.smali",
+        "dev/nino/squareglass/SliderMotion$0.smali",
+        "dev/nino/squareglass/SliderMotion.smali",
+        "dev/nino/squareglass/SquareDetails$1.smali",
+        "dev/nino/squareglass/SquareDetails$Binding$0.smali",
+        "dev/nino/squareglass/SquareDetails$Binding$1.smali",
+        "dev/nino/squareglass/SquareDetails$Binding.smali",
+        "dev/nino/squareglass/SquareDetails$CoverFade.smali",
+        "dev/nino/squareglass/SquareDetails$Hero.smali",
+        "dev/nino/squareglass/SquareDetails.smali",
+        "dev/nino/squareglass/SquareExplore$Binding$0.smali",
+        "dev/nino/squareglass/SquareExplore$Binding.smali",
+        "dev/nino/squareglass/SquareExplore.smali",
+        "dev/nino/squareglass/SquareGestures$0.smali",
+        "dev/nino/squareglass/SquareGestures$1.smali",
+        "dev/nino/squareglass/SquareGestures$Preview.smali",
+        "dev/nino/squareglass/SquareGestures.smali",
+        "dev/nino/squareglass/SquareHome$0.smali",
+        "dev/nino/squareglass/SquareHome$1.smali",
+        "dev/nino/squareglass/SquareHome$2.smali",
+        "dev/nino/squareglass/SquareHome$3.smali",
+        "dev/nino/squareglass/SquareHome$4.smali",
+        "dev/nino/squareglass/SquareHome$5.smali",
+        "dev/nino/squareglass/SquareHome$6.smali",
+        "dev/nino/squareglass/SquareHome.smali",
+        "dev/nino/squareglass/SquareLibrary$0.smali",
+        "dev/nino/squareglass/SquareLibrary$1.smali",
+        "dev/nino/squareglass/SquareLibrary$2.smali",
+        "dev/nino/squareglass/SquareLibrary$3.smali",
+        "dev/nino/squareglass/SquareLibrary$4.smali",
+        "dev/nino/squareglass/SquareLibrary$5.smali",
+        "dev/nino/squareglass/SquareLibrary$6.smali",
+        "dev/nino/squareglass/SquareLibrary.smali",
+        "dev/nino/squareglass/SquareLyrics$0.smali",
+        "dev/nino/squareglass/SquareLyrics$1.smali",
+        "dev/nino/squareglass/SquareLyrics.smali",
+        "dev/nino/squareglass/SquareMarketConfig.smali",
+        "dev/nino/squareglass/SquareMarketTokens.smali",
+        "dev/nino/squareglass/SquareMenus$Presentation$0.smali",
+        "dev/nino/squareglass/SquareMenus$Presentation$1.smali",
+        "dev/nino/squareglass/SquareMenus$Presentation$2.smali",
+        "dev/nino/squareglass/SquareMenus$Presentation.smali",
+        "dev/nino/squareglass/SquareMenus.smali",
+        "dev/nino/squareglass/SquareOutput$0.smali",
+        "dev/nino/squareglass/SquareOutput$1.smali",
+        "dev/nino/squareglass/SquareOutput$2.smali",
+        "dev/nino/squareglass/SquareOutput$3.smali",
+        "dev/nino/squareglass/SquareOutput$Request.smali",
+        "dev/nino/squareglass/SquareOutput$Session$0.smali",
+        "dev/nino/squareglass/SquareOutput$Session$1.smali",
+        "dev/nino/squareglass/SquareOutput$Session$2.smali",
+        "dev/nino/squareglass/SquareOutput$Session$3.smali",
+        "dev/nino/squareglass/SquareOutput$Session$4.smali",
+        "dev/nino/squareglass/SquareOutput$Session$5.smali",
+        "dev/nino/squareglass/SquareOutput$Session$6.smali",
+        "dev/nino/squareglass/SquareOutput$Session$7.smali",
+        "dev/nino/squareglass/SquareOutput$Session$8.smali",
+        "dev/nino/squareglass/SquareOutput$Session.smali",
+        "dev/nino/squareglass/SquareOutput.smali",
+        "dev/nino/squareglass/SquarePalette.smali",
+        "dev/nino/squareglass/SquareRuntime.smali",
+        "dev/nino/squareglass/SquareScreens.smali",
+        "dev/nino/squareglass/SquareSettings$0.smali",
+        "dev/nino/squareglass/SquareSettings.smali",
+        "dev/nino/squareglass/SquareShapes.smali",
+        "dev/nino/squareglass/SquareSongMenu$0.smali",
+        "dev/nino/squareglass/SquareSongMenu$1.smali",
+        "dev/nino/squareglass/SquareSongMenu$2.smali",
+        "dev/nino/squareglass/SquareSongMenu$3.smali",
+        "dev/nino/squareglass/SquareSongMenu$4.smali",
+        "dev/nino/squareglass/SquareSongMenu$5.smali",
+        "dev/nino/squareglass/SquareSongMenu$6.smali",
+        "dev/nino/squareglass/SquareSongMenu$7.smali",
+        "dev/nino/squareglass/SquareSongMenu$8.smali",
+        "dev/nino/squareglass/SquareSongMenu$9.smali",
+        "dev/nino/squareglass/SquareSongMenu$NativeHolder.smali",
+        "dev/nino/squareglass/SquareSongMenu.smali",
+        "dev/nino/squareglass/SquareSwitchPaint.smali",
+        "dev/nino/squareglass/SquareTypography.smali",
+        "dev/nino/squareglass/SurfaceMotion$1.smali",
+        "dev/nino/squareglass/SurfaceMotion.smali",
+        "dev/nino/squareglass/SystemBarTheme.smali",
+        "dev/nino/squareglass/TimeTaste.smali",
+        "dev/nino/squareglass/TrackEndGate.smali",
+        "dev/nino/squareglass/backdrop/AndroidRuntimeShader.smali",
+        "dev/nino/squareglass/backdrop/Backdrop$DefaultImpls.smali",
+        "dev/nino/squareglass/backdrop/Backdrop.smali",
+        "dev/nino/squareglass/backdrop/BackdropEffectScope$DefaultImpls.smali",
+        "dev/nino/squareglass/backdrop/BackdropEffectScope.smali",
+        "dev/nino/squareglass/backdrop/BackdropEffectScopeImpl.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropElement.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropModifierKt$0.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropModifierKt$1.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropModifierKt$2.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropModifierKt$3.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropModifierKt.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropNode$0.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropNode$1.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropNode$2.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropNode$3.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropNode$4.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropNode$5.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropNode$6.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropNode$7.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropNode$effectScope$1.smali",
+        "dev/nino/squareglass/backdrop/DrawBackdropNode.smali",
+        "dev/nino/squareglass/backdrop/PlatformKt.smali",
+        "dev/nino/squareglass/backdrop/RuntimeShader.smali",
+        "dev/nino/squareglass/backdrop/RuntimeShaderCache.smali",
+        "dev/nino/squareglass/backdrop/RuntimeShaderCacheImpl.smali",
+        "dev/nino/squareglass/backdrop/RuntimeShaderKt.smali",
+        "dev/nino/squareglass/backdrop/backdrops/Backdrop$0.smali",
+        "dev/nino/squareglass/backdrop/backdrops/Backdrop.smali",
+        "dev/nino/squareglass/backdrop/backdrops/BackdropFreeze$0.smali",
+        "dev/nino/squareglass/backdrop/backdrops/BackdropFreeze$connection$1.smali",
+        "dev/nino/squareglass/backdrop/backdrops/BackdropFreeze.smali",
+        "dev/nino/squareglass/backdrop/backdrops/BackdropFreezeKt.smali",
+        "dev/nino/squareglass/backdrop/backdrops/BackdropKt.smali",
+        "dev/nino/squareglass/backdrop/backdrops/BackdropStaticRegionElement.smali",
+        "dev/nino/squareglass/backdrop/backdrops/BackdropStaticRegionKt.smali",
+        "dev/nino/squareglass/backdrop/backdrops/BackdropStaticRegionNode.smali",
+        "dev/nino/squareglass/backdrop/backdrops/CanvasBackdrop.smali",
+        "dev/nino/squareglass/backdrop/backdrops/CanvasBackdropKt.smali",
+        "dev/nino/squareglass/backdrop/backdrops/Combined2Backdrops.smali",
+        "dev/nino/squareglass/backdrop/backdrops/Combined3Backdrops.smali",
+        "dev/nino/squareglass/backdrop/backdrops/CombinedBackdropKt.smali",
+        "dev/nino/squareglass/backdrop/backdrops/CombinedBackdrops.smali",
+        "dev/nino/squareglass/backdrop/backdrops/EmptyBackdrop.smali",
+        "dev/nino/squareglass/backdrop/backdrops/EmptyBackdropKt.smali",
+        "dev/nino/squareglass/backdrop/backdrops/LayerBackdrop.smali",
+        "dev/nino/squareglass/backdrop/backdrops/LayerBackdropElement.smali",
+        "dev/nino/squareglass/backdrop/backdrops/LayerBackdropKt$0.smali",
+        "dev/nino/squareglass/backdrop/backdrops/LayerBackdropKt.smali",
+        "dev/nino/squareglass/backdrop/backdrops/LayerBackdropModifierKt$0.smali",
+        "dev/nino/squareglass/backdrop/backdrops/LayerBackdropModifierKt.smali",
+        "dev/nino/squareglass/backdrop/backdrops/LayerBackdropNode$0.smali",
+        "dev/nino/squareglass/backdrop/backdrops/LayerBackdropNode.smali",
+        "dev/nino/squareglass/backdrop/effects/BlurKt.smali",
+        "dev/nino/squareglass/backdrop/effects/ColorFilterKt.smali",
+        "dev/nino/squareglass/backdrop/effects/LensKt.smali",
+        "dev/nino/squareglass/backdrop/effects/RenderEffectKt.smali",
+        "dev/nino/squareglass/backdrop/highlight/Highlight$Companion.smali",
+        "dev/nino/squareglass/backdrop/highlight/Highlight.smali",
+        "dev/nino/squareglass/backdrop/highlight/HighlightElement.smali",
+        "dev/nino/squareglass/backdrop/highlight/HighlightNode$0.smali",
+        "dev/nino/squareglass/backdrop/highlight/HighlightNode.smali",
+        "dev/nino/squareglass/backdrop/highlight/HighlightStyle$Ambient.smali",
+        "dev/nino/squareglass/backdrop/highlight/HighlightStyle$Companion.smali",
+        "dev/nino/squareglass/backdrop/highlight/HighlightStyle$Default.smali",
+        "dev/nino/squareglass/backdrop/highlight/HighlightStyle$Plain.smali",
+        "dev/nino/squareglass/backdrop/highlight/HighlightStyle.smali",
+        "dev/nino/squareglass/backdrop/highlight/HighlightStyleKt.smali",
+        "dev/nino/squareglass/backdrop/internal/InverseLayerScope.smali",
+        "dev/nino/squareglass/backdrop/internal/LayerRecorderKt$0.smali",
+        "dev/nino/squareglass/backdrop/internal/LayerRecorderKt.smali",
+        "dev/nino/squareglass/backdrop/internal/OutlineKt.smali",
+        "dev/nino/squareglass/backdrop/internal/PaintKt.smali",
+        "dev/nino/squareglass/backdrop/internal/RenderEffectKt.smali",
+        "dev/nino/squareglass/backdrop/internal/ShadersKt.smali",
+        "dev/nino/squareglass/backdrop/internal/ShapeProvider$shape$1.smali",
+        "dev/nino/squareglass/backdrop/internal/ShapeProvider.smali",
+        "dev/nino/squareglass/backdrop/shadow/InnerShadow$Companion.smali",
+        "dev/nino/squareglass/backdrop/shadow/InnerShadow.smali",
+        "dev/nino/squareglass/backdrop/shadow/InnerShadowElement.smali",
+        "dev/nino/squareglass/backdrop/shadow/InnerShadowKt.smali",
+        "dev/nino/squareglass/backdrop/shadow/InnerShadowModifierKt.smali",
+        "dev/nino/squareglass/backdrop/shadow/InnerShadowNode$0.smali",
+        "dev/nino/squareglass/backdrop/shadow/InnerShadowNode.smali",
+        "dev/nino/squareglass/backdrop/shadow/Shadow$Companion.smali",
+        "dev/nino/squareglass/backdrop/shadow/Shadow.smali",
+        "dev/nino/squareglass/backdrop/shadow/ShadowElement.smali",
+        "dev/nino/squareglass/backdrop/shadow/ShadowModifierKt.smali",
+        "dev/nino/squareglass/backdrop/shadow/ShadowNode$0.smali",
+        "dev/nino/squareglass/backdrop/shadow/ShadowNode.smali",
+        "dev/nino/squareglass/material/CoroutinesKt.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$animateToValue$1$1$1.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$animateToValue$1$1$2.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$animateToValue$1$1.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$animateToValue$1.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$modifier$1$0.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$modifier$1$1.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$modifier$1$2.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$modifier$1$3.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$modifier$1.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$press$1$1.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$press$1$2.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$press$1$3.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$press$1.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$release$1$0.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$release$1$3.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$release$1$4.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$release$1$5.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$release$1$invokeSuspend$$inlined$filter$1$2$1.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$release$1$invokeSuspend$$inlined$filter$1$2.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$release$1$invokeSuspend$$inlined$filter$1.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$release$1.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$updateValue$1$1$0.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$updateValue$1$1.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$updateValue$1.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation$updateVelocity$1.smali",
+        "dev/nino/squareglass/material/DampedDragAnimation.smali",
+        "dev/nino/squareglass/material/DragGestureInspectorKt$0.smali",
+        "dev/nino/squareglass/material/DragGestureInspectorKt$1.smali",
+        "dev/nino/squareglass/material/DragGestureInspectorKt$2.smali",
+        "dev/nino/squareglass/material/DragGestureInspectorKt$inspectDragGestures$5.smali",
+        "dev/nino/squareglass/material/DragGestureInspectorKt.smali",
+        "dev/nino/squareglass/material/FloatBounds.smali",
+        "dev/nino/squareglass/material/GlassComponent.smali",
+        "dev/nino/squareglass/material/GlassEffectConfig$WhenMappings.smali",
+        "dev/nino/squareglass/material/GlassEffectConfig.smali",
+        "dev/nino/squareglass/material/GlassEffectKt$0.smali",
+        "dev/nino/squareglass/material/GlassEffectKt$1.smali",
+        "dev/nino/squareglass/material/GlassEffectKt$10.smali",
+        "dev/nino/squareglass/material/GlassEffectKt$11.smali",
+        "dev/nino/squareglass/material/GlassEffectKt$12.smali",
+        "dev/nino/squareglass/material/GlassEffectKt$13.smali",
+        "dev/nino/squareglass/material/GlassEffectKt$14.smali",
+        "dev/nino/squareglass/material/GlassEffectKt$2.smali",
+        "dev/nino/squareglass/material/GlassEffectKt$3.smali",
+        "dev/nino/squareglass/material/GlassEffectKt$4.smali",
+        "dev/nino/squareglass/material/GlassEffectKt$5.smali",
+        "dev/nino/squareglass/material/GlassEffectKt$6.smali",
+        "dev/nino/squareglass/material/GlassEffectKt$7.smali",
+        "dev/nino/squareglass/material/GlassEffectKt$8.smali",
+        "dev/nino/squareglass/material/GlassEffectKt$9.smali",
+        "dev/nino/squareglass/material/GlassEffectKt.smali",
+        "dev/nino/squareglass/material/GlassStyle.smali",
+        "dev/nino/squareglass/material/InkKt$LocalInkOverride$1.smali",
+        "dev/nino/squareglass/material/InkKt.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$0.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$1.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$gestureModifier$1$0.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$gestureModifier$1$1$1$1.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$gestureModifier$1$1$1$2.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$gestureModifier$1$1$1.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$gestureModifier$1$1.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$gestureModifier$1$2$1$1.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$gestureModifier$1$2$1$2.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$gestureModifier$1$2$1.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$gestureModifier$1$2.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$gestureModifier$1$3$1$1.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$gestureModifier$1$3$1$2.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$gestureModifier$1$3$1.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$gestureModifier$1$3.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$gestureModifier$1$4$1.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight$gestureModifier$1.smali",
+        "dev/nino/squareglass/material/InteractiveHighlight.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabKt$0.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabKt$1.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabKt$2.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabKt$3.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabKt.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$0.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$1.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$10.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$11.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$12.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$13.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$14.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$15.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$16.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$17.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$18.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$19.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$2.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$20.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$21.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$22.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$23.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$24.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$3.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$4.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$5.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$6.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$7.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$8.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$9.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$LiquidBottomTabs$1$1$1$0.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$LiquidBottomTabs$1$1$1$2.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$LiquidBottomTabs$1$1$1.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$LiquidBottomTabs$1$dampedDragAnimation$1$2$1.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt$LiquidBottomTabs$1$dampedDragAnimation$1$4$1.smali",
+        "dev/nino/squareglass/material/LiquidBottomTabsKt.smali",
+        "dev/nino/squareglass/material/shapes/AdvancedContinuity.smali",
+        "dev/nino/squareglass/material/shapes/Continuity$Companion.smali",
+        "dev/nino/squareglass/material/shapes/Continuity$DefaultImpls.smali",
+        "dev/nino/squareglass/material/shapes/Continuity.smali",
+        "dev/nino/squareglass/material/shapes/ContinuousCapsuleImpl.smali",
+        "dev/nino/squareglass/material/shapes/ContinuousRectangleImpl.smali",
+        "dev/nino/squareglass/material/shapes/ContinuousRoundedRectangle.smali",
+        "dev/nino/squareglass/material/shapes/ContinuousRoundedRectangleKt.smali",
+        "dev/nino/squareglass/material/shapes/LerpContinuousRoundedRectangle.smali",
+        "dev/nino/squareglass/material/shapes/LerpContinuousRoundedRectangleKt.smali",
+        "dev/nino/squareglass/material/shapes/LerpCornerSize.smali",
+        "dev/nino/squareglass/material/shapes/MathUtilsKt.smali",
+        "dev/nino/squareglass/material/shapes/continuities/G0Continuity.smali",
+        "dev/nino/squareglass/material/shapes/continuities/G1Continuity.smali",
+        "dev/nino/squareglass/material/shapes/continuities/G2Continuity.smali",
+        "dev/nino/squareglass/material/shapes/continuities/G2ContinuityKt.smali",
+        "dev/nino/squareglass/material/shapes/continuities/G2ContinuityProfile$Companion.smali",
+        "dev/nino/squareglass/material/shapes/continuities/G2ContinuityProfile.smali",
+        "dev/nino/squareglass/material/shapes/continuities/G2ContinuityProfileKt.smali",
+        "dev/nino/squareglass/material/shapes/core/CubicBezier.smali",
+        "dev/nino/squareglass/material/shapes/core/Point$Companion.smali",
+        "dev/nino/squareglass/material/shapes/core/Point.smali",
+        "dev/nino/squareglass/material/shapes/core/PointKt.smali",
+        "dev/nino/squareglass/material/shapes/path/PathSegment$Arc.smali",
+        "dev/nino/squareglass/material/shapes/path/PathSegment$Circle.smali",
+        "dev/nino/squareglass/material/shapes/path/PathSegment$Cubic.smali",
+        "dev/nino/squareglass/material/shapes/path/PathSegment$Line.smali",
+        "dev/nino/squareglass/material/shapes/path/PathSegment.smali",
+        "dev/nino/squareglass/material/shapes/path/PathSegmentsBuilder.smali",
+        "dev/nino/squareglass/material/shapes/path/PathSegmentsBuilderKt.smali",
+        "dev/nino/squareglass/material/shapes/path/PathSegmentsKt.smali"
+      ],
+      "title": "Liquidify \u00b7 Glass navigation",
+      "description": "AndroidLiquidGlass navigation, mini-player and runtime design settings. Keeps native TIDAL routes and actions. Requires Liquidify Manager 1.0.0 Beta.",
+      "default": true,
+      "disables": [
+        "EnableLegacyUi",
+        "MiniPlayerRedesign"
+      ],
+      "advancedOptions": [
+        {
+          "type": "choice",
+          "key": "theme",
+          "title": "Theme",
+          "entries": [
+            "System",
+            "Light",
+            "Dark"
+          ],
+          "values": [
+            "0x0",
+            "0x1",
+            "0x2"
+          ],
+          "defaultIndex": 0,
+          "token": "RL_SQUARE_THEME_MODE",
+          "inline": true
+        }
+      ]
+    },
+    {
+      "id": "LiquidifyTheme",
+      "source": "liquidify",
+      "order": -20,
+      "fileNames": [
+        "050-square-wave-colors.patch",
+        "051-square-wave-theme.patch",
+        "052-square-market-colors.patch",
+        "053-square-market-system-theme.patch",
+        "054-square-wave-corners.patch",
+        "055-square-wave-one-colors.patch",
+        "056-square-market-tokens.patch",
+        "060-square-home-surface.patch",
+        "061-square-home-appbar.patch",
+        "062-square-home-refresh.patch",
+        "063-square-mini-contrast.patch",
+        "064-square-home-heading.patch",
+        "065-square-home-error.patch",
+        "066-square-home-loading.patch",
+        "067-square-primary-row.patch",
+        "068-square-text-row.patch",
+        "069-square-artist-caption.patch",
+        "070-square-artwork-corners.patch",
+        "071-square-player-background.patch",
+        "072-square-player-blur-film.patch",
+        "073-square-player-controls.patch",
+        "074-square-lyrics-contrast.patch",
+        "075-square-seek-track.patch",
+        "076-square-seek-thumb.patch",
+        "077-square-player-action-film.patch",
+        "078-square-player-glass-buttons.patch",
+        "079-square-mini-marquee-clip.patch",
+        "080-square-player-artwork.patch",
+        "081-square-broadcast-icon.patch",
+        "082-square-toolbar-icons.patch",
+        "083-square-lyrics-viewport.patch",
+        "084-square-home-filters.patch",
+        "085-square-home-shortcuts.patch",
+        "086-square-home-shortcut-icon.patch",
+        "087-square-home-toolbar-surface.patch",
+        "088-square-library-grid.patch",
+        "089-square-home-artwork-shadow.patch",
+        "090-square-context-menu-presentation.patch",
+        "091-square-context-menu-dismiss.patch",
+        "092-square-context-menu-contrast.patch",
+        "093-square-menu-anchor.patch",
+        "094-square-settings-page.patch",
+        "095-square-settings-cards.patch",
+        "096-square-switch-contrast.patch",
+        "097-square-settings-toggle-cards.patch",
+        "098-square-explore-page.patch",
+        "099-square-native-search-field.patch",
+        "100-square-module-header-contrast.patch",
+        "101-square-mix-page.patch",
+        "102-square-mix-header.patch",
+        "103-square-track-artwork.patch",
+        "104-square-collection-track-artwork.patch",
+        "105-square-legacy-track-artwork.patch",
+        "106-square-runtime-theme.patch",
+        "107-square-design-settings.patch",
+        "108-square-album-header.patch",
+        "109-square-player-artwork-background.patch",
+        "110-square-player-background-contrast.patch",
+        "111-square-player-secondary-bar.patch",
+        "112-square-player-footer-s3.patch",
+        "113-square-player-footer-e5.patch",
+        "114-square-player-footer-l0.patch",
+        "115-square-playlist-hero.patch",
+        "132-square-mini-gestures.patch",
+        "133-square-listening-observer.patch",
+        "134-square-home-actions.patch",
+        "136-square-clear-listening-on-logout.patch",
+        "137-square-cover-page-color.patch",
+        "138-square-player-cover-fade.patch",
+        "139-square-player-cover-spacing.patch",
+        "140-square-native-tab-feedback.patch",
+        "141-square-accessory-press-feedback.patch",
+        "142-square-player-top-edge.patch",
+        "143-square-player-menu-source.patch",
+        "144-square-queue-glass.patch",
+        "145-square-text-field-glass.patch",
+        "146-square-gesture-mini-controls.patch",
+        "147-square-recommendation-batch.patch",
+        "148-square-recommendation-result.patch",
+        "149-square-recommendation-position.patch",
+        "150-square-search-input-container.patch",
+        "151-square-search-input-cursor.patch",
+        "152-square-favorite-motion.patch",
+        "153-square-settings-icon-motion.patch",
+        "154-square-collection-settings-motion.patch",
+        "155-square-native-favorite-motion.patch",
+        "156-square-slider-thumb-motion.patch",
+        "157-square-output-popup.patch",
+        "158-square-output-anchor.patch",
+        "159-square-linn-provider.patch",
+        "160-square-linn-player.patch"
+      ],
+      "requires": [
+        "LiquidifyCore"
+      ],
+      "title": "Liquidify \u00b7 Design and gestures",
+      "description": "Anchored Liquid Glass Output popup with native TIDAL devices and an integrated Linn OpenHome provider. Device-side TIDAL queue, central playback adapter, remote volume and reconnect. Requires TIDAL sign-in for the renderer through the Linn app. Beta; see LINN_OUTPUT.md for tested scope.",
+      "default": true
+    },
+    {
+      "id": "LiquidifyTypography",
+      "source": "liquidify",
+      "order": -10,
+      "fileNames": [],
+      "requires": [
+        "LiquidifyCore"
+      ],
+      "title": "Liquidify \u00b7 Typography",
+      "description": "Static Inter font instances, with original labels and accessibility text retained.",
+      "default": true
+    },
+    {
+      "id": "EnableLegacyUi",
+      "order": 10,
+      "fileNames": [
+        "enable-legacy-ui.patch"
+      ],
+      "title": "Enable Legacy UI",
+      "description": "[This patch will stop working soon] - Replaces the New Compose based UI with the Legacy UI (disables player-market-ui feature flag)",
+      "default": false,
+      "requires": [
+        "DebugMenuUnlock"
+      ],
+      "disables": [
+        "LyricsRlApi",
+        "PlayerBackdrop",
+        "QualityBadgeColors",
+        "PlayerMovePlayingFrom",
+        "PlayerOneHanded",
+        "LyricsProgressPill",
+        "LyricsDisableCover",
+        "LyricsReplaceLyricsButton",
+        "LyricsReplaceShareButton",
+        "LyricsKeepControlsVisible"
+      ]
+    },
+    {
+      "id": "LyricsRlApi",
+      "order": 20,
+      "fileNames": [
+        "lyrics-rl-api.patch",
+        "lyrics-rl-api-observer.patch",
+        "lyrics-rl-api-isrc.patch"
+      ],
+      "title": "Radiant Lyrics API - WIP",
+      "description": "Use Radiant Lyrics API to fetch Lyrics (Syllable Level & Higher Quality)",
+      "default": false,
+      "defaultVariantIndex": 0,
+      "variants": [
+        {
+          "title": "Line",
+          "fileNames": []
+        },
+        {
+          "title": "Word",
+          "fileNames": [
+            "lyrics-rl-api-word.patch"
+          ]
+        },
+        {
+          "title": "Syllable",
+          "fileNames": [
+            "lyrics-rl-api-syllable.patch"
+          ]
+        }
+      ],
+      "extensionFiles": [
+        "radiant/RLAPILyricsHook.smali",
+        "radiant/RLAPILyricsWorker.smali",
+        "radiant/IsrcCache.smali",
+        "radiant/WordLyrics.smali",
+        "radiant/WordLyricsTick.smali",
+        "radiant/SylBrush.smali",
+        "radiant/SylLayout.smali"
+      ],
+      "advancedOptions": [
+        {
+          "type": "toggle",
+          "key": "romanize",
+          "title": "Romanization",
+          "description": "Return a romanized transcription and show that instead of the original script",
+          "default": false,
+          "token": "RL_ROMANIZE",
+          "inline": true
+        },
+        {
+          "type": "toggle",
+          "key": "synthesize",
+          "title": "WIP | AI Generate Syllables",
+          "description": "[Only works with API results] - Generates Syllable timings from Line timings using a self trained AI model ",
+          "default": false,
+          "inline": true,
+          "token": "RL_SYNTHESIZE"
+        },
+        {
+          "type": "toggle",
+          "key": "context_aware",
+          "title": "Context Aware Lyrics",
+          "description": "Display voice context cues (adlibs and duet singers get displayed seperately)",
+          "default": true,
+          "token": "RL_CTX_ON"
+        },
+        {
+          "type": "choice",
+          "key": "context_aware_mode",
+          "title": "Show",
+          "description": "",
+          "entries": [
+            "Adlibs",
+            "Singers",
+            "Both"
+          ],
+          "values": [
+            "0x1",
+            "0x2",
+            "0x3"
+          ],
+          "defaultIndex": 0,
+          "requiresOption": "context_aware",
+          "token": "RL_CTX"
+        }
+      ]
+    },
+    {
+      "id": "PlayerBackdrop",
+      "order": 30,
+      "fileNames": [],
+      "title": "Player Backdrop",
+      "description": "Swap the player backdrop for the Kawarp shader, or fine-tune TIDAL's own blurred cover",
+      "default": true,
+      "defaultVariantIndex": 1,
+      "variants": [
+        {
+          "title": "Tidal",
+          "fileNames": [
+            "player-backdrop-playback.patch"
+          ],
+          "extensionFiles": [
+            "radiant/BackdropFx.smali"
+          ]
+        },
+        {
+          "title": "Radiant",
+          "fileNames": [
+            "player-backdrop-kawarp.patch"
+          ],
+          "extensionFiles": [
+            "radiant/Kawarp.smali",
+            "dev/kawarp/KawarpEngine.smali"
+          ],
+          "minSdk": 33
+        }
+      ],
+      "advancedOptions": [
+        {
+          "type": "slider",
+          "key": "blur_strength",
+          "title": "Blur Strength",
+          "description": "The value of Blur applied to the backdrop cover",
+          "default": 50,
+          "min": 0,
+          "max": 100,
+          "steps": 19,
+          "displayAsPercent": true,
+          "token": "RL_BLUR",
+          "encode": {
+            "kind": "int",
+            "scale": 1.0
+          },
+          "requiresVariant": 0
+        },
+        {
+          "type": "slider",
+          "key": "contrast",
+          "title": "Contrast",
+          "description": "The value of Contrast applied to the backdrop cover",
+          "default": 50,
+          "min": 0,
+          "max": 100,
+          "steps": 19,
+          "displayAsPercent": true,
+          "token": "RL_CONTRAST",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.02
+          },
+          "requiresVariant": 0
+        },
+        {
+          "type": "slider",
+          "key": "saturation",
+          "title": "Saturation",
+          "description": "The value of Saturation applied to the backdrop cover",
+          "default": 50,
+          "min": 0,
+          "max": 100,
+          "steps": 19,
+          "displayAsPercent": true,
+          "token": "RL_SATURATION",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.02
+          },
+          "requiresVariant": 0
+        },
+        {
+          "type": "slider",
+          "key": "brightness",
+          "title": "Brightness",
+          "description": "The value of Brightness applied to the backdrop cover",
+          "default": 50,
+          "min": 0,
+          "max": 100,
+          "steps": 19,
+          "displayAsPercent": true,
+          "token": "RL_BRIGHTNESS",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.02
+          },
+          "requiresVariant": 0
+        },
+        {
+          "type": "toggle",
+          "key": "kawarp_reactive",
+          "title": "Playback Reactive",
+          "description": "Cover shader reacts to playback state by freezing/resuming",
+          "default": true,
+          "token": "RL_KW_REACTIVE",
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_blur",
+          "title": "Blur Passes",
+          "description": "Kawase blur passes, higher is softer but costs more GPU",
+          "default": 6,
+          "min": 1,
+          "max": 40,
+          "steps": 38,
+          "displayAsPercent": false,
+          "token": "RL_KW_BLUR",
+          "encode": {
+            "kind": "int",
+            "scale": 1.0
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_warp",
+          "title": "Warp Intensity",
+          "description": "Strength of the fluidity effect",
+          "default": 100,
+          "min": 0,
+          "max": 100,
+          "steps": 19,
+          "displayAsPercent": true,
+          "token": "RL_KW_WARP",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.01
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_speed",
+          "title": "Animation Speed",
+          "description": "How fast the backdrop flows",
+          "default": 175,
+          "min": 0,
+          "max": 500,
+          "steps": 19,
+          "displayAsPercent": true,
+          "token": "RL_KW_SPEED",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.01
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_scale",
+          "title": "Backdrop Scale",
+          "description": "Zoom level of the effect",
+          "default": 100,
+          "min": 10,
+          "max": 400,
+          "steps": 12,
+          "displayAsPercent": true,
+          "token": "RL_KW_SCALE",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.01
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_contrast",
+          "title": "Contrast",
+          "description": "Contrast of the backdrop",
+          "default": 100,
+          "min": 0,
+          "max": 300,
+          "steps": 11,
+          "displayAsPercent": true,
+          "token": "RL_KW_CONTRAST",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.01
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_saturation",
+          "title": "Saturation",
+          "description": "Colour intensity of the backdrop",
+          "default": 100,
+          "min": 0,
+          "max": 400,
+          "steps": 15,
+          "displayAsPercent": true,
+          "token": "RL_KW_SAT",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.01
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_brightness",
+          "title": "Brightness",
+          "description": "The value of Brightness applied to the backdrop",
+          "default": 100,
+          "min": 0,
+          "max": 200,
+          "steps": 19,
+          "displayAsPercent": true,
+          "token": "RL_KW_BRIGHT",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.01
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_darken",
+          "title": "Auto Darken Bright Covers",
+          "description": "Prevents bright covers from making text unreadable",
+          "default": 80,
+          "min": 0,
+          "max": 100,
+          "steps": 19,
+          "displayAsPercent": true,
+          "token": "RL_KW_DARKEN",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.01
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_dither",
+          "title": "Dithering",
+          "description": "Breaks up color banding in smooth gradients",
+          "default": 15,
+          "min": 0,
+          "max": 100,
+          "steps": 19,
+          "displayAsPercent": false,
+          "token": "RL_KW_DITHER",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.001
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "toggle",
+          "key": "cover_everywhere",
+          "title": "Cover Everywhere - WIP",
+          "description": "Applies TIDAL's native blurred album-art backdrop to every Compose based page (Home & Collection)",
+          "default": false,
+          "inline": true,
+          "fileNames": [
+            "home-backdrop.patch",
+            "collection-backdrop.patch",
+            "cover-capture.patch"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "QualityBadgeColors",
+      "order": 36,
+      "fileNames": [
+        "player-quality-badge-colors.patch"
+      ],
+      "title": "Quality Badge Colors",
+      "description": "Brings color back to the player quality badge.",
+      "default": true
+    },
+    {
+      "id": "PlayerMovePlayingFrom",
+      "order": 37,
+      "fileNames": [
+        "player-move-playing-from.patch"
+      ],
+      "extensionFiles": [
+        "radiant/PlayingFrom.smali"
+      ],
+      "title": "Playing From",
+      "description": "Shows the source name (playlist/album/mix) above the track title",
+      "default": true
+    },
+    {
+      "id": "PlayerOneHanded",
+      "order": 38,
+      "fileNames": [
+        "player-one-handed.patch"
+      ],
+      "title": "One-Handed Mode",
+      "description": "Mirrors the bottom player buttons left-to-right for easier one-handed reach.",
+      "default": false
+    },
+    {
+      "id": "SwipeToQueue",
+      "order": 39,
+      "fileNames": [
+        "swipe-to-queue.patch",
+        "swipe-to-queue-compose.patch"
+      ],
+      "extensionFiles": [
+        "radiant/gestures/queue/SwipeToQueue.smali",
+        "radiant/gestures/queue/QueueSwipeRemove.smali",
+        "radiant/gestures/queue/QueueRequest.smali",
+        "radiant/gestures/queue/QueueRowResolver.smali",
+        "radiant/gestures/queue/QueueExecutor.smali",
+        "radiant/gestures/queue/FavoriteTracksResolver.smali",
+        "radiant/gestures/queue/DynamicTrackResolver.smali",
+        "radiant/gestures/queue/MyAlbumsResolver.smali",
+        "radiant/gestures/queue/MyPlaylistsResolver.smali",
+        "radiant/gestures/queue/MyMixesAndRadioResolver.smali",
+        "radiant/gestures/queue/SearchAlbumsResolver.smali",
+        "radiant/gestures/queue/SearchPlaylistsResolver.smali",
+        "radiant/gestures/queue/PlaylistItemsResolver.smali",
+        "radiant/gestures/queue/UnifiedSearchResolver.smali",
+        "radiant/gestures/queue/ComposeSwipeAction.smali",
+        "radiant/gestures/queue/ComposeSwipeState.smali",
+        "radiant/gestures/queue/ComposeSwipeState$Gesture.smali",
+        "radiant/gestures/queue/ComposeSwipeState$Draw.smali",
+        "radiant/gestures/queue/ComposeSwipeState$ResetAnimator.smali",
+        "radiant/gestures/queue/ComposeTapGuard.smali",
+        "radiant/gestures/queue/AlbumItemQueueAction.smali",
+        "radiant/gestures/queue/DynamicTrackQueueEvent.smali",
+        "radiant/gestures/queue/DynamicTrackQueueAction.smali",
+        "radiant/gestures/queue/DynamicTrackQueue.smali",
+        "radiant/gestures/queue/ViewAllTrackQueueAction.smali",
+        "radiant/gestures/queue/ViewAllTrackQueue.smali",
+        "radiant/gestures/queue/ComposeSearchQueueEvent.smali",
+        "radiant/gestures/queue/ComposeSearchQueueAction.smali",
+        "radiant/gestures/queue/ComposeSearchQueue.smali",
+        "radiant/gestures/queue/FeedResolver.smali",
+        "radiant/gestures/queue/ArtistTrackCreditsQueueEvent.smali",
+        "radiant/gestures/queue/ArtistTrackCreditsQueueAction.smali",
+        "radiant/gestures/queue/ArtistTrackCreditsQueue.smali",
+        "radiant/gestures/queue/DynamicMediaQueueEvent.smali",
+        "radiant/gestures/queue/CompactGridMediaQueueAction.smali",
+        "radiant/gestures/queue/VerticalMediaQueueAction.smali",
+        "radiant/gestures/queue/PublicPlaylistQueueAction.smali",
+        "radiant/gestures/queue/DynamicMediaQueue.smali",
+        "radiant/gestures/queue/SuggestionsResolver.smali"
+      ],
+      "title": "Swipe to Queue",
+      "description": "Swipe on tracks/albums/playlists to add them to the play queue (and more actions)",
+      "default": false,
+      "advancedOptions": [
+        {
+          "type": "choice",
+          "key": "left_action",
+          "title": "Left Swipe Action",
+          "entries": [
+            "Disabled",
+            "Play next",
+            "Add to queue",
+            "Add to playlist"
+          ],
+          "values": [
+            "0x0",
+            "0x1",
+            "0x2",
+            "0x3"
+          ],
+          "defaultIndex": 2,
+          "inline": true,
+          "distinctFrom": "right_action",
+          "token": "RL_SWIPE_TO_QUEUE_LEFT_ACTION"
+        },
+        {
+          "type": "choice",
+          "key": "right_action",
+          "title": "Right Swipe Action",
+          "entries": [
+            "Disabled",
+            "Play next",
+            "Add to queue",
+            "Add to playlist"
+          ],
+          "values": [
+            "0x0",
+            "0x1",
+            "0x2",
+            "0x3"
+          ],
+          "defaultIndex": 0,
+          "inline": true,
+          "distinctFrom": "left_action",
+          "token": "RL_SWIPE_TO_QUEUE_RIGHT_ACTION"
+        },
+        {
+          "type": "choice",
+          "key": "remove_direction",
+          "title": "Remove Track from Queue",
+          "entries": [
+            "Left swipe",
+            "Right swipe",
+            "Both directions"
+          ],
+          "values": [
+            "0x4",
+            "0x8",
+            "0xc"
+          ],
+          "defaultIndex": 0,
+          "forceDropdown": true,
+          "inline": true,
+          "token": "RL_SWIPE_TO_QUEUE_REMOVE_DIRECTION"
+        },
+        {
+          "type": "color",
+          "key": "background_color",
+          "title": "Add to Queue Color",
+          "default": -14408663,
+          "token": "RL_SWIPE_TO_QUEUE_ADD_COLOR"
+        },
+        {
+          "type": "color",
+          "key": "play_next_color",
+          "title": "Play Next Color",
+          "default": -14408663,
+          "token": "RL_SWIPE_TO_QUEUE_PLAY_NEXT_COLOR"
+        },
+        {
+          "type": "color",
+          "key": "add_to_playlist_color",
+          "title": "Add to Playlist Color",
+          "default": -14408663,
+          "token": "RL_SWIPE_TO_QUEUE_ADD_TO_PLAYLIST_COLOR"
+        }
+      ]
+    },
+    {
+      "id": "LyricsProgressPill",
+      "order": 40,
+      "fileNames": [
+        "lyrics-progress-pill.patch",
+        "lyrics-fade-region.patch"
+      ],
+      "title": "Lyrics Progress Pill",
+      "description": "Restores the old Track Progress Pill in the top of the Lyrics screen!",
+      "default": true,
+      "requires": [
+        "LyricsDisableCover",
+        "LyricsReplaceLyricsButton",
+        "LyricsReplaceShareButton"
+      ]
+    },
+    {
+      "id": "LyricsDisableCover",
+      "order": 41,
+      "fileNames": [
+        "lyrics-disable-cover.patch"
+      ],
+      "title": "Disable Lyrics Cover",
+      "description": "Removes the mini track cover from the lyrics screen.",
+      "default": true
+    },
+    {
+      "id": "LyricsReplaceLyricsButton",
+      "order": 42,
+      "fileNames": [
+        "lyrics-replace-lyrics-button.patch",
+        "lyrics-sparkle-conditional-visibility.patch"
+      ],
+      "title": "Replace Lyrics Button",
+      "description": "Replaces the Lyrics button with the RL Sparkle!",
+      "default": true
+    },
+    {
+      "id": "LyricsReplaceShareButton",
+      "order": 43,
+      "fileNames": [
+        "lyrics-replace-share-button.patch"
+      ],
+      "title": "Replace Share Button",
+      "description": "Replaces the share button with the Tidal Connect button from the top of the screen. (it's in the menu already)",
+      "default": true
+    },
+    {
+      "id": "MiniPlayerRedesign",
+      "order": 50,
+      "fileNames": [],
+      "title": "Redesigned Mini-Player",
+      "description": "Integrates the Seekbar into the control panel at the bottom of the screen.",
+      "default": false,
+      "defaultVariantIndex": 2,
+      "variants": [
+        {
+          "title": "Floating",
+          "fileNames": []
+        },
+        {
+          "title": "Grey",
+          "fileNames": [
+            "mini-player-grey.patch"
+          ]
+        },
+        {
+          "title": "Black",
+          "fileNames": [
+            "mini-player-black.patch"
+          ]
+        }
+      ],
+      "advancedOptions": [
+        {
+          "type": "toggle",
+          "key": "dynamic_bg",
+          "title": "Mini-Player Dynamic Background",
+          "description": "Colorizes the Mini-Player depending on the currently playing track.",
+          "default": false,
+          "inline": true,
+          "fileNames": [
+            "mini-player-dynamic-bg.patch"
+          ],
+          "extensionFiles": [
+            "radiant/MiniPlayerBackground.smali"
+          ],
+          "hidesVariants": [
+            2
+          ],
+          "relabelVariants": {
+            "1": "Legacy"
+          }
+        },
+        {
+          "type": "toggle",
+          "key": "border",
+          "title": "Progress Border",
+          "description": "Draws an animated progress ring around the floating mini-player. Requires the Floating style.",
+          "default": false,
+          "requiresVariant": 0,
+          "fileNames": [
+            "mini-player-floating-border.patch"
+          ],
+          "extensionFiles": [
+            "radiant/MiniSeekerFloating.smali"
+          ]
+        },
+        {
+          "type": "toggle",
+          "key": "gestures",
+          "title": "Mini-Player Gestures",
+          "description": "Adds swipe up gesture to the mini-player to reopen the player",
+          "default": true,
+          "fileNames": [
+            "mini-player-up-gesture.patch",
+            "player-swipe-gesture.patch",
+            "lyrics-gesture-scroll-guard.patch"
+          ],
+          "extensionFiles": [
+            "radiant/gestures/miniplayer/MiniPlayerGestures.smali",
+            "radiant/gestures/miniplayer/MiniPlayerGestures$Gesture.smali",
+            "radiant/gestures/miniplayer/MiniPlayerGestures$FeedbackLayer.smali",
+            "radiant/gestures/miniplayer/MiniPlayerGestures$FeedbackResetAnimator.smali",
+            "radiant/gestures/miniplayer/MiniPlayerGestures$RootGesture.smali",
+            "radiant/gestures/miniplayer/MiniPlayerGestures$ApplyPending.smali",
+            "radiant/gestures/lyrics/LyricsDrag.smali",
+            "radiant/gestures/lyrics/LyricsDrag$Guard.smali"
+          ]
+        },
+        {
+          "type": "choice",
+          "key": "swipe_up_drag",
+          "title": "Swipe Up Style",
+          "entries": [
+            "Static",
+            "Drag"
+          ],
+          "values": [
+            "0x0",
+            "0x1"
+          ],
+          "defaultIndex": 1,
+          "requiresOption": "gestures",
+          "token": "RL_MINI_PLAYER_SWIPE_UP_DRAG"
+        },
+        {
+          "type": "toggle",
+          "key": "next_prev",
+          "title": "Next/Previous Gestures",
+          "description": "Swipe left or right on the mini-player to skip tracks.",
+          "default": false,
+          "requiresOption": "gestures",
+          "fileNames": [
+            "mini-player-left-right-gesture.patch"
+          ],
+          "extensionFiles": [
+            "radiant/gestures/miniplayer/MiniPlayerTrackGestures.smali",
+            "radiant/gestures/miniplayer/MiniPlayerTrackGestures$Gesture.smali",
+            "radiant/gestures/miniplayer/MiniPlayerTrackGestures$OffsetLayer.smali",
+            "radiant/gestures/miniplayer/MiniPlayerTrackGestures$ResetAnimator.smali",
+            "radiant/gestures/miniplayer/MiniPlayerTrackGestures$TextDraw.smali",
+            "com/tidal/android/feature/appscaffold/ui/r$c.smali"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LyricsKeepControlsVisible",
+      "order": 60,
+      "fileNames": [
+        "lyrics-keep-controls-visible.patch"
+      ],
+      "extensionFiles": [
+        "radiant/LyricsReinitGuard.smali"
+      ],
+      "title": "Keep Controls Visible",
+      "description": "Inverts the auto-hide behavior on the lyrics screen, playback controls stay visible by default and only hide when you tap them off. Also stops the open lyrics view from randomly closing when the player re-fetches the same track.",
+      "default": true
+    },
+    {
+      "id": "WazeIntegration",
+      "order": 90,
+      "category": "integration",
+      "pathLocked": true,
+      "fileNames": [
+        "integration-waze-playback.patch"
+      ],
+      "extensionFiles": [
+        "radiant/WazeInitReceiver.smali",
+        "radiant/WazeServiceConnection.smali"
+      ],
+      "title": "Waze Integration",
+      "description": "Control TIDAL playback from the Waze app",
+      "default": true,
+      "advancedOptions": [
+        {
+          "type": "choice",
+          "key": "browse_root",
+          "title": "Media Menu",
+          "entries": [
+            "Auto Menu",
+            "Home",
+            "Recents"
+          ],
+          "values": [
+            "ROOT_AUTO",
+            "HOME_V2::home_page_v2_id",
+            "RECENTLY_PLAYED::home/pages/CONTINUE_LISTEN_TO/view-all"
+          ],
+          "defaultIndex": 0,
+          "token": "RL_WAZE_ROOT_ID"
+        },
+        {
+          "type": "color",
+          "key": "accent_color",
+          "title": "Accent Color",
+          "default": -16747037,
+          "token": "RL_WAZE_THEME_COLOR"
+        }
+      ]
+    },
+    {
+      "id": "PebbleIntegration",
+      "order": 91,
+      "category": "integration",
+      "fileNames": [
+        "integration-pebble-playback.patch",
+        "integration-pebble-lyrics.patch"
+      ],
+      "extensionFiles": [
+        "radiant/PebbleBridge.smali",
+        "radiant/PebbleBridge$1.smali",
+        "radiant/PebbleBridge$2.smali"
+      ],
+      "title": "Pebble Watch",
+      "description": "Shows synced lyrics on your Pebble Time 2 when listening, Everything is configured and managed in the Pebble App",
+      "default": false,
+      "requires": [
+        "LyricsRlApi"
+      ],
+      "companionApp": {
+        "storeId": "02b779dcf9084fecb0375df1",
+        "storeSource": "https://appstore-api.repebble.com/api"
+      }
+    },
+    {
+      "id": "DebugMenuUnlock",
+      "order": 100,
+      "fileNames": [
+        "debug-menu-unlock.patch"
+      ],
+      "title": "Unlock Debug Menu",
+      "description": "Reveals TIDAL's hidden Debug Menu in Settings. (Unlocks Feature Flags & the legacy Debug Options)",
+      "default": false
+    }
+  ],
+  "releaseVersion": "1.0.0-beta",
+  "name": "Liquidify",
+  "editor": "ninocss",
+  "compatibility": {
+    "apkSha256": "18807fa8a192d223635df7dabe388f404767b09b0a3e6dbdeed53cbb800f8311",
+    "minSdk": 33,
+    "capabilities": [
+      "exactBaseSha256",
+      "squareResourcesV1",
+      "squareRuntimeThemeV1"
+    ],
+    "strictSquarePatches": true
+  },
+  "designResources": {
+    "patchId": "LiquidifyTheme",
+    "palette": [
+      {
+        "id": "7f060019",
+        "name": "accentBright",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "ff66fff3",
+        "light": "ff454951",
+        "dark": "ffd5d8df"
+      },
+      {
+        "id": "7f06001a",
+        "name": "accentBrighter",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "ff99fff7",
+        "light": "ff626873",
+        "dark": "ffe8eaf0"
+      },
+      {
+        "id": "7f06001b",
+        "name": "accentDark",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "ff3d8f88",
+        "light": "ff353941",
+        "dark": "ffb4b8c4"
+      },
+      {
+        "id": "7f06001c",
+        "name": "accentDarker",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "ff244240",
+        "light": "ff24272e",
+        "dark": "ff828796"
+      },
+      {
+        "id": "7f06001d",
+        "name": "accentDarkest",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "ff141f1e",
+        "light": "ff191b22",
+        "dark": "ff5d626d"
+      },
+      {
+        "id": "7f06001e",
+        "name": "accentFill",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "ff33ffee",
+        "light": "ff15161a",
+        "dark": "fff7f8fa"
+      },
+      {
+        "id": "7f060023",
+        "name": "app_background",
+        "expectedType": "REFERENCE",
+        "expectedData": "7f06003e",
+        "light": "fff1f2f6",
+        "dark": "ff0d0e11"
+      },
+      {
+        "id": "7f060036",
+        "name": "baseBright",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "ff18181b",
+        "light": "ffffffff",
+        "dark": "ff191b22"
+      },
+      {
+        "id": "7f060037",
+        "name": "baseBrighter",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "ff242429",
+        "light": "ffe9eaf0",
+        "dark": "ff22252e"
+      },
+      {
+        "id": "7f060038",
+        "name": "baseBrightest",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "ff303036",
+        "light": "ffe0e2eb",
+        "dark": "ff30343f"
+      },
+      {
+        "id": "7f060039",
+        "name": "baseFill",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "ff000000",
+        "light": "fff1f2f6",
+        "dark": "ff0d0e11"
+      },
+      {
+        "id": "7f0600ad",
+        "name": "contrastDark",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "ffe4e4e7",
+        "light": "ff5d626d",
+        "dark": "ffb4b8c4"
+      },
+      {
+        "id": "7f0600ae",
+        "name": "contrastDarker",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "ffafafb6",
+        "light": "ff60656f",
+        "dark": "ff9a9fac"
+      },
+      {
+        "id": "7f0600af",
+        "name": "contrastDarkest",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "ff787887",
+        "light": "ff60656f",
+        "dark": "ff9a9fac"
+      },
+      {
+        "id": "7f0600b0",
+        "name": "contrastFill",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "ffffffff",
+        "light": "ff15161a",
+        "dark": "fff7f8fa"
+      },
+      {
+        "id": "7f0600ba",
+        "name": "default_font_color",
+        "expectedType": "REFERENCE",
+        "expectedData": "7f060524",
+        "light": "ff15161a",
+        "dark": "fff7f8fa"
+      },
+      {
+        "id": "7f0600f0",
+        "name": "genre_gradient_end",
+        "expectedType": "INT_COLOR_RGB8",
+        "expectedData": "ff222226",
+        "light": "ffffffff",
+        "dark": "ff191b22"
+      },
+      {
+        "id": "7f0600f1",
+        "name": "genre_gradient_start",
+        "expectedType": "INT_COLOR_RGB8",
+        "expectedData": "ff393940",
+        "light": "ffe9eaf0",
+        "dark": "ff22252e"
+      },
+      {
+        "id": "7f060101",
+        "name": "gray",
+        "expectedType": "INT_COLOR_RGB8",
+        "expectedData": "ff72727f",
+        "light": "ff60656f",
+        "dark": "ff9a9fac"
+      },
+      {
+        "id": "7f060102",
+        "name": "gray_darken_15",
+        "expectedType": "INT_COLOR_RGB8",
+        "expectedData": "ff505059",
+        "light": "ff60656f",
+        "dark": "ff9a9fac"
+      },
+      {
+        "id": "7f060104",
+        "name": "gray_darken_25",
+        "expectedType": "INT_COLOR_RGB8",
+        "expectedData": "ff393940",
+        "light": "ffe0e2eb",
+        "dark": "ff30343f"
+      },
+      {
+        "id": "7f060107",
+        "name": "gray_darken_35",
+        "expectedType": "INT_COLOR_RGB8",
+        "expectedData": "ff222226",
+        "light": "ffe9eaf0",
+        "dark": "ff22252e"
+      },
+      {
+        "id": "7f060108",
+        "name": "gray_darken_40",
+        "expectedType": "INT_COLOR_RGB8",
+        "expectedData": "ff17171a",
+        "light": "ffffffff",
+        "dark": "ff191b22"
+      },
+      {
+        "id": "7f06010b",
+        "name": "gray_darken_43",
+        "expectedType": "INT_COLOR_RGB8",
+        "expectedData": "ff101012",
+        "light": "fff1f2f6",
+        "dark": "ff0d0e11"
+      },
+      {
+        "id": "7f06010c",
+        "name": "gray_darken_45",
+        "expectedType": "INT_COLOR_RGB8",
+        "expectedData": "ff0c0c0d",
+        "light": "fff1f2f6",
+        "dark": "ff0d0e11"
+      },
+      {
+        "id": "7f060111",
+        "name": "gray_lighten_15",
+        "expectedType": "INT_COLOR_RGB8",
+        "expectedData": "ff9898a6",
+        "light": "ff5d626d",
+        "dark": "ffb4b8c4"
+      },
+      {
+        "id": "7f060112",
+        "name": "gray_lighten_25",
+        "expectedType": "INT_COLOR_RGB8",
+        "expectedData": "ffb2b2bf",
+        "light": "ff5d626d",
+        "dark": "ffb4b8c4"
+      },
+      {
+        "id": "7f060113",
+        "name": "gray_lighten_35",
+        "expectedType": "INT_COLOR_RGB8",
+        "expectedData": "ffceced9",
+        "light": "ff15161a",
+        "dark": "fff7f8fa"
+      },
+      {
+        "id": "7f060114",
+        "name": "gray_lighten_55",
+        "expectedType": "INT_COLOR_RGB8",
+        "expectedData": "ffb0b0b5",
+        "light": "ff5d626d",
+        "dark": "ffb4b8c4"
+      },
+      {
+        "id": "7f0604c4",
+        "name": "primary_text_default_material_dark",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "ffffffff",
+        "light": "ff15161a",
+        "dark": "fff7f8fa"
+      },
+      {
+        "id": "7f0604c5",
+        "name": "primary_text_default_material_light",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "de000000",
+        "light": "ff15161a",
+        "dark": "fff7f8fa"
+      },
+      {
+        "id": "7f0604df",
+        "name": "secondary_text_default_material_dark",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "b3ffffff",
+        "light": "ff5d626d",
+        "dark": "ffb4b8c4"
+      },
+      {
+        "id": "7f0604e0",
+        "name": "secondary_text_default_material_light",
+        "expectedType": "INT_COLOR_ARGB8",
+        "expectedData": "8a000000",
+        "light": "ff5d626d",
+        "dark": "ffb4b8c4"
+      }
+    ],
+    "fontsPatchId": "LiquidifyTypography",
+    "fonts": [
+      {
+        "target": "res/font/nationale_black.otf",
+        "source": "fonts/squareglass_900.ttf",
+        "originalSha256": "011acab13da1e7fd4473b64ffe64c22eb6d34aa3c4a096cc172653700af96414",
+        "sha256": "eae692067377b50faf015c4b9d1066580866fbe2a3fc01d299e4859b10f7113f"
+      },
+      {
+        "target": "res/font/nationale_bold.otf",
+        "source": "fonts/squareglass_700.ttf",
+        "originalSha256": "5051b0cc56631f3dc620db35f015fce4363a68ceb7e2e36d9776359d11105bff",
+        "sha256": "53173814c8ddfdf54302a574875e829de44a0263a1bee67a087ca70af2e97e29"
+      },
+      {
+        "target": "res/font/nationale_demi_bold.otf",
+        "source": "fonts/squareglass_600.ttf",
+        "originalSha256": "6b5679f7a582e47a1d37a5306f9d2d248ec42c07ec57dee204e207bb0f0e269f",
+        "sha256": "ae47600a5f0a07a132eba2015802e29f0d1d477295684a81b7ba2d81fd933ea0"
+      },
+      {
+        "target": "res/font/nationale_medium.otf",
+        "source": "fonts/squareglass_500.ttf",
+        "originalSha256": "730efb5ef9c70fa24e3bb055fc1bb0523639c6452b00d644d93f845c8d9eafc9",
+        "sha256": "db2993cc55bfcad6bf9bec9c4d4f7f8484186f07104059f2725d6e8abfe384b9"
+      },
+      {
+        "target": "res/font/nationale_regular.otf",
+        "source": "fonts/squareglass_400.ttf",
+        "originalSha256": "79d50ac5fde0474be51c3e42b5883a9a41e7021c4054c9a628f6f01d23c2f162",
+        "sha256": "c71ce498700c7f08306c15f5f9d45a16c9320db5b97c82abf292f75b5cf239a5"
+      },
+      {
+        "target": "res/font/square_sans_text_bold.otf",
+        "source": "fonts/squareglass_700.ttf",
+        "originalSha256": "c2ad025ef984d6f2fb6496e5752a1ccf40270c725dc4f16f023214b4b3181f46",
+        "sha256": "53173814c8ddfdf54302a574875e829de44a0263a1bee67a087ca70af2e97e29"
+      },
+      {
+        "target": "res/font/square_sans_text_medium.otf",
+        "source": "fonts/squareglass_500.ttf",
+        "originalSha256": "29e53251ee189c3d47bbc7f89755dae9ef1c087fa4acce72a232a6fd40209496",
+        "sha256": "db2993cc55bfcad6bf9bec9c4d4f7f8484186f07104059f2725d6e8abfe384b9"
+      },
+      {
+        "target": "res/font/square_sans_text_regular.otf",
+        "source": "fonts/squareglass_400.ttf",
+        "originalSha256": "521b3e40e32f6cf5a9c6e5e14926e7dd913952bac48b6d81d9444f86d2e84030",
+        "sha256": "c71ce498700c7f08306c15f5f9d45a16c9320db5b97c82abf292f75b5cf239a5"
+      },
+      {
+        "target": "res/font/square_sans_text_semi_bold.otf",
+        "source": "fonts/squareglass_600.ttf",
+        "originalSha256": "5084a13a099b96994399f59bc26f3c9bef769d664782acdff908926acf632cec",
+        "sha256": "ae47600a5f0a07a132eba2015802e29f0d1d477295684a81b7ba2d81fd933ea0"
+      },
+      {
+        "target": "res/raw/square_sans_display_bold.otf",
+        "source": "fonts/squareglass_700.ttf",
+        "originalSha256": "710079f03e2380f0c1570da41b35113fe4d126b5448be497010ce384acafd275",
+        "sha256": "53173814c8ddfdf54302a574875e829de44a0263a1bee67a087ca70af2e97e29"
+      },
+      {
+        "target": "res/raw/square_sans_display_medium.otf",
+        "source": "fonts/squareglass_500.ttf",
+        "originalSha256": "f1df20bcc007258b19b8ea926537ebc697ffc166611bf9b9c0f220cf1bcc2bf9",
+        "sha256": "db2993cc55bfcad6bf9bec9c4d4f7f8484186f07104059f2725d6e8abfe384b9"
+      },
+      {
+        "target": "res/raw/square_sans_display_regular.otf",
+        "source": "fonts/squareglass_400.ttf",
+        "originalSha256": "e75f4e44f054c2148aa2ef91d53fa36fa438ce1baeb4acf18721449fe79bc363",
+        "sha256": "c71ce498700c7f08306c15f5f9d45a16c9320db5b97c82abf292f75b5cf239a5"
+      },
+      {
+        "target": "res/raw/square_sans_text_bold.otf",
+        "source": "fonts/squareglass_700.ttf",
+        "originalSha256": "c2ad025ef984d6f2fb6496e5752a1ccf40270c725dc4f16f023214b4b3181f46",
+        "sha256": "53173814c8ddfdf54302a574875e829de44a0263a1bee67a087ca70af2e97e29"
+      },
+      {
+        "target": "res/raw/square_sans_text_medium.otf",
+        "source": "fonts/squareglass_500.ttf",
+        "originalSha256": "29e53251ee189c3d47bbc7f89755dae9ef1c087fa4acce72a232a6fd40209496",
+        "sha256": "db2993cc55bfcad6bf9bec9c4d4f7f8484186f07104059f2725d6e8abfe384b9"
+      },
+      {
+        "target": "res/raw/square_sans_text_regular.otf",
+        "source": "fonts/squareglass_400.ttf",
+        "originalSha256": "521b3e40e32f6cf5a9c6e5e14926e7dd913952bac48b6d81d9444f86d2e84030",
+        "sha256": "c71ce498700c7f08306c15f5f9d45a16c9320db5b97c82abf292f75b5cf239a5"
+      },
+      {
+        "target": "res/raw/square_sans_text_semi_bold.otf",
+        "source": "fonts/squareglass_600.ttf",
+        "originalSha256": "5084a13a099b96994399f59bc26f3c9bef769d664782acdff908926acf632cec",
+        "sha256": "ae47600a5f0a07a132eba2015802e29f0d1d477295684a81b7ba2d81fd933ea0"
+      }
+    ],
+    "themeXml": [
+      {
+        "target": "res/color/primary_text_selector.xml",
+        "attributeId": "010101a5",
+        "expectedType": 1,
+        "fromResource": "7f060524",
+        "toResource": "7f0600b0",
+        "expectedCount": 1,
+        "originalSha256": "4c95b31aac39d881e6fcf6be74da9d2c7f66073ab432667ff3815aa5d9e67670",
+        "sha256": "fb3a90e119c3a88fa6f37b8f75c2060f7c11d0d745a634d232b7f872d5d3c6ca"
+      },
+      {
+        "target": "res/color/primary_playback_title_text_selector.xml",
+        "attributeId": "010101a5",
+        "expectedType": 1,
+        "fromResource": "7f060524",
+        "toResource": "7f0600b0",
+        "expectedCount": 1,
+        "originalSha256": "3e65ffea167da9fe3ed1eb0e7dbaa1f00006454924c6bada4c2ab751420aff50",
+        "sha256": "90efa2cda9d0026d2186b2dce698d63bbbbc38d5474bb92ae00fb0e109b0a67f"
+      },
+      {
+        "target": "res/layout/launcher_activity_view.xml",
+        "attributeId": "010100d4",
+        "expectedType": 1,
+        "fromResource": "7f06003e",
+        "toResource": "7f060039",
+        "expectedCount": 1,
+        "originalSha256": "f184895ea7d62d0222bda4118c6bffb54280291edd1ee2984a469fe1b9de69c5",
+        "sha256": "69dae73b15bf5ceb7d6ef4b97c6ff0eb94b51bcb114ce1f30055efd6e14aa82c"
+      },
+      {
+        "target": "res/color/vector_tint_theme_color.xml",
+        "attributeId": "010101a5",
+        "expectedType": 2,
+        "fromResource": "01010435",
+        "toResource": "7f0600b0",
+        "expectedCount": 1,
+        "originalSha256": "cf34dc5bdb4a6d1568143e115ac4e34448383ac772862ef0fdbb7fe8936c6dd3",
+        "sha256": "07ef631f7286faa9d5612ab7eee57469d6a5cede33cae24b815db452857ea1bf"
+      }
+    ]
+  }
+}

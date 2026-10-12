@@ -1,0 +1,26 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/LyricsKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/LyricsKt.smali
+@@ -3819,6 +3819,12 @@
+     move-object v15, v10
+ 
+     .line 61
++    move-object/from16 v0, v17
++
++    invoke-static {v15, v0}, Ldev/nino/squareglass/SquareLyrics;->viewport(Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/layout/PaddingValues;)Landroidx/compose/ui/Modifier;
++
++    move-result-object v15
++
+     invoke-static/range {v15 .. v27}, Landroidx/compose/foundation/lazy/LazyDslKt;->LazyColumn(Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/lazy/LazyListState;Landroidx/compose/foundation/layout/PaddingValues;ZLandroidx/compose/foundation/layout/Arrangement$Vertical;Landroidx/compose/ui/Alignment$Horizontal;Landroidx/compose/foundation/gestures/FlingBehavior;ZLandroidx/compose/foundation/OverscrollEffect;Lam0/l;Landroidx/compose/runtime/Composer;II)V
+ 
+     move-object/from16 v0, v25
+@@ -4470,6 +4476,10 @@
+ 
+     move-object/from16 v9, p6
+ 
++    invoke-static {v9, v11}, Ldev/nino/squareglass/SquareLyrics;->viewport(Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/layout/PaddingValues;)Landroidx/compose/ui/Modifier;
++
++    move-result-object v9
++
+     invoke-static/range {v9 .. v21}, Landroidx/compose/foundation/lazy/LazyDslKt;->LazyColumn(Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/lazy/LazyListState;Landroidx/compose/foundation/layout/PaddingValues;ZLandroidx/compose/foundation/layout/Arrangement$Vertical;Landroidx/compose/ui/Alignment$Horizontal;Landroidx/compose/foundation/gestures/FlingBehavior;ZLandroidx/compose/foundation/OverscrollEffect;Lam0/l;Landroidx/compose/runtime/Composer;II)V
+ 
+     invoke-static {}, Landroidx/compose/runtime/ComposerKt;->isTraceInProgress()Z

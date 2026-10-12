@@ -1,0 +1,20 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/k3.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/k3.smali
+@@ -395,7 +395,7 @@
+ 
+     .line 165
+     .line 166
+-    invoke-virtual {v3}, Landroidx/compose/ui/graphics/Color$Companion;->getBlack-0d7_KjU()J
++    invoke-static {}, Ldev/nino/squareglass/NativePlayerPaint;->film()J
+ 
+     .line 167
+     .line 168
+@@ -558,7 +558,7 @@
+     move-result-object v1
+ 
+     .line 249
+-    invoke-virtual {v3}, Landroidx/compose/ui/graphics/Color$Companion;->getBlack-0d7_KjU()J
++    invoke-static {}, Ldev/nino/squareglass/NativePlayerPaint;->film()J
+ 
+     .line 250
+     .line 251

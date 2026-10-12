@@ -1,0 +1,35 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/p3.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/p3.smali
+@@ -395,7 +395,7 @@
+ 
+     .line 165
+     .line 166
+-    invoke-virtual {v0}, Landroidx/compose/ui/graphics/Color$Companion;->getBlack-0d7_KjU()J
++    invoke-static {}, Ldev/nino/squareglass/NativePlayerPaint;->base()J
+ 
+     .line 167
+     .line 168
+@@ -595,6 +595,12 @@
+ 
+     move-result-object v6
+ 
++    const/4 v0, 0x0
++
++    invoke-static {v5, v6, v0}, Ldev/nino/squareglass/NativeBackdrop;->capturePlayer(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++
++    move-result-object v5
++
+     and-int/lit8 v1, v10, 0x6
+ 
+     const/4 v2, 0x2
+@@ -926,6 +932,10 @@
+     const/4 v14, 0x0
+ 
+     const/4 v0, 0x0
++
++    invoke-static/range {v12 .. v13}, Ldev/nino/squareglass/NativePlayerPaint;->background(J)J
++
++    move-result-wide v12
+ 
+     invoke-static/range {v11 .. v16}, Landroidx/compose/foundation/BackgroundKt;->background-bw27NRU$default(Landroidx/compose/ui/Modifier;JLandroidx/compose/ui/graphics/Shape;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+ 

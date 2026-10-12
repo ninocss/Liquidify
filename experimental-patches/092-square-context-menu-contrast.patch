@@ -1,0 +1,19 @@
+--- a/y40/a.smali
++++ b/y40/a.smali
+@@ -363,6 +363,16 @@
+     .line 153
+     invoke-virtual {p1, v1}, Landroid/view/View;->setOnClickListener(Landroid/view/View$OnClickListener;)V
+ 
++    iget v2, v0, Lv40/a;->f:I
++
++    iget v3, v0, Lv40/a;->e:I
++
++    invoke-virtual {v0}, Lv40/a;->a()Z
++
++    move-result v4
++
++    invoke-static {p1, v2, v3, v4}, Ldev/nino/squareglass/SquareMenus;->row(Landroid/view/View;IIZ)V
++
+     .line 154
+     .line 155
+     .line 156

@@ -1,0 +1,15 @@
+--- a/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
+@@ -1181,6 +1181,12 @@
+ 
+     move-result-object v9
+ 
++    const/4 v10, 0x0
++
++    invoke-static {v9, v15, v10}, Ldev/nino/squareglass/NativeGlass;->miniSurface(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++
++    move-result-object v9
++
+     int-to-float v7, v7
+ 
+     .line 36

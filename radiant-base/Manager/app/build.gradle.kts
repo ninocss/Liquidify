@@ -1,0 +1,245 @@
+@file:Suppress("UnstableApiUsage")
+
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.hiddenApi.refine)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
+}
+
+val isRelease = System.getenv("RELEASE")?.toBoolean() ?: false
+val gitCurrentBranch = providers.execIgnoreCode("git", "symbolic-ref", "--quiet", "--short", "HEAD").takeIf { it.isNotEmpty() }
+val gitLatestCommit = providers.execIgnoreCode("git", "rev-parse", "--short", "HEAD")
+val gitHasLocalCommits = gitCurrentBranch?.let { branch ->
+    val remoteBranchExists = providers.execIgnoreCode("git", "ls-remote", "--heads", "origin", branch)
+        .isNotEmpty()
+
+    remoteBranchExists && providers.execIgnoreCode("git", "log", "origin/$branch..HEAD").isNotEmpty()
+} ?: false
+val gitHasHasLocalChanges = providers.execIgnoreCode("git", "status", "-s").isNotEmpty()
+
+android {
+    namespace = "com.meowarex.rlmobile"
+    // Compose 1.12.x and PebbleKit require compile SDK 37. targetSdk stays at 36.
+    compileSdk = 37
+
+    defaultConfig {
+        applicationId = "dev.nino.squareglass.manager"
+        minSdk = 24
+        targetSdk = 36
+        versionCode = 71
+        versionName = "1.0.0-beta"
+
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+
+        buildConfigField("String", "TAG", "\"LiquidifyManager\"")
+        buildConfigField("String", "SUPPORT_SERVER", "\"\"")
+
+        buildConfigField("String", "PATCHES_REPO_OWNER", "\"ninocss\"")
+        buildConfigField("String", "PATCHES_REPO_NAME", "\"liquidify\"")
+
+        buildConfigField("Boolean", "RELEASE", isRelease.toString())
+        buildConfigField("String", "GIT_BRANCH", "\"$gitCurrentBranch\"")
+        buildConfigField("String", "GIT_COMMIT", "\"$gitLatestCommit\"")
+        buildConfigField("boolean", "GIT_LOCAL_COMMITS", "$gitHasLocalCommits")
+        buildConfigField("boolean", "GIT_LOCAL_CHANGES", "$gitHasHasLocalChanges")
+    }
+
+    signingConfigs {
+        create("release") {
+            enableV1Signing = true
+            enableV2Signing = true
+            enableV3Signing = true
+            enableV4Signing = true
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+            storeFile = System.getenv("SIGNING_STORE_FILE")?.let(::File)
+            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+        }
+    }
+
+    buildTypes {
+        val isRelease = System.getenv("RELEASE")?.toBoolean() ?: false
+        val hasReleaseSigning = System.getenv("SIGNING_STORE_PASSWORD")?.isNotEmpty() == true
+
+        if (isRelease && !hasReleaseSigning)
+            error("Missing keystore in a release workflow!")
+
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            isCrunchPngs = true
+            signingConfig = signingConfigs.getByName(if (hasReleaseSigning) "release" else "debug")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+
+        create("staging") {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            isCrunchPngs = true
+            signingConfig = signingConfigs.getByName("debug")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+
+    androidComponents {
+        onVariants(selector().withBuildType("release")) {
+            it.packaging.resources.excludes.apply {
+                // Debug metadata
+                add("/**/*.version")
+                add("/kotlin-tooling-metadata.json")
+                // Kotlin debugging (https://github.com/Kotlin/kotlinx.coroutines/issues/2274)
+                add("/DebugProbesKt.bin")
+                // Reflection symbol list (https://stackoverflow.com/a/41073782/13964629)
+                add("/**/*.kotlin_builtins")
+            }
+        }
+    }
+
+    packaging {
+        resources {
+            // okhttp3 is used by some lib (no cookies so publicsuffixes.gz can be dropped)
+            excludes += "/okhttp3/**"
+
+            // Remnants of smali/baksmali lib
+            excludes += "/*.properties"
+            excludes += "/org/antlr/**"
+            excludes += "/com/android/tools/smali/**"
+            excludes += "/org/eclipse/jgit/**"
+
+            // bouncycastle
+            excludes += "/META-INF/versions/9/OSGI-INF/MANIFEST.MF"
+            excludes += "/org/bouncycastle/**"
+        }
+        jniLibs {
+            // x86 is dead
+            excludes += "/lib/x86/*.so"
+
+            // Equivalent of AndroidManifest's extractNativeLibs=false
+            useLegacyPackaging = false
+        }
+    }
+
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+
+    buildFeatures {
+        buildConfig = true
+        compose = true
+    }
+
+    androidResources {
+        generateLocaleConfig = true
+    }
+
+    lint {
+        disable += "ModifierParameter"
+        disable += "ExtraTranslation"
+    }
+}
+
+composeCompiler {
+    // Temporary workaround for https://youtrack.jetbrains.com/projects/KT/issues/KT-83266/
+    // Remove once updated to Kotlin 2.3.10
+    includeComposeMappingFile.set(false)
+}
+
+kotlin {
+    compilerOptions {
+        val reportsDir = layout.buildDirectory.asFile.get()
+            .resolve("reports").absolutePath
+
+        jvmTarget = JvmTarget.JVM_21
+        optIn.addAll(
+            "androidx.compose.animation.ExperimentalAnimationApi",
+            "androidx.compose.foundation.ExperimentalFoundationApi",
+            "androidx.compose.foundation.layout.ExperimentalLayoutApi",
+            "androidx.compose.material3.ExperimentalMaterial3Api",
+            "androidx.compose.material3.ExperimentalMaterial3ExpressiveApi",
+            "kotlin.time.ExperimentalTime",
+            "kotlinx.serialization.ExperimentalSerializationApi",
+        )
+        freeCompilerArgs.addAll(
+            "-P", "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${reportsDir}",
+            "-XXLanguage:+ExplicitBackingFields",
+            "-XXLanguage:+PropertyParamAnnotationDefaultTargetMode", // @StringRes in field parameters of a class warning
+        )
+    }
+}
+
+tasks.withType<JavaCompile> {
+    // Disable warnings about obsolete target version
+    options.compilerArgs.add("-Xlint:-options")
+}
+
+dependencies {
+    testImplementation("junit:junit:4.13.2")
+    implementation(libs.bundles.accompanist)
+    implementation(libs.bundles.androidx)
+    implementation(libs.bundles.coil)
+    implementation(libs.bundles.compose)
+    implementation(libs.bundles.koin)
+    implementation(libs.bundles.ktor)
+    implementation(libs.bundles.shizuku)
+    implementation(libs.bundles.voyager)
+    implementation(libs.pebblekit2.client)
+
+    implementation(libs.compose.ui.tooling.preview)
+    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.runtime.tracing)
+
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.androidx.work.runtime)
+
+    implementation(libs.kotlinx.immutable)
+    implementation(libs.kotlinx.serialization.json)
+
+    compileOnly(libs.hiddenApi.stub)
+    implementation(libs.hiddenApi.refine)
+    implementation(libs.hiddenApi.bypass)
+
+    implementation(libs.apksig)
+    implementation(libs.axml)
+    implementation(libs.bouncycastle)
+    implementation(libs.binaryResources)
+    implementation(libs.dhizuku.api)
+    implementation(libs.diff)
+    implementation(libs.microg)
+    implementation(libs.smali)
+    implementation(libs.baksmali)
+    implementation(libs.compose.pipette)
+    implementation(libs.compose.shimmer)
+    implementation(libs.libsu)
+    implementation(libs.zip)
+
+    coreLibraryDesugaring(libs.desugaring)
+}
+
+fun ProviderFactory.execIgnoreCode(vararg command: String): String = try {
+    val result = exec {
+        commandLine = command.toList()
+        isIgnoreExitValue = true
+    }
+
+    result.standardOutput.asText.get().trim()
+} catch (_: Exception) {
+    ""
+}
+
+// Sync Local Cached Assets with Repo Releases to keep them up to date
+val syncBundledManifest by tasks.registering(Copy::class) {
+    val src = rootProject.rootDir.resolve("../../patches/manifest.json")
+    onlyIf { src.exists() }
+    from(src)
+    into(layout.projectDirectory.dir("src/main/assets"))
+    rename { "patches-manifest.json" }
+}
+tasks.named("preBuild") { dependsOn(syncBundledManifest) }

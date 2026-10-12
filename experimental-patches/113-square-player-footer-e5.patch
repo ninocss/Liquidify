@@ -1,0 +1,11 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/e5.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/e5.smali
+@@ -217,7 +217,7 @@
+ 
+     .line 93
+     .line 94
+-    sget-object v17, Lcom/squareup/ui/market/core/components/properties/IconButton$Rank;->SECONDARY:Lcom/squareup/ui/market/core/components/properties/IconButton$Rank;
++    sget-object v17, Lcom/squareup/ui/market/core/components/properties/IconButton$Rank;->TERTIARY:Lcom/squareup/ui/market/core/components/properties/IconButton$Rank;
+ 
+     .line 95
+     .line 96

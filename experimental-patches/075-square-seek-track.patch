@@ -1,0 +1,13 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/e0.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/e0.smali
+@@ -194,6 +194,10 @@
+ 
+     .line 85
+     sget-wide v5, Lcom/tidal/android/feature/playerscreen/ui/composables/t4;->c:J
++
++    invoke-static/range {v5 .. v6}, Ldev/nino/squareglass/NativePlayerPaint;->foreground(J)J
++
++    move-result-wide v5
+ 
+     .line 86
+     .line 87

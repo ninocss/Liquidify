@@ -1,0 +1,10 @@
+* text=auto
+gradlew text eol=lf
+*.bat text eol=crlf
+*.sh text eol=lf
+*.patch -text
+*.zip binary
+*.jar binary
+*.ttf binary
+*.png binary
+*.webp binary

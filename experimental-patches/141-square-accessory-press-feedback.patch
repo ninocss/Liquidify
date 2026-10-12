@@ -1,0 +1,11 @@
+--- a/com/tidal/android/feature/appscaffold/ui/composable/i.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/i.smali
+@@ -2595,6 +2595,8 @@
+     const/16 v45, 0x0
+ 
+     .line 189
++    const/16 v42, 0x0
++
+     invoke-static/range {v40 .. v48}, Landroidx/compose/foundation/ClickableKt;->clickable-O2vRcR0$default(Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/foundation/Indication;ZLjava/lang/String;Landroidx/compose/ui/semantics/Role;Lam0/a;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+ 
+     move-result-object v4

@@ -1,0 +1,24 @@
+--- a/com/tidal/android/feature/appscaffold/ui/composable/i.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/i.smali
+@@ -2054,9 +2054,7 @@
+     const/16 v36, 0x0
+ 
+     .line 117
+-    invoke-static/range {v33 .. v38}, Landroidx/compose/foundation/BackgroundKt;->background$default(Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Brush;Landroidx/compose/ui/graphics/Shape;FILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+-
+-    move-result-object v2
++    move-object/from16 v2, v33
+ 
+     invoke-interface {v7, v3}, Landroidx/compose/runtime/Composer;->changed(Ljava/lang/Object;)Z
+ 
+@@ -2338,9 +2336,7 @@
+     sget-object v5, Lcom/tidal/android/feature/appscaffold/ui/composable/a;->c:Landroidx/compose/foundation/shape/RoundedCornerShape;
+ 
+     .line 151
+-    invoke-static {v2, v3, v4, v5}, Landroidx/compose/foundation/BackgroundKt;->background-bw27NRU(Landroidx/compose/ui/Modifier;JLandroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;
+-
+-    move-result-object v2
++    invoke-static {v3, v4}, Ldev/nino/squareglass/NativeGlass;->observeHostBackground(J)V
+ 
+     .line 152
+     invoke-static {v2, v5}, Landroidx/compose/ui/draw/ClipKt;->clip(Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;

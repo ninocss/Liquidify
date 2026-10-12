@@ -1,0 +1,15 @@
+--- a/com/tidal/android/feature/appscaffold/ui/composable/i.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/i.smali
+@@ -2347,6 +2347,12 @@
+ 
+     move-result-object v2
+ 
++    sget-object v5, Lradiant/MiniSeekerFloating;->INSTANCE:Lradiant/MiniSeekerFloating;    # draw lambda
++
++    invoke-static {v2, v5}, Landroidx/compose/ui/draw/DrawModifierKt;->drawWithContent(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;    # overlay perimeter stroke
++
++    move-result-object v2    # updated modifier
++
+     .line 153
+     sget-object v3, Lkotlin/u;->a:Lkotlin/u;
+ 

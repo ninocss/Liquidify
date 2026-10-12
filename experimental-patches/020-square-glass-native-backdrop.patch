@@ -1,0 +1,15 @@
+--- a/com/tidal/wave2/foundation/WaveScaffoldKt.smali
++++ b/com/tidal/wave2/foundation/WaveScaffoldKt.smali
+@@ -889,6 +889,12 @@
+     .line 386
+     .line 387
+     :cond_20
++    const/4 v0, 0x0
++
++    invoke-static {v9, v1, v0}, Ldev/nino/squareglass/NativeBackdrop;->capture(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++
++    move-result-object v9
++
+     new-instance v0, Lcom/tidal/wave2/foundation/WaveScaffoldKt$WaveScaffold$2;
+ 
+     .line 388

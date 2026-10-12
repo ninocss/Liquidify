@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "patches": 96,
+  "engine": "Manager strict java-diff-utils",
+  "source": "Fresh pinned stock APK disassembly",
+  "expected": "research/probe-hook-smali",
+  "extensionDexSha256": "5f0ade126dcfc6bc9e151a5c67e0cc993ed3b925d9cd0e1c76296a854847c2be",
+  "result": "Strict Manager diff engine verified 96 patches against baksmali output"
+}

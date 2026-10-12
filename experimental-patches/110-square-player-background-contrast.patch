@@ -1,0 +1,11 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/k3.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/k3.smali
+@@ -411,7 +411,7 @@
+ 
+     .line 173
+     .line 174
+-    const v15, 0x3f0ccccd    # 0.55f
++    const v15, 0x3f570a3d    # 0.84f
+ 
+     .line 175
+     .line 176

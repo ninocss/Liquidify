@@ -1,0 +1,13 @@
+--- a/com/aspiro/wamp/settings/compose/c0.smali
++++ b/com/aspiro/wamp/settings/compose/c0.smali
+@@ -360,6 +360,10 @@
+ 
+     .line 150
+     .line 151
++    invoke-static {v6, v7, v9}, Ldev/nino/squareglass/SquareScreens;->settingsRow(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++
++    move-result-object v6
++
+     invoke-static {v6, v8}, Lcom/tidal/wave/theme/WavePaddingKt;->c(Landroidx/compose/ui/Modifier;Lcom/tidal/wave/designtokens/WaveSpacing;)Landroidx/compose/ui/Modifier;
+ 
+     .line 152

@@ -1,0 +1,47 @@
+name: Liquidify Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  manager:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-37.0 build-tools;37.0.0'
+          log-accepted-android-sdk-licenses: false
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Validate prepared patches
+        run: python tools/validate_release.py
+      - name: Build and test Manager
+        working-directory: radiant-base/Manager
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:testDebugUnitTest :app:assembleDebug --no-daemon --console=plain
+      - name: Verify launcher name and APK signature
+        run: |
+          apk=radiant-base/Manager/app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/37.0.0/apksigner" verify "$apk"
+          "$ANDROID_HOME/build-tools/37.0.0/aapt2" dump badging "$apk" | grep -Fx "application-label:'Liquidify Manager'"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Liquidify-local-build
+          path: |
+            radiant-base/Manager/app/build/outputs/apk/debug/app-debug.apk
+            patches/patches.zip

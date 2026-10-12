@@ -1,0 +1,11 @@
+--- a/j40/q2.smali
++++ b/j40/q2.smali
+@@ -253,7 +253,7 @@
+     move-result-object v2
+ 
+     .line 92
+-    invoke-virtual {v2}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->J0()Lf20/a;
++    invoke-virtual {v2}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->E0()Lf20/a;
+ 
+     .line 93
+     .line 94

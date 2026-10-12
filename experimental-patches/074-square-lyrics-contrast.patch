@@ -1,0 +1,11 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/LyricsKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/LyricsKt.smali
+@@ -943,7 +943,7 @@
+     move-result-object v8
+ 
+     .line 260
+-    invoke-virtual {v8}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->J0()Lf20/a;
++    invoke-virtual {v8}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->E0()Lf20/a;
+ 
+     .line 261
+     .line 262

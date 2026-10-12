@@ -1,0 +1,55 @@
+--- a/mb/f.smali
++++ b/mb/f.smali
+@@ -613,6 +613,25 @@
+ 
+     .line 236
+     :goto_8
++    const-string/jumbo v5, "com.waze"
++
++    invoke-static {v3, v5}, Lkotlin/jvm/internal/n;->b(Ljava/lang/Object;Ljava/lang/Object;)Z # package match
++
++    move-result v5
++
++    if-eqz v5, :rl_waze_done
++
++    const-string/jumbo v5, "03:63:7f:6c:5d:8f:60:4e:6f:db:79:a6:ff:bf:a5:78:de:4e:31:8f:8d:a2:2f:c6:10:66:65:24:7f:88:07:d7" # Waze cert
++
++    invoke-static {v2, v5}, Lkotlin/jvm/internal/n;->b(Ljava/lang/Object;Ljava/lang/Object;)Z # cert match
++
++    move-result v5
++
++    if-eqz v5, :rl_waze_done
++
++    goto :goto_9 # trust Waze
++
++    :rl_waze_done
+     invoke-static {}, Landroid/os/Process;->myUid()I
+ 
+     .line 237
+@@ -769,6 +788,26 @@
+     :goto_b
+     if-eqz v2, :cond_14
+ 
++    const-string/jumbo v1, "com.waze"
++
++    invoke-static {v3, v1}, Lkotlin/jvm/internal/n;->b(Ljava/lang/Object;Ljava/lang/Object;)Z # package match
++
++    move-result v1
++
++    if-eqz v1, :rl_waze_recent_root_done_2
++
++    new-instance v1, Landroidx/media/MediaBrowserServiceCompat$BrowserRoot;
++
++    const-string/jumbo v4, "__RL_WAZE_ROOT_ID__"
++
++    const/4 v5, 0x0
++
++    invoke-direct {v1, v4, v5}, Landroidx/media/MediaBrowserServiceCompat$BrowserRoot;-><init>(Ljava/lang/String;Landroid/os/Bundle;)V
++
++    return-object v1
++
++    :rl_waze_recent_root_done_2
++
+     .line 306
+     .line 307
+     iget-object v1, v0, Lmb/f;->c:Ljava/util/Map;

@@ -1,0 +1,14 @@
+--- a/d8/d.smali
++++ b/d8/d.smali
+@@ -554,5 +554,11 @@
+ 
+     .line 104
+     .line 105
++    invoke-virtual {p0}, Landroidx/fragment/app/Fragment;->requireView()Landroid/view/View;
++
++    move-result-object p1
++
++    invoke-static {p1}, Ldev/nino/squareglass/SquareDetails;->install(Landroid/view/View;)V
++
+     return-void
+ .end method

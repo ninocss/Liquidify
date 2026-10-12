@@ -1,0 +1,18 @@
+--- a/com/aspiro/wamp/MainActivity.smali
++++ b/com/aspiro/wamp/MainActivity.smali
+@@ -5039,3 +5039,15 @@
+     .line 3
+     return-object v0
+ .end method
++
++.method public dispatchTouchEvent(Landroid/view/MotionEvent;)Z
++    .locals 1
++
++    invoke-static {p0, p1}, Ldev/nino/squareglass/SquareMenus;->touch(Landroid/app/Activity;Landroid/view/MotionEvent;)V
++
++    invoke-super {p0, p1}, Landroidx/appcompat/app/AppCompatActivity;->dispatchTouchEvent(Landroid/view/MotionEvent;)Z
++
++    move-result v0
++
++    return v0
++.end method

@@ -1,0 +1,68 @@
+--- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
+@@ -298,8 +298,14 @@
+ 
+     move-result-object v14
+ 
++    const/4 v9, 0x0
++
++    invoke-static {v3, v11, v9}, Ldev/nino/squareglass/PlayerArtwork;->media(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++
++    move-result-object v9
++
+     .line 8
+-    invoke-static {v11, v3}, Landroidx/compose/ui/ComposedModifierKt;->materializeModifier(Landroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
++    invoke-static {v11, v9}, Landroidx/compose/ui/ComposedModifierKt;->materializeModifier(Landroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+ 
+     move-result-object v9
+ 
+@@ -4279,6 +4285,10 @@
+ 
+     move-result-object v7
+ 
++    invoke-static {v3, v10, v12}, Ldev/nino/squareglass/PlayerArtwork;->frame(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++
++    move-result-object v3
++
+     .line 151
+     invoke-static {v10, v3}, Landroidx/compose/ui/ComposedModifierKt;->materializeModifier(Landroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+ 
+@@ -4730,6 +4740,10 @@
+ 
+     const/4 v15, 0x2
+ 
++    invoke-static {v3, v7, v8}, Ldev/nino/squareglass/PlayerArtwork;->header(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++
++    move-result-object v3
++
+     .line 200
+     invoke-static {v3, v6, v8, v15, v11}, Landroidx/compose/foundation/layout/PaddingKt;->padding-VpY3zN4$default(Landroidx/compose/ui/Modifier;FFILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+ 
+@@ -5465,6 +5479,18 @@
+ 
+     move-object/from16 v4, v19
+ 
++    const/4 v8, 0x0
++
++    invoke-static {v3, v7, v8}, Ldev/nino/squareglass/PlayerArtwork;->hero(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++
++    move-result-object v3
++
++    invoke-virtual/range {v54 .. v54}, Landroidx/compose/ui/Alignment$Companion;->getTopStart()Landroidx/compose/ui/Alignment;
++
++    move-result-object v4
++
++    const/16 v8, 0xc30
++
+     .line 293
+     invoke-static/range {v3 .. v9}, Landroidx/compose/foundation/layout/BoxWithConstraintsKt;->BoxWithConstraints(Landroidx/compose/ui/Modifier;Landroidx/compose/ui/Alignment;ZLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+ 
+@@ -5835,7 +5861,7 @@
+ 
+     move-result-object v4
+ 
+-    invoke-static {v0, v7, v6}, Ldev/nino/squareglass/NativeGlass;->secondaryBar(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++    invoke-static {v0, v7, v6}, Ldev/nino/squareglass/PlayerArtwork;->footer(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
+ 
+     move-result-object v0
+ 

@@ -1,0 +1,13 @@
+--- a/com/aspiro/wamp/MainActivity.smali
++++ b/com/aspiro/wamp/MainActivity.smali
+@@ -2417,6 +2417,10 @@
+     move-result-object v2
+ 
+     .line 177
++    invoke-static {p0, v2}, Ldev/nino/squareglass/GlassHost;->wrapNative(Landroid/app/Activity;Lam0/p;)Lam0/p;
++
++    move-result-object v2
++
+     invoke-virtual {v0, v2}, Landroidx/compose/ui/platform/ComposeView;->setContent(Lam0/p;)V
+ 
+     .line 178

@@ -1,0 +1,15 @@
+--- a/com/aspiro/wamp/broadcast/s.smali
++++ b/com/aspiro/wamp/broadcast/s.smali
+@@ -156,6 +156,12 @@
+     .line 69
+     invoke-virtual {p0, v2}, Lcom/aspiro/wamp/broadcast/s;->a(Lcom/aspiro/wamp/broadcast/q;)V
+ 
++    sget-object v2, Lcom/aspiro/wamp/App;->v:Lcom/aspiro/wamp/App;
++    new-instance p1, Ldev/nino/squareglass/LinnProvider;
++    invoke-direct {p1, v2}, Ldev/nino/squareglass/LinnProvider;-><init>(Landroid/app/Application;)V
++    invoke-virtual {p0, p1}, Lcom/aspiro/wamp/broadcast/s;->a(Lcom/aspiro/wamp/broadcast/q;)V
++
++
+     .line 70
+     .line 71
+     .line 72

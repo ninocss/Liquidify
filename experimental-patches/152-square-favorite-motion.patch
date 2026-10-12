@@ -1,0 +1,13 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/e1.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/e1.smali
+@@ -336,7 +336,9 @@
+     move-result-object v2
+ 
+     .line 149
+-    invoke-static {v15}, Lcom/tidal/android/feature/playerscreen/ui/composables/anim/BouncePressKt;->a(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
++    iget-boolean v4, v0, Lcom/tidal/android/feature/playerscreen/ui/e;->a:Z
++    const/4 v6, 0x0
++    invoke-static {v15, v4, v11, v6}, Ldev/nino/squareglass/IconMotion;->favorite(Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
+ 
+     .line 150
+     .line 151

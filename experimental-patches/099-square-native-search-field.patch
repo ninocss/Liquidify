@@ -1,0 +1,16 @@
+--- a/com/aspiro/wamp/widgets/TidalSearchView.smali
++++ b/com/aspiro/wamp/widgets/TidalSearchView.smali
+@@ -316,3 +316,13 @@
+     .line 19
+     return-object v0
+ .end method
++
++.method protected onAttachedToWindow()V
++    .locals 0
++
++    invoke-super {p0}, Landroidx/appcompat/widget/SearchView;->onAttachedToWindow()V
++
++    invoke-static {p0}, Ldev/nino/squareglass/SquareExplore;->search(Landroid/view/View;)V
++
++    return-void
++.end method

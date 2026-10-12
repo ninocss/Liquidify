@@ -1,0 +1,24 @@
+--- a/com/tidal/android/feature/home/ui/composables/g.smali
++++ b/com/tidal/android/feature/home/ui/composables/g.smali
+@@ -324,7 +324,7 @@
+     move-result v0
+ 
+     .line 135
+-    invoke-static {v5, v0}, Landroidx/compose/foundation/layout/PaddingKt;->padding-3ABfNKs(Landroidx/compose/ui/Modifier;F)Landroidx/compose/ui/Modifier;
++    invoke-static {v5}, Ldev/nino/squareglass/SquareHome;->toolbarButton(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+ 
+     .line 136
+     .line 137
+@@ -476,6 +476,12 @@
+     move-object v6, v0
+ 
+     .line 206
++    const/16 v15, 0x38
++
++    invoke-static {}, Ldev/nino/squareglass/NativeGlass;->iconTint()Landroidx/compose/ui/graphics/ColorFilter;
++
++    move-result-object v12
++
+     invoke-static/range {v6 .. v15}, Landroidx/compose/foundation/ImageKt;->Image(Landroidx/compose/ui/graphics/painter/Painter;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/Alignment;Landroidx/compose/ui/layout/ContentScale;FLandroidx/compose/ui/graphics/ColorFilter;Landroidx/compose/runtime/Composer;II)V
+ 
+     .line 207

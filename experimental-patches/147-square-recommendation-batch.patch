@@ -1,0 +1,58 @@
+--- a/com/aspiro/wamp/playlist/ui/items/o.smali
++++ b/com/aspiro/wamp/playlist/ui/items/o.smali
+@@ -1153,6 +1153,7 @@
+ 
+ .method public final g()V
+     .locals 11
++    invoke-static {p0}, Ldev/nino/squareglass/RecommendationUpdates;->manual(Ljava/lang/Object;)V
+ 
+     .line 1
+     iget-object v0, p0, Lcom/aspiro/wamp/playlist/ui/items/o;->x:Lcom/aspiro/wamp/playlist/viewmodel/PlaylistCollectionViewModel;
+@@ -1298,6 +1299,8 @@
+ 
+     .line 20
+     :cond_1
++    invoke-static {p0}, Ldev/nino/squareglass/RecommendationUpdates;->begin(Ljava/lang/Object;)V
++
+     iget-object v0, p0, Lcom/aspiro/wamp/playlist/ui/items/o;->x:Lcom/aspiro/wamp/playlist/viewmodel/PlaylistCollectionViewModel;
+ 
+     .line 21
+@@ -1886,6 +1889,12 @@
+ .method public final l(Lcom/aspiro/wamp/model/Playlist;)V
+     .locals 12
+ 
++    invoke-static {p0, p1}, Ldev/nino/squareglass/RecommendationUpdates;->reuse(Ljava/lang/Object;Ljava/lang/Object;)Z
++    move-result v0
++    if-eqz v0, :square_native_reload
++    return-void
++    :square_native_reload
++
+     .line 1
+     new-instance v0, Lcom/aspiro/wamp/playlist/viewmodel/PlaylistCollectionViewModel;
+ 
+@@ -2117,6 +2126,12 @@
+ .method public final n(Z)V
+     .locals 4
+ 
++    invoke-static {p0}, Ldev/nino/squareglass/RecommendationUpdates;->active(Ljava/lang/Object;)Z
++    move-result v0
++    if-eqz v0, :square_native_suggestions
++    return-void
++    :square_native_suggestions
++
+     .line 1
+     iget-object v0, p0, Lcom/aspiro/wamp/playlist/ui/items/o;->x:Lcom/aspiro/wamp/playlist/viewmodel/PlaylistCollectionViewModel;
+ 
+@@ -2329,6 +2344,12 @@
+ .method public final o(Lcom/aspiro/wamp/playlist/viewmodel/PlaylistCollectionViewModel;)V
+     .locals 3
+ 
++    invoke-static {p0, p1}, Ldev/nino/squareglass/RecommendationUpdates;->handle(Ljava/lang/Object;Ljava/lang/Object;)Z
++    move-result v0
++    if-eqz v0, :square_native_diff
++    return-void
++    :square_native_diff
++
+     .line 1
+     invoke-virtual {p1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+ 

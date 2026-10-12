@@ -1,0 +1,20 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/CoverPagerKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/CoverPagerKt.smali
+@@ -190,7 +190,7 @@
+ 
+     move-result v9
+ 
+-    invoke-static {v9}, Landroidx/compose/foundation/shape/RoundedCornerShapeKt;->RoundedCornerShape-0680j_4(F)Landroidx/compose/foundation/shape/RoundedCornerShape;
++    invoke-static {v9}, Ldev/nino/squareglass/SquareShapes;->playerArtwork(F)Landroidx/compose/foundation/shape/RoundedCornerShape;
+ 
+     move-result-object v17
+ 
+@@ -584,7 +584,7 @@
+ 
+     move-result v6
+ 
+-    invoke-static {v6}, Landroidx/compose/foundation/shape/RoundedCornerShapeKt;->RoundedCornerShape-0680j_4(F)Landroidx/compose/foundation/shape/RoundedCornerShape;
++    invoke-static {v6}, Ldev/nino/squareglass/SquareShapes;->playerArtwork(F)Landroidx/compose/foundation/shape/RoundedCornerShape;
+ 
+     move-result-object v15
+ 

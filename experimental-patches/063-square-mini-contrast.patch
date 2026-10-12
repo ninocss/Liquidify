@@ -1,0 +1,38 @@
+--- a/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
+@@ -888,7 +888,7 @@
+     .line 13
+     new-instance v24, Lf20/d;
+ 
+-    invoke-virtual/range {v22 .. v22}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->J0()Lf20/a;
++    invoke-virtual/range {v22 .. v22}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->E0()Lf20/a;
+ 
+     move-result-object v25
+ 
+@@ -1745,7 +1745,7 @@
+     move-result-object v3
+ 
+     .line 106
+-    invoke-virtual/range {v22 .. v22}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->s0()Lf20/a;
++    invoke-virtual/range {v22 .. v22}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->l0()Lf20/a;
+ 
+     move-result-object v5
+ 
+@@ -1879,7 +1879,7 @@
+     sget v8, Lcom/tidal/android/feature/appscaffold/ui/composable/j;->d:F
+ 
+     .line 127
+-    invoke-virtual/range {v22 .. v22}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->q0()Lf20/a;
++    invoke-virtual/range {v22 .. v22}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->r0()Lf20/a;
+ 
+     move-result-object v3
+ 
+@@ -1888,7 +1888,7 @@
+     move-result-wide v6
+ 
+     .line 128
+-    invoke-virtual/range {v22 .. v22}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->s0()Lf20/a;
++    invoke-virtual/range {v22 .. v22}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->l0()Lf20/a;
+ 
+     move-result-object v3
+ 

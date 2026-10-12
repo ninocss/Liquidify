@@ -1,0 +1,47 @@
+--- a/com/tidal/android/feature/home/ui/composables/shortcutlist/ShortcutListModuleKt.smali
++++ b/com/tidal/android/feature/home/ui/composables/shortcutlist/ShortcutListModuleKt.smali
+@@ -16,7 +16,7 @@
+     .locals 1
+ 
+     .line 1
+-    const/16 v0, 0x3c
++    const/16 v0, 0x48
+ 
+     .line 2
+     .line 3
+@@ -532,7 +532,7 @@
+ 
+     move-result v14
+ 
+-    invoke-static {v14}, Landroidx/compose/foundation/shape/RoundedCornerShapeKt;->RoundedCornerShape-0680j_4(F)Landroidx/compose/foundation/shape/RoundedCornerShape;
++    invoke-static {v14}, Ldev/nino/squareglass/SquareShapes;->shortcut(F)Landroidx/compose/foundation/shape/RoundedCornerShape;
+ 
+     move-result-object v14
+ 
+@@ -555,7 +555,7 @@
+ 
+     const/16 v33, 0x2
+ 
+-    invoke-static/range {v29 .. v34}, Landroidx/compose/foundation/BackgroundKt;->background-bw27NRU$default(Landroidx/compose/ui/Modifier;JLandroidx/compose/ui/graphics/Shape;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
++    invoke-static/range {v29 .. v29}, Ldev/nino/squareglass/SquareHome;->shortcutSurface(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+ 
+     move-result-object v4
+ 
+@@ -5175,7 +5175,7 @@
+     move-result v3
+ 
+     .line 151
+-    invoke-static {v3}, Landroidx/compose/foundation/shape/RoundedCornerShapeKt;->RoundedCornerShape-0680j_4(F)Landroidx/compose/foundation/shape/RoundedCornerShape;
++    invoke-static {v3}, Ldev/nino/squareglass/SquareShapes;->artwork(F)Landroidx/compose/foundation/shape/RoundedCornerShape;
+ 
+     .line 152
+     .line 153
+@@ -5639,7 +5639,7 @@
+ 
+     move-result v6
+ 
+-    invoke-static {v6}, Landroidx/compose/foundation/shape/RoundedCornerShapeKt;->RoundedCornerShape-0680j_4(F)Landroidx/compose/foundation/shape/RoundedCornerShape;
++    invoke-static {v6}, Ldev/nino/squareglass/SquareShapes;->artwork(F)Landroidx/compose/foundation/shape/RoundedCornerShape;
+ 
+     move-result-object v6
+ 

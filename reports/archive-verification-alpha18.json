@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "archives": {
+    "SquareGlass-0.1.9-alpha18-patches.zip": {
+      "entries": 741,
+      "sha256": "a3e91b25ae5f746c7e821ead78a65fa1ccfe64e332c2f0b1c7dec5932e86d94e",
+      "allEntryChecksumsVerified": true
+    },
+    "SquareGlass-0.1.9-alpha18-source.zip": {
+      "entries": 680,
+      "sha256": "2c352e91e7a90a69f082e491eeb23b3f9743532911f6a6e6ed7b3eb9c1672a22",
+      "allEntryChecksumsVerified": true
+    }
+  },
+  "managerUnchanged": true
+}

@@ -1,0 +1,13 @@
+--- a/com/aspiro/wamp/settings/compose/n0.smali
++++ b/com/aspiro/wamp/settings/compose/n0.smali
+@@ -33,6 +33,10 @@
+ 
+     .line 1
+     check-cast p1, Landroidx/compose/foundation/lazy/LazyListScope;
++
++    iget-object v0, p0, Lcom/aspiro/wamp/settings/compose/n0;->a:Ljava/util/List;
++
++    invoke-static {p1, v0}, Ldev/nino/squareglass/DesignEntry;->append(Landroidx/compose/foundation/lazy/LazyListScope;Ljava/util/List;)V
+ 
+     .line 2
+     .line 3

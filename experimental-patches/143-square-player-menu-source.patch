@@ -1,0 +1,13 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/l0.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/l0.smali
+@@ -19,6 +19,10 @@
+     .line 2
+     .line 3
+     move-object/from16 v1, p1
++
++    invoke-static {v1}, Ldev/nino/squareglass/PlayerWindow;->menuAction(Lam0/a;)Lam0/a;
++
++    move-result-object v1
+ 
+     .line 4
+     .line 5

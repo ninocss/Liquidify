@@ -1,0 +1,25 @@
+{
+  "version": "0.1.9-alpha20",
+  "date": "2026-10-11",
+  "archives": [
+    {
+      "kind": "patches",
+      "file": "SquareGlass-0.1.9-alpha20-patches.zip",
+      "entries": 743,
+      "sha256": "2a1dd6e7521ca1adb504032bda97b7025a7cf6e0266c82d29e99d4e61708f38d",
+      "zipIntegrity": true,
+      "allEntryChecksums": true,
+      "excludedPrivateCapturesAndBinaries": true
+    },
+    {
+      "kind": "source",
+      "file": "SquareGlass-0.1.9-alpha20-source.zip",
+      "entries": 692,
+      "sha256": "8523232e0a1add2861e32d94ac3b3f9e83f7ff1381c52e103e63568ed46d1070",
+      "zipIntegrity": true,
+      "allEntryChecksums": true,
+      "excludedPrivateCapturesAndBinaries": true
+    }
+  ],
+  "managerUnchanged": true
+}

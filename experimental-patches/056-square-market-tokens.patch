@@ -1,0 +1,13 @@
+--- a/com/squareup/ui/market/core/theme/MarketStylesheet.smali
++++ b/com/squareup/ui/market/core/theme/MarketStylesheet.smali
+@@ -3506,6 +3506,10 @@
+     .line 6
+     iget-object v0, p0, Lcom/squareup/ui/market/core/theme/MarketStylesheet;->colorTokens:Lv20/i$b;
+ 
++    invoke-static {v0}, Ldev/nino/squareglass/SquareMarketTokens;->select(Lv20/i$b;)Lv20/i$b;
++
++    move-result-object v0
++
+     return-object v0
+ .end method
+ 

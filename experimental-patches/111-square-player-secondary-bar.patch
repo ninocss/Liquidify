@@ -1,0 +1,13 @@
+--- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
+@@ -5835,6 +5835,10 @@
+ 
+     move-result-object v4
+ 
++    invoke-static {v0, v7, v6}, Ldev/nino/squareglass/NativeGlass;->secondaryBar(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++
++    move-result-object v0
++
+     .line 348
+     invoke-static {v7, v0}, Landroidx/compose/ui/ComposedModifierKt;->materializeModifier(Landroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+ 

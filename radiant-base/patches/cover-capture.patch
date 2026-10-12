@@ -1,0 +1,22 @@
+--- a/com/tidal/android/feature/appscaffold/ui/q.smali
++++ b/com/tidal/android/feature/appscaffold/ui/q.smali
+@@ -55,6 +55,8 @@
+     .line 10
+     iput-object p4, p0, Lcom/tidal/android/feature/appscaffold/ui/q;->d:Ljava/lang/String;
+ 
++    invoke-static {p3, p4}, Lradiant/HomeBackdrop;->fromMiniPlayer(ILjava/lang/String;)V    # capture cover state
++
+     .line 11
+     .line 12
+     iput-boolean p5, p0, Lcom/tidal/android/feature/appscaffold/ui/q;->e:Z
+--- a/com/tidal/android/feature/appscaffold/ui/t.smali
++++ b/com/tidal/android/feature/appscaffold/ui/t.smali
+@@ -23,6 +23,8 @@
+ .method public constructor <init>(Lcom/tidal/android/feature/appscaffold/ui/MiniPlayerContract$ItemType;Lcom/tidal/android/feature/appscaffold/ui/q;Lcom/tidal/android/feature/appscaffold/ui/MiniPlayerContract$PlayState;Z)V
+     .locals 0
+ 
++    invoke-static {p3}, Lradiant/HomeBackdrop;->onPlayState(Lcom/tidal/android/feature/appscaffold/ui/MiniPlayerContract$PlayState;)V    # RL: publish live play state to Cover Everywhere
++
+     .line 1
+     invoke-virtual {p1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+ 

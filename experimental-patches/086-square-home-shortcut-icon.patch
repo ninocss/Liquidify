@@ -1,0 +1,15 @@
+--- a/com/tidal/android/feature/home/ui/composables/shortcutlist/p.smali
++++ b/com/tidal/android/feature/home/ui/composables/shortcutlist/p.smali
+@@ -239,6 +239,12 @@
+     move-object v2, v1
+ 
+     .line 97
++    const/16 v11, 0x38
++
++    invoke-static {}, Ldev/nino/squareglass/NativeGlass;->iconTint()Landroidx/compose/ui/graphics/ColorFilter;
++
++    move-result-object v8
++
+     invoke-static/range {v2 .. v11}, Landroidx/compose/foundation/ImageKt;->Image(Landroidx/compose/ui/graphics/painter/Painter;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/Alignment;Landroidx/compose/ui/layout/ContentScale;FLandroidx/compose/ui/graphics/ColorFilter;Landroidx/compose/runtime/Composer;II)V
+ 
+     .line 98

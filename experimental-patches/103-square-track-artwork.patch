@@ -1,0 +1,11 @@
+--- a/t6/q.smali
++++ b/t6/q.smali
+@@ -883,6 +883,8 @@
+     .line 425
+     invoke-virtual {p1, p2}, Landroid/view/View;->setOnCreateContextMenuListener(Landroid/view/View$OnCreateContextMenuListener;)V
+ 
++    invoke-static {p1}, Ldev/nino/squareglass/SquareDetails;->track(Landroid/view/View;)V
++
+     .line 426
+     .line 427
+     .line 428

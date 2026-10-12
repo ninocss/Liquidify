@@ -1,0 +1,15 @@
+--- a/com/tidal/android/feature/search/ui/composables/a0.smali
++++ b/com/tidal/android/feature/search/ui/composables/a0.smali
+@@ -447,6 +447,12 @@
+     .line 187
+     .line 188
+     const/4 v4, 0x1
++
++    invoke-static {}, Ldev/nino/squareglass/SearchChrome;->container()Lam0/p;
++    move-result-object v19
++    invoke-static {}, Ldev/nino/squareglass/SearchChrome;->shape()Landroidx/compose/ui/graphics/Shape;
++    move-result-object v16
++    const v23, 0x38c0
+ 
+     .line 189
+     invoke-virtual/range {v1 .. v23}, Landroidx/compose/material3/TextFieldDefaults;->DecorationBox(Ljava/lang/String;Lam0/p;ZZLandroidx/compose/ui/text/input/VisualTransformation;Landroidx/compose/foundation/interaction/InteractionSource;ZLam0/p;Lam0/p;Lam0/p;Lam0/p;Lam0/p;Lam0/p;Lam0/p;Landroidx/compose/ui/graphics/Shape;Landroidx/compose/material3/TextFieldColors;Landroidx/compose/foundation/layout/PaddingValues;Lam0/p;Landroidx/compose/runtime/Composer;III)V

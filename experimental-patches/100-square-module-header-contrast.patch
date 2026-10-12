@@ -1,0 +1,28 @@
+--- a/t7/d.smali
++++ b/t7/d.smali
+@@ -986,6 +986,12 @@
+ 
+     .line 465
+     .line 466
++    invoke-static {}, Ldev/nino/squareglass/SquarePalette;->inkColor()J
++
++    move-result-wide v6
++
++    and-int/lit8 v28, v28, -0x5
++
+     invoke-static/range {v4 .. v28}, Landroidx/compose/material/TextKt;->Text--4IGK_g(Ljava/lang/String;Landroidx/compose/ui/Modifier;JJLandroidx/compose/ui/text/font/FontStyle;Landroidx/compose/ui/text/font/FontWeight;Landroidx/compose/ui/text/font/FontFamily;JLandroidx/compose/ui/text/style/TextDecoration;Landroidx/compose/ui/text/style/TextAlign;JIZIILam0/l;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/runtime/Composer;III)V
+ 
+     .line 467
+@@ -1158,6 +1164,12 @@
+ 
+     .line 547
+     .line 548
++    invoke-static {}, Ldev/nino/squareglass/SquarePalette;->inkColor()J
++
++    move-result-wide v6
++
++    and-int/lit8 v28, v28, -0x5
++
+     invoke-static/range {v4 .. v28}, Landroidx/compose/material/TextKt;->Text--4IGK_g(Ljava/lang/String;Landroidx/compose/ui/Modifier;JJLandroidx/compose/ui/text/font/FontStyle;Landroidx/compose/ui/text/font/FontWeight;Landroidx/compose/ui/text/font/FontFamily;JLandroidx/compose/ui/text/style/TextDecoration;Landroidx/compose/ui/text/style/TextAlign;JIZIILam0/l;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/runtime/Composer;III)V
+ 
+     .line 549

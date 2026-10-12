@@ -1,0 +1,14 @@
+--- a/a8/g.smali
++++ b/a8/g.smali
+@@ -721,5 +721,11 @@
+     .line 97
+     .line 98
+     .line 99
++    invoke-virtual {p0}, Landroidx/fragment/app/Fragment;->requireView()Landroid/view/View;
++
++    move-result-object p1
++
++    invoke-static {p1}, Ldev/nino/squareglass/SquareExplore;->install(Landroid/view/View;)V
++
+     return-void
+ .end method

@@ -1,0 +1,77 @@
+--- a/com/tidal/android/feature/playerscreen/ui/PlayerViewModel.smali
++++ b/com/tidal/android/feature/playerscreen/ui/PlayerViewModel.smali
+@@ -1374,6 +1374,8 @@
+     .line 105
+     check-cast v1, Lcom/aspiro/wamp/model/Track;
+ 
++    invoke-static {v0, v1}, Lradiant/RLAPILyricsHook;->onWampTrack(Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;Lcom/aspiro/wamp/model/Track;)V    # RL API lyrics hook
++
+     .line 106
+     .line 107
+     invoke-virtual {v1}, Lcom/aspiro/wamp/model/MediaItem;->getId()I
+@@ -1655,7 +1657,11 @@
+     .line 239
+     .line 240
+     .line 241
+-    if-nez v9, :cond_a
++    invoke-static {v0}, Lradiant/RLAPILyricsHook;->shouldKeepOpen(Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;)Z
++    move-result v20
++    if-nez v20, :cond_a    # keep visibility only for RL state owned by this ViewModel
++    :rl_native_visibility
++    if-nez v9, :cond_a
+ 
+     .line 242
+     .line 243
+@@ -2347,7 +2353,12 @@
+ 
+     .line 572
+     :goto_c
++    invoke-static {v0}, Lradiant/RLAPILyricsHook;->isOwner(Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;)Z
++    move-result v20
++    if-nez v20, :rl_keep_n2    # only preserve RL content owned by this ViewModel
++    :rl_set_n2
+     invoke-interface {v9, v1}, Lkotlinx/coroutines/flow/MutableStateFlow;->setValue(Ljava/lang/Object;)V
++    :rl_keep_n2
+ 
+     .line 573
+     .line 574
+@@ -2396,7 +2407,12 @@
+ 
+     .line 595
+     .line 596
++    invoke-static {v0}, Lradiant/RLAPILyricsHook;->shouldKeepOpen(Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;)Z
++    move-result v20
++    if-nez v20, :rl_keep_o    # only preserve visibility owned by this ViewModel
++    :rl_set_o
+     invoke-interface {v1, v5}, Lkotlinx/coroutines/flow/MutableStateFlow;->setValue(Ljava/lang/Object;)V
++    :rl_keep_o
+ 
+     .line 597
+     .line 598
+@@ -2425,7 +2441,12 @@
+ 
+     .line 610
+     .line 611
++    invoke-static {v0}, Lradiant/RLAPILyricsHook;->isOwner(Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;)Z
++    move-result v20
++    if-nez v20, :rl_keep_n    # only preserve RL content owned by this ViewModel
++    :rl_set_n
+     invoke-interface {v1, v6}, Lkotlinx/coroutines/flow/MutableStateFlow;->setValue(Ljava/lang/Object;)V
++    :rl_keep_n
+ 
+     .line 612
+     .line 613
+--- a/com/tidal/android/feature/playerscreen/ui/PlayerViewModel$special$$inlined$mapNotNull$1$2.smali
++++ b/com/tidal/android/feature/playerscreen/ui/PlayerViewModel$special$$inlined$mapNotNull$1$2.smali
+@@ -2256,6 +2256,11 @@
+     .line 1040
+     .line 1041
+     move-result v34
++    invoke-static {v1}, Lradiant/RLAPILyricsHook;->isOwner(Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;)Z
++    move-result v4
++    if-eqz v4, :rl_hl_done    # ignore non-RL state or state owned by an obsolete ViewModel
++    const/16 v34, 0x1    # RL lyrics active = force hasLyrics so the sparkle stays
++    :rl_hl_done
+ 
+     .line 1042
+     iget-object v4, v1, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->P:Lkotlinx/coroutines/flow/MutableStateFlow;

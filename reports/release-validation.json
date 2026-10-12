@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0-beta",
+  "patchesSha256": "6c961ea2db4ab5f9e80f45677b5c058ebb13dcd87f421c1b86225b0401188554",
+  "helpers": 603,
+  "strictPatches": 96,
+  "patchTestsPassed": 25,
+  "managerTestsPassed": 5,
+  "managerBuildPassed": true,
+  "betaComponentImportUiPassed": true,
+  "visibleDefaultPatches": 3,
+  "editorAndOwnRepositoriesUiPassed": true,
+  "radiantForkCreditsUiPassed": true,
+  "upstreamPatchSpecsAndFilesUnchanged": true,
+  "actualManagerPatchInstallAndApkReadbackPassed": true,
+  "installedTidalApkSha256": "65dacdcba17acf82ce0aba09c95303d1c629d67ac7214744faf4d91c1e69fde0",
+  "newPlaybackStarted": false,
+  "releaseManagerSigning": "Stable dedicated Liquidify key stored as encrypted Actions secrets; excluded from Git"
+}

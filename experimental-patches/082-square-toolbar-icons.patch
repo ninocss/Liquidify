@@ -1,0 +1,15 @@
+--- a/com/tidal/android/feature/home/ui/composables/g.smali
++++ b/com/tidal/android/feature/home/ui/composables/g.smali
+@@ -915,6 +915,12 @@
+ 
+     .line 166
+     .line 167
++    move-wide/from16 v18, v20
++
++    move-wide/from16 v22, v20
++
++    const/16 v26, 0x0
++
+     invoke-virtual/range {v13 .. v26}, Landroidx/compose/material3/TopAppBarDefaults;->topAppBarColors-zjMxDiM(JJJJJLandroidx/compose/runtime/Composer;II)Landroidx/compose/material3/TopAppBarColors;
+ 
+     .line 168

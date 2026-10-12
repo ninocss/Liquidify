@@ -1,0 +1,37 @@
+--- a/com/aspiro/wamp/playlist/ui/items/o$c.smali
++++ b/com/aspiro/wamp/playlist/ui/items/o$c.smali
+@@ -58,10 +58,14 @@
+ 
+ # virtual methods
+ .method public final onError(Ljava/lang/Throwable;)V
+-    .locals 0
++    .locals 1
+ 
+     .line 1
+     invoke-super {p0, p1}, Lr1/a;->onError(Ljava/lang/Throwable;)V
++    iget-object p1, p0, Lcom/aspiro/wamp/playlist/ui/items/o$c;->b:Lcom/aspiro/wamp/playlist/ui/items/o;
++    const/4 v0, 0x0
++    invoke-static {p1, v0}, Ldev/nino/squareglass/RecommendationUpdates;->completed(Ljava/lang/Object;Z)V
++
+ 
+     .line 2
+     .line 3
+@@ -137,6 +141,8 @@
+ 
+     .line 15
+     .line 16
++    invoke-static {v2, v1}, Ldev/nino/squareglass/RecommendationUpdates;->completed(Ljava/lang/Object;Z)V
++
+     if-eqz v1, :cond_4
+ 
+     .line 17
+@@ -340,6 +346,9 @@
+ 
+     .line 109
+     .line 110
++    invoke-static {v2}, Ldev/nino/squareglass/RecommendationUpdates;->active(Ljava/lang/Object;)Z
++    move-result v1
++    if-nez v1, :cond_3
+     invoke-virtual {v2, v3}, Lcom/aspiro/wamp/playlist/ui/items/o;->n(Z)V
+ 
+     .line 111

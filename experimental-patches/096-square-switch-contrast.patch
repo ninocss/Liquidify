@@ -1,0 +1,74 @@
+--- a/com/tidal/wave/components/WaveSwitchKt.smali
++++ b/com/tidal/wave/components/WaveSwitchKt.smali
+@@ -2006,7 +2006,7 @@
+ 
+     .line 95
+     .line 96
+-    invoke-interface {v0}, Lyk0/c;->c()J
++    invoke-static {}, Ldev/nino/squareglass/SquareSwitchPaint;->thumbEnabled()J
+ 
+     .line 97
+     .line 98
+@@ -2022,7 +2022,7 @@
+     move-result-object v1
+ 
+     .line 104
+-    invoke-interface {v0}, Lyk0/c;->w()J
++    invoke-static {}, Ldev/nino/squareglass/SquareSwitchPaint;->thumbEnabled()J
+ 
+     .line 105
+     .line 106
+@@ -2051,7 +2051,7 @@
+ 
+     .line 118
+     :cond_9
+-    invoke-interface {v0}, Lyk0/c;->k()J
++    invoke-static {}, Ldev/nino/squareglass/SquareSwitchPaint;->thumbDisabled()J
+ 
+     .line 119
+     .line 120
+@@ -2067,7 +2067,7 @@
+     move-result-object v1
+ 
+     .line 126
+-    invoke-interface {v0}, Lyk0/c;->k()J
++    invoke-static {}, Ldev/nino/squareglass/SquareSwitchPaint;->thumbDisabled()J
+ 
+     .line 127
+     .line 128
+@@ -2523,7 +2523,7 @@
+ 
+     .line 92
+     .line 93
+-    invoke-interface {v1}, Lyk0/c;->x()J
++    invoke-static {}, Ldev/nino/squareglass/SquareSwitchPaint;->trackOff()J
+ 
+     .line 94
+     .line 95
+@@ -2539,7 +2539,7 @@
+     move-result-object v2
+ 
+     .line 101
+-    invoke-interface {v1}, Lyk0/c;->s()J
++    invoke-static {}, Ldev/nino/squareglass/SquareSwitchPaint;->trackOn()J
+ 
+     .line 102
+     .line 103
+@@ -2568,7 +2568,7 @@
+ 
+     .line 115
+     :cond_7
+-    invoke-interface {v1}, Lyk0/c;->v()J
++    invoke-static {}, Ldev/nino/squareglass/SquareSwitchPaint;->trackDisabled()J
+ 
+     .line 116
+     .line 117
+@@ -2584,7 +2584,7 @@
+     move-result-object v2
+ 
+     .line 123
+-    invoke-interface {v1}, Lyk0/c;->v()J
++    invoke-static {}, Ldev/nino/squareglass/SquareSwitchPaint;->trackDisabled()J
+ 
+     .line 124
+     .line 125

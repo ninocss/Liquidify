@@ -1,0 +1,11 @@
+--- a/y40/c.smali
++++ b/y40/c.smali
+@@ -434,6 +434,8 @@
+ 
+     .line 10
+     .line 11
++    invoke-static {p0}, Ldev/nino/squareglass/SquareMenus;->dismissed(Landroid/app/Dialog;)V
++
+     invoke-super {p0}, Landroidx/appcompat/app/AppCompatDialog;->dismiss()V
+ 
+     .line 12

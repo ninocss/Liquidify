@@ -1,0 +1,13 @@
+--- a/com/aspiro/wamp/settings/compose/h0.smali
++++ b/com/aspiro/wamp/settings/compose/h0.smali
+@@ -544,6 +544,10 @@
+     move-result-object v7
+ 
+     .line 241
++    invoke-static {v7, v11, v9}, Ldev/nino/squareglass/SquareScreens;->settingsRow(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++
++    move-result-object v7
++
+     sget-object v8, Lcom/tidal/wave/designtokens/WaveSpacing;->Regular:Lcom/tidal/wave/designtokens/WaveSpacing;
+ 
+     .line 242

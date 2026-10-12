@@ -1,0 +1,38 @@
+--- a/com/aspiro/wamp/widgets/SecondaryActionButton.smali
++++ b/com/aspiro/wamp/widgets/SecondaryActionButton.smali
+@@ -592,3 +592,35 @@
+     .line 7
+     return-void
+ .end method
++
++.method protected onAttachedToWindow()V
++    .locals 0
++    invoke-super {p0}, Landroidx/constraintlayout/widget/ConstraintLayout;->onAttachedToWindow()V
++    invoke-static {p0}, Ldev/nino/squareglass/NativeIconMotion;->attach(Landroid/view/View;)V
++    return-void
++.end method
++
++.method protected onDetachedFromWindow()V
++    .locals 0
++    invoke-static {p0}, Ldev/nino/squareglass/NativeIconMotion;->detach(Landroid/view/View;)V
++    invoke-super {p0}, Landroidx/constraintlayout/widget/ConstraintLayout;->onDetachedFromWindow()V
++    return-void
++.end method
++
++.method public dispatchTouchEvent(Landroid/view/MotionEvent;)Z
++    .locals 1
++    invoke-static {p0, p1}, Ldev/nino/squareglass/NativeIconMotion;->touch(Landroid/view/View;Landroid/view/MotionEvent;)V
++    invoke-super {p0, p1}, Landroidx/constraintlayout/widget/ConstraintLayout;->dispatchTouchEvent(Landroid/view/MotionEvent;)Z
++    move-result v0
++    return v0
++.end method
++
++.method protected drawChild(Landroid/graphics/Canvas;Landroid/view/View;J)Z
++    .locals 2
++    invoke-static {p0, p2, p1}, Ldev/nino/squareglass/NativeIconMotion;->before(Landroid/view/View;Landroid/view/View;Landroid/graphics/Canvas;)I
++    move-result v0
++    invoke-super/range {p0 .. p4}, Landroidx/constraintlayout/widget/ConstraintLayout;->drawChild(Landroid/graphics/Canvas;Landroid/view/View;J)Z
++    move-result v1
++    invoke-static {p0, p2, p1, v0}, Ldev/nino/squareglass/NativeIconMotion;->after(Landroid/view/View;Landroid/view/View;Landroid/graphics/Canvas;I)V
++    return v1
++.end method

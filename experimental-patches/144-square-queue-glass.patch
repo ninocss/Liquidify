@@ -1,0 +1,24 @@
+--- a/com/aspiro/wamp/nowplaying/view/playqueue/l.smali
++++ b/com/aspiro/wamp/nowplaying/view/playqueue/l.smali
+@@ -378,6 +378,8 @@
+     .line 21
+     .line 22
+     :cond_0
++    invoke-static {p1}, Ldev/nino/squareglass/QueueGlass;->dialog(Landroid/app/Dialog;)V
++
+     return-object p1
+ .end method
+ 
+@@ -975,6 +977,12 @@
+     .line 252
+     .line 253
+     .line 254
++    invoke-virtual {p0}, Landroidx/fragment/app/Fragment;->requireView()Landroid/view/View;
++
++    move-result-object p1
++
++    invoke-static {p1}, Ldev/nino/squareglass/QueueGlass;->install(Landroid/view/View;)V
++
+     return-void
+ 
+     .line 255

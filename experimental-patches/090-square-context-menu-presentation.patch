@@ -1,0 +1,28 @@
+--- a/i4/a.smali
++++ b/i4/a.smali
+@@ -78,7 +78,15 @@
+ 
+     .line 27
+     .line 28
+-    invoke-virtual {v0}, Landroid/app/Dialog;->show()V
++    invoke-virtual {v0}, Landroid/app/Dialog;->getOwnerActivity()Landroid/app/Activity;
++
++    move-result-object p1
++
++    iget-object v1, v0, Ly40/c;->b:Landroid/view/View;
++
++    iget-object v2, v0, Ly40/c;->c:Ly40/a;
++
++    invoke-static {v0, p1, v1, v2}, Ldev/nino/squareglass/SquareMenus;->show(Landroid/app/Dialog;Landroid/app/Activity;Landroid/view/View;Landroidx/recyclerview/widget/RecyclerView$Adapter;)V
+ 
+     .line 29
+     .line 30
+@@ -129,7 +137,7 @@
+ 
+     .line 17
+     :cond_1
+-    invoke-virtual {v0}, Landroid/app/Dialog;->isShowing()Z
++    invoke-static {v0}, Ldev/nino/squareglass/SquareMenus;->showing(Landroid/app/Dialog;)Z
+ 
+     .line 18
+     .line 19

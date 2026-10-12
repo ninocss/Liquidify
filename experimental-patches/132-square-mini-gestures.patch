@@ -1,0 +1,17 @@
+--- a/com/tidal/android/feature/appscaffold/ui/composable/i.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/i.smali
+@@ -2599,6 +2599,14 @@
+ 
+     move-result-object v4
+ 
++    move-object/from16 v5, v46
++
++    const/4 v6, 0x0
++
++    invoke-static {v4, v5, v7, v6}, Ldev/nino/squareglass/NativeMiniGestures;->decorate(Landroidx/compose/ui/Modifier;Lam0/a;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++
++    move-result-object v4
++
+     .line 190
+     invoke-interface/range {v32 .. v32}, Landroidx/compose/runtime/State;->getValue()Ljava/lang/Object;
+ 

@@ -1,0 +1,35 @@
+--- a/com/tidal/android/ui/market/a.smali
++++ b/com/tidal/android/ui/market/a.smali
+@@ -16,19 +16,8 @@
+ 
+     .line 2
+     .line 3
+-    new-instance v1, Lm20/a$a;
+-
+-    .line 4
+-    .line 5
+-    sget-object v2, Lcom/squareup/ui/market/designtokens/core/ColorMode;->DARK:Lcom/squareup/ui/market/designtokens/core/ColorMode;
+-
+-    .line 6
+-    .line 7
+-    invoke-direct {v1, v2}, Lm20/a$a;-><init>(Lcom/squareup/ui/market/designtokens/core/ColorMode;)V
+-
+-    .line 8
+-    .line 9
+-    .line 10
++    sget-object v1, Lm20/a$b;->b:Lm20/a$b;
++
+     const/4 v4, 0x6
+ 
+     .line 11
+@@ -228,7 +217,9 @@
+ 
+     .line 74
+     .line 75
+-    sget-object p0, Lcom/tidal/android/ui/market/a;->a:Lm20/b;
++    invoke-static {}, Ldev/nino/squareglass/SquareMarketConfig;->create()Lm20/b;
++
++    move-result-object p0
+ 
+     .line 76
+     .line 77

@@ -1,0 +1,13 @@
+--- a/com/aspiro/wamp/MainActivity.smali
++++ b/com/aspiro/wamp/MainActivity.smali
+@@ -1838,6 +1838,10 @@
+     .line 42
+     .line 43
+     :cond_0
++    invoke-static {p1}, Ldev/nino/squareglass/SquareRuntime;->context(Landroid/content/Context;)Landroid/content/Context;
++
++    move-result-object p1
++
+     invoke-super {p0, p1}, Landroidx/appcompat/app/AppCompatActivity;->attachBaseContext(Landroid/content/Context;)V
+ 
+     .line 44

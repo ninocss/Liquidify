@@ -1,0 +1,15 @@
+--- a/com/tidal/wave2/theme/WaveThemeKt.smali
++++ b/com/tidal/wave2/theme/WaveThemeKt.smali
+@@ -677,7 +677,11 @@
+ 
+     .line 128
+     .line 129
+-    sget-object v9, Lcom/tidal/wave2/theme/WaveThemeKt;->a:Lal0/a;
++    const/4 v9, 0x0
++
++    invoke-static {v4, v9}, Ldev/nino/squareglass/NativeTheme;->waveColors(Landroidx/compose/runtime/Composer;I)Lal0/a;
++
++    move-result-object v9
+ 
+     .line 130
+     .line 131

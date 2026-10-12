@@ -1,0 +1,13 @@
+--- a/n8/d.smali
++++ b/n8/d.smali
+@@ -104,6 +104,10 @@
+ 
+     .line 32
+     .line 33
++    iget-object p1, p0, Landroidx/recyclerview/widget/RecyclerView$ViewHolder;->itemView:Landroid/view/View;
++
++    invoke-static {p1}, Ldev/nino/squareglass/SquareDetails;->track(Landroid/view/View;)V
++
+     return-void
+ .end method
+ 

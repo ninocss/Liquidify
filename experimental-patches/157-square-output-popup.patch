@@ -1,0 +1,34 @@
+--- a/com/aspiro/wamp/broadcast/f.smali
++++ b/com/aspiro/wamp/broadcast/f.smali
+@@ -1156,3 +1156,31 @@
+     .line 21
+     return-void
+ .end method
++
++.method public show()V
++    .locals 1
++    invoke-static {p0}, Ldev/nino/squareglass/SquareOutput;->show(Landroid/app/Dialog;)Z
++    move-result v0
++    if-nez v0, :done
++    invoke-super {p0}, Lcom/google/android/material/bottomsheet/BottomSheetDialog;->show()V
++    :done
++    return-void
++.end method
++
++.method public dismiss()V
++    .locals 0
++    invoke-static {p0}, Ldev/nino/squareglass/SquareOutput;->dismissed(Landroid/app/Dialog;)V
++    invoke-super {p0}, Landroidx/appcompat/app/AppCompatDialog;->dismiss()V
++    return-void
++.end method
++
++.method public isShowing()Z
++    .locals 1
++    invoke-static {p0}, Ldev/nino/squareglass/SquareOutput;->showing(Landroid/app/Dialog;)Z
++    move-result v0
++    if-nez v0, :done
++    invoke-super {p0}, Landroid/app/Dialog;->isShowing()Z
++    move-result v0
++    :done
++    return v0
++.end method

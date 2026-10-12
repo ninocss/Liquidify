@@ -1,0 +1,24 @@
+--- a/com/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel.smali
++++ b/com/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel.smali
+@@ -716,6 +716,8 @@
+     .line 3
+     iget-object v1, v0, Lcom/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel;->a:Lbi/e;
+ 
++    invoke-static {v1}, Ldev/nino/squareglass/NativePlayback;->bind(Lbi/e;)V
++
+     .line 4
+     .line 5
+     invoke-interface {v1}, Lbi/e;->getCurrentItem()Lcom/aspiro/wamp/playqueue/u0;
+@@ -1247,6 +1249,12 @@
+     .line 239
+     .line 240
+     .line 241
++    invoke-virtual {v2}, Ljava/lang/Enum;->name()Ljava/lang/String;
++
++    move-result-object v1
++
++    invoke-static {v1}, Ldev/nino/squareglass/NativePlayback;->observeName(Ljava/lang/String;)V
++
+     return-object v7
+ 
+     .line 242

@@ -1,0 +1,13 @@
+--- a/com/tidal/wave/components/WaveTextFieldKt.smali
++++ b/com/tidal/wave/components/WaveTextFieldKt.smali
+@@ -1245,6 +1245,10 @@
+     move-object/from16 v26, v11
+ 
+     .line 58
++    invoke-static/range {v18 .. v18}, Ldev/nino/squareglass/GlassPanels;->field(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
++
++    move-result-object v18
++
+     invoke-static/range {v16 .. v34}, Landroidx/compose/foundation/text/BasicTextFieldKt;->BasicTextField(Ljava/lang/String;Lam0/l;Landroidx/compose/ui/Modifier;ZZLandroidx/compose/ui/text/TextStyle;Landroidx/compose/foundation/text/KeyboardOptions;Landroidx/compose/foundation/text/KeyboardActions;ZILandroidx/compose/ui/text/input/VisualTransformation;Lam0/l;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/ui/graphics/Brush;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;III)V
+ 
+     move-object/from16 v0, v31

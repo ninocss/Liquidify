@@ -1,0 +1,56 @@
+{
+  "scope": "Local UI and Manager branding corrections prepared for the recreated ninocss/liquidify repository",
+  "patchesSha256": "c26215163dd34e7f46439e7375d4b36d6bc65d974ecfc79ae565438cf5a663cb",
+  "installedApkSha256": "63bf8e367809aeab719809bbaed1c59e3b240dbeb7db46b43720ed1d1b303f62",
+  "patchTestsPassed": 28,
+  "strictPatchesPassed": 96,
+  "hostLinkagePassed": true,
+  "extensionClasses": 606,
+  "managerImportPatchInstallReadbackPassed": true,
+  "paletteExact": true,
+  "signatureVerified": true,
+  "emulator": "emulator-5554",
+  "visualThemes": [
+    "light",
+    "dark"
+  ],
+  "visualScreens": [
+    "Home",
+    "My Tracks",
+    "Album",
+    "Playlist"
+  ],
+  "checks": [
+    "Shared muted text tokens exceed 4.5:1 on mapped native surfaces",
+    "Playback accessory film floor preserves label contrast over extreme artwork",
+    "Library light navigation and original selection effects; blue duplicate icon layer omitted",
+    "Equal primary controls and separate dynamically reflowing action rail",
+    "No My Tracks AppBar elevation frame",
+    "Readable collection toolbar at rest and while scrolled",
+    "Page-local glass prevents recursive RenderNode capture",
+    "Late-loaded Updates month headings use theme-aware ink",
+    "Unfilled native detail actions with evenly spaced icons and aligned labels",
+    "Detail toolbar uses 48dp touch targets and inset 40dp Glass circles"
+  ],
+  "playbackStarted": false,
+  "hardwarePlaybackRetested": false,
+  "additionalLightScreens": [
+    "Search",
+    "Updates"
+  ],
+  "navigationVisualScreens": [
+    "Home Light",
+    "Updates Dark"
+  ],
+  "iconAnimationsUnchanged": true,
+  "iconMotionSha256": "0eb8e56f148b0e695fdd1934a2ce77de34f99a2383524138dcca5733aaef6e50",
+  "navigationMaterial": "Pinned AndroidLiquidGlass catalog light variant; no custom contrast film or border",
+  "detailActionsVisualThemes": [
+    "light",
+    "dark"
+  ],
+  "detailActionsVisualScreens": [
+    "Album",
+    "Playlist"
+  ]
+}

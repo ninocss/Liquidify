@@ -1,0 +1,28 @@
+--- a/com/aspiro/wamp/settings/compose/SettingsScreenKt.smali
++++ b/com/aspiro/wamp/settings/compose/SettingsScreenKt.smali
+@@ -299,6 +299,10 @@
+     const/4 v4, 0x0
+ 
+     .line 118
++    invoke-static {v5}, Ldev/nino/squareglass/SquareScreens;->settingsBottomInset(F)F
++
++    move-result v5
++
+     invoke-static/range {v2 .. v7}, Landroidx/compose/foundation/layout/PaddingKt;->PaddingValues-a9UjIt4$default(FFFFILjava/lang/Object;)Landroidx/compose/foundation/layout/PaddingValues;
+ 
+     .line 119
+@@ -423,6 +427,14 @@
+     move-object v11, v2
+ 
+     .line 175
++    move-object/from16 v10, v19
++
++    invoke-static {v9, v10, v12}, Ldev/nino/squareglass/SquareScreens;->enter(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++
++    move-result-object v9
++
++    const/4 v10, 0x0
++
+     invoke-static/range {v9 .. v21}, Landroidx/compose/foundation/lazy/LazyDslKt;->LazyColumn(Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/lazy/LazyListState;Landroidx/compose/foundation/layout/PaddingValues;ZLandroidx/compose/foundation/layout/Arrangement$Vertical;Landroidx/compose/ui/Alignment$Horizontal;Landroidx/compose/foundation/gestures/FlingBehavior;ZLandroidx/compose/foundation/OverscrollEffect;Lam0/l;Landroidx/compose/runtime/Composer;II)V
+ 
+     .line 176

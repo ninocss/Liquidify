@@ -1,0 +1,11 @@
+--- a/j40/c0.smali
++++ b/j40/c0.smali
+@@ -1857,7 +1857,7 @@
+     move-result p1
+ 
+     .line 36
+-    invoke-static {p1}, Landroidx/compose/foundation/shape/RoundedCornerShapeKt;->RoundedCornerShape-0680j_4(F)Landroidx/compose/foundation/shape/RoundedCornerShape;
++    invoke-static {p1}, Ldev/nino/squareglass/SquareShapes;->artwork(F)Landroidx/compose/foundation/shape/RoundedCornerShape;
+ 
+     .line 37
+     .line 38

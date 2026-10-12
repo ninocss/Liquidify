@@ -1,0 +1,28 @@
+--- a/f80/f.smali
++++ b/f80/f.smali
+@@ -81,6 +81,25 @@
+         }
+     .end annotation
+ 
++    const/4 v0, 0x0
++
++    move-object/from16 v1, p2
++
++    invoke-static {v1, v0}, Ldev/nino/squareglass/SquareHome;->actionsEnabled(Landroidx/compose/runtime/Composer;I)Z
++
++    move-result v0
++
++    if-eqz v0, :square_native_home
++
++    const/4 v0, 0x0
++
++    move-object/from16 v1, p2
++
++    invoke-static {v1, v0}, Ldev/nino/squareglass/SquareHome;->Actions(Landroidx/compose/runtime/Composer;I)V
++
++    return-void
++
++    :square_native_home
+     move-object/from16 v0, p0
+ 
+     move-object/from16 v1, p1

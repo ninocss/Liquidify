@@ -1,0 +1,2 @@
+package com.aspiro.wamp.broadcast;
+public interface o { interface a {} void addListener(l listener); void connect(p2.a device); void disconnect(a callback); io.reactivex.Single<java.util.List<p2.a>> getAllAvailableDevices(); p getBroadcastProviderButton(); r getBroadcastProviderGroupButton(); p2.a getConnectedItem(); fq.f getVolumeControl(); void init(); boolean isConnected(); boolean isConnecting(); boolean isValidItem(p2.a device); void startScanning(); void stopScanning(); }

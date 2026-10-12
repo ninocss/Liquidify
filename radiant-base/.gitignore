@@ -1,0 +1,32 @@
+# Gradle
+.gradle/
+build/
+**/build/
+*.apk
+*.aab
+*.dex
+
+# Android
+local.properties
+Manager/app/release/
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Keys / secrets
+*.keystore
+*.jks
+
+# Reference material (APKs, original source)
+Reference/
+
+# tidal-apk/: CI consumes the top-level .apk/.apkm; ignore decompiled subdirs
+*.apkm
+!tidal-apk/*.apk
+!tidal-apk/*.apkm
+tidal-apk/*/
+
+# Kawarp-AGSL library (CLONE HERE! the build tooling in tools/kawarp-build expects it)
+tools/kawarp-agsl

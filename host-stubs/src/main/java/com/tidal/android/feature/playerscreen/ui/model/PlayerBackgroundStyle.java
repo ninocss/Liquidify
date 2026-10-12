@@ -1,0 +1,1 @@
+package com.tidal.android.feature.playerscreen.ui.model; public enum PlayerBackgroundStyle { FILLED_COLOR, DARK_BLUR }

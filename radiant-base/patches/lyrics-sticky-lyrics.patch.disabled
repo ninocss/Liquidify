@@ -1,0 +1,32 @@
+--- a/com/tidal/android/feature/playerscreen/ui/PlayerViewModel.smali
++++ b/com/tidal/android/feature/playerscreen/ui/PlayerViewModel.smali
+@@ -1060,9 +1060,13 @@
+     move-object/from16 v0, p0
+
+     .line 2
+     .line 3
+     move-object/from16 v1, p1
+
++    const/4 v2, 0x1    # true literal
++
++    sput-boolean v2, Lradiant/StickyLyrics;->enabled:Z    # arm sticky flag
++
+     .line 4
+     .line 5
+     invoke-virtual {v0}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+@@ -1568,9 +1572,15 @@
+     .line 244
+     .line 245
+     .line 246
+     :cond_a
++    iget-object v9, v0, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->N:Lkotlinx/coroutines/flow/MutableStateFlow;    # N flow
++
++    sget-object v10, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;    # TRUE literal
++
++    invoke-interface {v9, v10}, Lkotlinx/coroutines/flow/MutableStateFlow;->setValue(Ljava/lang/Object;)V    # force N=true
++
+     iget-object v9, v0, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->K:Lkotlinx/coroutines/flow/MutableStateFlow;
+
+     .line 247
+     .line 248
+     iget-object v10, v1, Lcom/tidal/android/tidalapi/domain/model/o;->j:Lcom/tidal/android/tidalapi/domain/model/a;

@@ -1,0 +1,14 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/BroadcastButtonKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/BroadcastButtonKt.smali
+@@ -993,6 +993,11 @@
+     .line 266
+     move-result-object v1
+ 
++    invoke-static {v1, v11, v12}, Ldev/nino/squareglass/OutputAnchor;->watch(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++
++    move-result-object v1
++
++
+     .line 267
+     sget-object v2, Landroidx/compose/ui/Alignment;->Companion:Landroidx/compose/ui/Alignment$Companion;
+ 
