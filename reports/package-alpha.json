@@ -1,6 +1,6 @@
 {
   "file": "Liquidify-1.0.0-beta-patches.zip",
-  "sha256": "c26215163dd34e7f46439e7375d4b36d6bc65d974ecfc79ae565438cf5a663cb",
+  "sha256": "9aed67f90494115c112085f051f7cce56cc2e127e370441a4104f9039fe4fafc",
   "helpers": 606,
   "squarePatches": 96,
   "status": "1.0.0 Beta; scoped hardware acceptance documented in LINN_OUTPUT.md"

@@ -7,7 +7,7 @@ import subprocess
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "1.0.0-beta"
+VERSION = json.loads((ROOT / "release.json").read_text())["version"]
 
 
 def digest(data):
@@ -22,7 +22,7 @@ def main():
     dex = (ROOT / "research/probe-remapped.dex").read_bytes()
     if not report["passed"] or report["sourceDexSha256"] != digest(dex):
         raise SystemExit("Current extension must pass linkage audit")
-    upstream = ROOT / "radiant-base/Patches"
+    upstream = ROOT / "radiant-base/patches"
     manifest = json.loads((upstream / "manifest.json").read_text())
     helpers = sorted(p.relative_to(ROOT / "research/probe-remapped").as_posix()
                      for p in (ROOT / "research/probe-remapped").rglob("*.smali"))

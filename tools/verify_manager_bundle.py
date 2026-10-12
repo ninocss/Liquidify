@@ -1,5 +1,6 @@
 """Verify that a Manager APK supports first installation without a GitHub release."""
 import hashlib
+import io
 import json
 import sys
 import zipfile
@@ -20,6 +21,10 @@ def verify(apk):
         assert json.loads(manager.read('assets/liquidify/data.json')) == expected
         patches = manager.read('assets/liquidify/patches.zip')
         assert patches == (ROOT / release['patches']).read_bytes(), 'Bundled patches differ'
+        with zipfile.ZipFile(io.BytesIO(patches)) as payload:
+            manifest = json.loads(payload.read('manifest.json'))
+            assert manifest['releaseVersion'] == expected['patchesVersion']
+            assert json.loads(manager.read('assets/patches-manifest.json')) == manifest
     return {'passed': True, 'bundledBuildInfoExact': True,
             'bundledPatchesSha256': hashlib.sha256(patches).hexdigest()}
 

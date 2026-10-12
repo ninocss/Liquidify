@@ -3,10 +3,12 @@ from pathlib import Path
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 import zipfile
 from fontTools.ttLib import TTFont
 from fontTools.varLib.instancer import instantiateVariableFont
+from build_runtime import java_tool
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -19,9 +21,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--theme-mode", type=int, choices=(0, 1, 2), default=0)
     args = parser.parse_args()
-    java = Path(r"C:\Program Files\Android\Android Studio\jbr\bin")
-    subprocess.run([str(java / "javac.exe"), "-cp", "build/dex-tools/*", "-d", "research/resource-tools", "tools/ResourcePalettePatcher.java", "tools/ColorSelectorPatcher.java"], cwd=ROOT, check=True)
-    subprocess.run([str(java / "java.exe"), "-cp", "build/dex-tools/*;research/resource-tools", "tools/PatchResources.java",
+    classpath = os.pathsep.join(["build/dex-tools/*", "research/resource-tools"])
+    subprocess.run([str(java_tool("javac")), "-cp", "build/dex-tools/*", "-d", "research/resource-tools", "tools/ResourcePalettePatcher.java", "tools/ColorSelectorPatcher.java"], cwd=ROOT, check=True)
+    subprocess.run([str(java_tool("java")), "-cp", classpath, "tools/PatchResources.java",
         "research/tidal-stock-2.200.0.apk", "mappings/resource-palette.tsv", "research/square-resources.arsc", str(args.theme_mode)], cwd=ROOT, check=True)
     palette = []
     for line in (ROOT / "mappings/resource-palette.tsv").read_text().splitlines():
@@ -61,7 +63,7 @@ def main():
             source_xml.parent.mkdir(parents=True, exist_ok=True)
             target_xml.parent.mkdir(parents=True, exist_ok=True)
             source_xml.write_bytes(original)
-            subprocess.run([str(java / "java.exe"), "-cp", "build/dex-tools/*;research/resource-tools", "tools/PatchThemeXml.java",
+            subprocess.run([str(java_tool("java")), "-cp", classpath, "tools/PatchThemeXml.java",
                 str(source_xml), str(target_xml), spec["attributeId"], str(spec["expectedType"]), spec["fromResource"], spec["toResource"], str(spec["expectedCount"])], cwd=ROOT, check=True)
             spec["sha256"] = sha(target_xml.read_bytes())
         for name in apk.namelist():

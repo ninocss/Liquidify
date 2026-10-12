@@ -16,12 +16,21 @@
   },
   "square": {
     "repository": "https://github.com/Lelonio/Square",
-    "commit": "34c96f19728fd4e7434f0e53f7111a41b41271b5"
+    "commit": "34c96f19728fd4e7434f0e53f7111a41b41271b5",
+    "font": {
+      "path": "app/src/main/res/font/inter.ttf",
+      "sha256": "29160a80ff49ddcab2c97711247e08b1fab27a484a329ce8b813d820dc559031"
+    }
   },
   "androidLiquidGlass": {
     "repository": "https://github.com/Kyant0/AndroidLiquidGlass",
     "tag": "2.0.0",
     "commit": "bebb11a91bd97bf1dabde479f3b332ad9898731f",
     "source": "Square's vendored Android adaptation; see extension/src/main/kotlin/dev/nino/squareglass/backdrop"
+  },
+  "apktool": {
+    "version": "3.0.3",
+    "url": "https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar",
+    "sha256": "dbf930b076c6b9be08d57c449cacefc3bdd6b71ebd59b3066fc0e1f5b14f9423"
   }
 }

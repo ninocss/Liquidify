@@ -3,9 +3,10 @@ from pathlib import Path
 import hashlib
 import json
 import subprocess
+from build_runtime import java_tool
 
 ROOT=Path(__file__).resolve().parents[1]
-JAVA=Path('C:/Program Files/Android/Android Studio/jbr/bin/java.exe')
+JAVA=java_tool('java')
 
 
 def main():

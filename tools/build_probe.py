@@ -12,6 +12,7 @@ import sys
 import shutil
 import zipfile
 from pathlib import Path
+from build_runtime import gradle_wrapper, sdk_tool
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -37,13 +38,13 @@ def main():
     if mapping["apkSha256"] != actual_hash:
         raise SystemExit("Mapping belongs to a different APK")
     env = dict(os.environ, JAVA_HOME=str(args.java_home))
-    java = args.java_home / "bin/java.exe"
+    java = args.java_home / "bin" / ("java.exe" if os.name == "nt" else "java")
     run(sys.executable, ROOT / "tools/prepare_output_bridge.py")
     run(sys.executable, ROOT / "tools/prepare_linn_abi.py")
     from prepare_linn_patch import bridge
     bridge()
     if not args.skip_build:
-        run(ROOT / "gradlew.bat", ":extension:assembleDebug", "prepareDexTools", "--console=plain", env=env)
+        run(gradle_wrapper(), ":extension:assembleDebug", "prepareDexTools", "--console=plain", env=env)
     work = ROOT / "research"
     work.mkdir(exist_ok=True)
     for name in ("probe-dex", "probe-smali", "probe-remapped"):
@@ -58,7 +59,7 @@ def main():
     dex_dir = work / "probe-dex"
     dex_dir.mkdir(exist_ok=True)
     build_tools = sorted((args.sdk / "build-tools").iterdir(), key=lambda x: tuple(int(n) for n in x.name.split(".")))[-1]
-    run(build_tools / "d8.bat", "--release", "--min-api", "33", "--lib", args.sdk / "platforms/android-36/android.jar", "--output", dex_dir, jar, env=env)
+    run(sdk_tool(build_tools, "d8"), "--release", "--min-api", "33", "--lib", args.sdk / "platforms/android-36/android.jar", "--output", dex_dir, jar, env=env)
     tool = ROOT / "tools/DexTool.java"
     cp = str(ROOT / "build/dex-tools/*")
     def dex(command, src, dest):
