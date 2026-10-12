@@ -51,6 +51,14 @@ private LAN/account evidence stay in ignored local directories.
 
 ## GitHub release
 
+Manager APKs include the pinned build metadata and exact prepared patch ZIP.
+Local patch imports do not require GitHub release metadata. A first installation
+falls back to the bundled payload when no release or cached metadata is available.
+The stock TIDAL APK still needs a download or a local import.
+Verify the packaged fallback with `python tools/verify_manager_bundle.py <manager.apk>`.
+GitHub commit history and release updates require a publicly accessible repository;
+the Manager does not authenticate to private repositories.
+
 The single root workflow `.github/workflows/release.yml` runs on a matching
 version tag or manual dispatch. It builds and tests Manager from source using
 JDK 21, checks the prepared patch payload, verifies APK signing, then uploads

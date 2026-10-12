@@ -20,7 +20,7 @@ import org.koin.core.component.inject
 import kotlin.coroutines.cancellation.CancellationException
 
 @Stable
-class FetchInfoStep : Step(), KoinComponent {
+class FetchInfoStep(private val localPatches: Boolean = false) : Step(), KoinComponent {
     private val github: RadiantLyricsGithubService by inject()
     private val context: Application by inject()
     private val paths: PathManager by inject()
@@ -35,7 +35,14 @@ class FetchInfoStep : Step(), KoinComponent {
     lateinit var patchesAssetUrl: String
         private set
 
+    var bundledPatches = false
+        private set
+
     override suspend fun execute(container: StepRunner) {
+        if (localPatches) {
+            loadBundled(container)
+            return
+        }
         // Fetch the latest release and refresh the cache (when online)
         if (context.isOnline()) {
             try {
@@ -52,14 +59,23 @@ class FetchInfoStep : Step(), KoinComponent {
         }
 
         val cached = ReleaseInfoCache.load(paths, json)
-            ?: throw IllegalStateException(
-                "Could not fetch the latest release and no cached release info is available. " +
-                    "Connect to the internet and try again."
-            )
+        if (cached == null) {
+            loadBundled(container)
+            return
+        }
         data = cached.data
         patchesAssetUrl = cached.patchesAssetUrl
         container.log("Using cached build info: $data")
         container.log("Cached patches asset URL: $patchesAssetUrl")
+    }
+
+    private fun loadBundled(container: StepRunner) {
+        data = context.assets.open("liquidify/data.json").bufferedReader().use {
+            json.decodeFromString<RLBuildInfo>(it.readText())
+        }
+        patchesAssetUrl = ""
+        bundledPatches = true
+        container.log("Using bundled Liquidify build info; GitHub release not required: $data")
     }
 
     private suspend fun fetchFromRemote(container: StepRunner) {

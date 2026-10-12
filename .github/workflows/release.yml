@@ -63,6 +63,7 @@ jobs:
           ./gradlew :app:testDebugUnitTest :app:assembleRelease --no-daemon --stacktrace
       - name: Prepare and verify release assets
         run: |
+          python tools/verify_manager_bundle.py radiant-base/Manager/app/build/outputs/apk/release/app-release.apk
           python - <<'PY'
           import hashlib,json,shutil
           from pathlib import Path

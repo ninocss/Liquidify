@@ -21,6 +21,34 @@ val gitHasLocalCommits = gitCurrentBranch?.let { branch ->
 } ?: false
 val gitHasHasLocalChanges = providers.execIgnoreCode("git", "status", "-s").isNotEmpty()
 
+// Keep a fresh installation usable before the repository has a public release.
+abstract class BundleLiquidifyAssets : DefaultTask() {
+    @get:InputFile abstract val lockFile: RegularFileProperty
+    @get:InputFile abstract val releaseFile: RegularFileProperty
+    @get:InputFile abstract val patchesFile: RegularFileProperty
+    @get:OutputDirectory abstract val outputDirectory: DirectoryProperty
+
+    @TaskAction fun bundle() {
+        val parser = groovy.json.JsonSlurper()
+        val tidal = (parser.parse(lockFile.get().asFile) as Map<*, *>)["tidal"] as Map<*, *>
+        val identity = parser.parse(releaseFile.get().asFile) as Map<*, *>
+        val output = outputDirectory.get().asFile.resolve("liquidify").apply { mkdirs() }
+        output.resolve("data.json").writeText(groovy.json.JsonOutput.toJson(mapOf(
+            "tidalVersionCode" to tidal["versionCode"],
+            "tidalApkUrl" to tidal["url"],
+            "patchesVersion" to identity["version"],
+        )))
+        patchesFile.get().asFile.copyTo(output.resolve("patches.zip"), overwrite = true)
+    }
+}
+val bundleLiquidify = tasks.register<BundleLiquidifyAssets>("bundleLiquidify") {
+    val projectRoot = rootProject.projectDir.resolve("../..")
+    lockFile.set(projectRoot.resolve("upstream-lock.json"))
+    releaseFile.set(projectRoot.resolve("release.json"))
+    patchesFile.set(projectRoot.resolve("patches/patches.zip"))
+    outputDirectory.set(layout.buildDirectory.dir("generated/liquidifyAssets"))
+}
+
 android {
     namespace = "com.meowarex.rlmobile"
     // Compose 1.12.x and PebbleKit require compile SDK 37. targetSdk stays at 36.
@@ -88,6 +116,9 @@ android {
     }
 
     androidComponents {
+        onVariants { variant ->
+            variant.sources.assets?.addGeneratedSourceDirectory(bundleLiquidify) { it.outputDirectory }
+        }
         onVariants(selector().withBuildType("release")) {
             it.packaging.resources.excludes.apply {
                 // Debug metadata

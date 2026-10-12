@@ -1,0 +1,20 @@
+{
+  "managerApkSha256": "c24d58c5701a4922b58b4ff018e1c72a07f9274110eac53ef9417440a619fd6f",
+  "emulator": "emulator-5554",
+  "repositoryPublic": true,
+  "githubCommitsLoaded": true,
+  "githubReleasesAvailable": false,
+  "releaseInfoCacheRemovedBeforeTest": true,
+  "bundledBuildInfoUsed": true,
+  "bundledPatchesUsed": true,
+  "localStockApkUsed": true,
+  "testsPassed": 5,
+  "bundlePayloadExact": true,
+  "signatureVerified": true,
+  "playbackStarted": false,
+  "bundledPatchInstallationPassed": true,
+  "localZipImportInstallationPassed": true,
+  "localZipImportSkippedReleaseFetch": true,
+  "installedApkReadbackPassed": true,
+  "installedApkSha256": "4e65f05e4c95d3a6dc5d9174c027d0b6d0ea35493b907dacaf892bfd1bab8b97"
+}

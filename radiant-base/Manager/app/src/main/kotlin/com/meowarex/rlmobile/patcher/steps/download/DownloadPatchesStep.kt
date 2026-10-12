@@ -1,6 +1,7 @@
 package com.meowarex.rlmobile.patcher.steps.download
 
 import androidx.compose.runtime.Stable
+import android.app.Application
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.manager.PathManager
 import com.meowarex.rlmobile.network.utils.SemVer
@@ -18,6 +19,7 @@ class DownloadPatchesStep(
     private val custom: PatchComponent?,
 ) : DownloadStep<SemVer>(), KoinComponent {
     private val paths: PathManager by inject()
+    private val context: Application by inject()
 
     override val localizedName = R.string.patch_step_dl_smali
 
@@ -41,6 +43,19 @@ class DownloadPatchesStep(
                 )
             }
 
+            state = StepState.Skipped
+            return
+        }
+
+        if (container.getStep<FetchInfoStep>().bundledPatches) {
+            val file = getStoredFile(container)
+            file.parentFile?.mkdirs()
+            // Replace any cached archive of the same beta with this exact build's payload.
+            context.assets.open("liquidify/patches.zip").use { input ->
+                file.outputStream().use { output -> input.copyTo(output) }
+            }
+            verify(container)
+            container.log("Using bundled Liquidify patches; GitHub download not required")
             state = StepState.Skipped
             return
         }

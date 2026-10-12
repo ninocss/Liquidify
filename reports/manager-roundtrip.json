@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "apkSha256": "63bf8e367809aeab719809bbaed1c59e3b240dbeb7db46b43720ed1d1b303f62",
+  "apkSha256": "4e65f05e4c95d3a6dc5d9174c027d0b6d0ea35493b907dacaf892bfd1bab8b97",
   "zipSha256": "c26215163dd34e7f46439e7375d4b36d6bc65d974ecfc79ae565438cf5a663cb",
   "package": "com.aspiro.tidal",
   "minSdk": 33,

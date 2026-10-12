@@ -60,7 +60,12 @@ fun CommitList(commits: LazyPagingItems<GithubCommit>) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
             ) {
-                Text("Failed to load commits", style = MaterialTheme.typography.labelLarge, textAlign = TextAlign.Center)
+                Text("GitHub commits unavailable", style = MaterialTheme.typography.labelLarge, textAlign = TextAlign.Center)
+                Text(
+                    "The repository may be private or unreachable. Bundled patches and local imports still work.",
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.Center,
+                )
                 RadiantButton(
                     text = "Retry",
                     onClick = { commits.retry() },

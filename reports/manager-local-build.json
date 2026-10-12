@@ -4,9 +4,11 @@
   "launcherLabel": "Liquidify Manager",
   "repository": "ninocss/liquidify",
   "variant": "debug",
-  "apkSha256": "5a7371e4ed40074224d11feb35862bd3af77e736c30c9f7f889e456a47967f03",
+  "apkSha256": "c24d58c5701a4922b58b4ff018e1c72a07f9274110eac53ef9417440a619fd6f",
   "testsPassed": 5,
   "bundledManifestExact": true,
   "signatureVerified": true,
-  "releaseSigningIdentity": false
+  "releaseSigningIdentity": false,
+  "bundledBuildInfoExact": true,
+  "bundledPatchesSha256": "c26215163dd34e7f46439e7375d4b36d6bc65d974ecfc79ae565438cf5a663cb"
 }

@@ -37,6 +37,7 @@ jobs:
       - name: Verify launcher name and APK signature
         run: |
           apk=radiant-base/Manager/app/build/outputs/apk/debug/app-debug.apk
+          python tools/verify_manager_bundle.py "$apk"
           "$ANDROID_HOME/build-tools/37.0.0/apksigner" verify "$apk"
           "$ANDROID_HOME/build-tools/37.0.0/aapt2" dump badging "$apk" | grep -Fx "application-label:'Liquidify Manager'"
       - uses: actions/upload-artifact@v4
