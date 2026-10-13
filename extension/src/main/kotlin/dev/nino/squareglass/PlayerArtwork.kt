@@ -29,6 +29,8 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.graphics.ColorMatrixColorFilter
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.geometry.Rect
@@ -119,16 +121,12 @@ object PlayerArtwork {
     @JvmStatic
     @Composable
     fun media(original: Modifier): Modifier {
-        val view = LocalView.current
-        return original.layout { measurable, constraints ->
-            val child = measurable.measure(constraints)
-            layout(child.width, child.height) { child.place(0, -(view.height * .035f).roundToInt()) }
-        }.then(ink(Modifier))
+        return original.then(ink(Modifier))
     }
 
     @JvmStatic
     @Composable
-    fun footer(original: Modifier): Modifier = atHeight(original, .855f).then(ink(Modifier)).zIndex(2f)
+    fun footer(original: Modifier): Modifier = atHeight(original, .905f).then(ink(Modifier)).zIndex(2f)
 
     @JvmStatic
     @OptIn(InternalComposeApi::class)
@@ -164,6 +162,8 @@ object PlayerArtwork {
         val color = surface
         val topFilm = Color(SquarePalette.base(NativeGlass.dark))
         return original.drawWithCache {
+            val saturation = ColorMatrix().apply { setToSaturation(1.28f) }
+            val artworkPaint = Paint().apply { colorFilter = ColorMatrixColorFilter(saturation) }
             val fade = Brush.verticalGradient(
                 Pair(0f, topFilm.copy(alpha = .32f)),
                 Pair(.12f, color.copy(alpha = 0f)),
@@ -173,7 +173,12 @@ object PlayerArtwork {
                 Pair(1f, color),
                 endY = size.height,
             )
-            onDrawWithContent { drawContent(); drawRect(fade) }
+            onDrawWithContent {
+                drawContext.canvas.saveLayer(Rect(Offset.Zero, size), artworkPaint)
+                drawContent()
+                drawContext.canvas.restore()
+                drawRect(fade)
+            }
         }
     }
 }

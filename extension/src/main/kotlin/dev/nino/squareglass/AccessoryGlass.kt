@@ -13,6 +13,7 @@ import dev.nino.squareglass.backdrop.drawBackdrop
 import dev.nino.squareglass.backdrop.effects.blur
 import dev.nino.squareglass.backdrop.effects.lens
 import dev.nino.squareglass.backdrop.effects.vibrancy
+import dev.nino.squareglass.backdrop.highlight.Highlight
 import dev.nino.squareglass.material.shapes.ContinuousCapsule
 
 object AccessoryGlass {
@@ -38,7 +39,14 @@ object AccessoryGlass {
         return original.drawBackdrop(backdrop = backdrop, shape = { shape }, effects = {
             vibrancy()
             blur(8.dp.toPx())
-            if (SquareSettings.preset() == 0 && SquareSettings.motion()) lens(24.dp.toPx(),24.dp.toPx())
+            if (SquareSettings.preset() == 0 && SquareSettings.motion()) {
+                val refraction = SquareSettings.refraction()
+                lens((24 * refraction).dp.toPx(), (32 * refraction).dp.toPx())
+            }
+        }, highlight = {
+            // The library's 0.5dp default rim is nearly invisible on these
+            // moving native accessories. Keep a subtle but persistent edge glint.
+            Highlight(width = 1.dp, blurRadius = 2.dp, alpha = 0.8f)
         }, layerBlock = layer, onDrawSurface = {
             ProbeDiagnostics.glassDraws++
             if (hasSample) {

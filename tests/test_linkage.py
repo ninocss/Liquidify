@@ -11,6 +11,19 @@ def cls(superclass="Ljava/lang/Object;", methods=(), fields=(), interfaces=()):
 
 
 class LinkageTests(unittest.TestCase):
+    def test_enum_array_clone_and_ioexception_message(self):
+        extension = {"LE;": cls("Ljava/lang/Enum;"), "LFault;": cls("Ljava/io/IOException;")}
+        refs = dict(types=["[LE;"], methods=["[LE;->clone()Ljava/lang/Object;", "LFault;->getMessage()Ljava/lang/String;"], fields=[])
+        self.assertTrue(audit({}, extension, refs)["passed"])
+        refs["methods"].append("[LE;->missing()V")
+        self.assertFalse(audit({}, extension, refs)["passed"])
+
+    def test_view_methods_are_inherited_by_custom_view(self):
+        extension = {"LMyGlyph;": cls("Landroid/view/View;")}
+        refs = dict(types=[], methods=["LMyGlyph;->getWidth()I",
+            "LMyGlyph;->getResources()Landroid/content/res/Resources;"], fields=[])
+        self.assertTrue(audit({}, extension, refs)["passed"])
+
     def test_missing_method_is_not_satisfied_by_object(self):
         report = audit({"LHost;": cls()}, {}, dict(types=[], methods=["LHost;->missing()V"], fields=[]))
         self.assertFalse(report["passed"])

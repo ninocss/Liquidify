@@ -1,13 +1,14 @@
 {
   "passed": true,
-  "apkSha256": "4e65f05e4c95d3a6dc5d9174c027d0b6d0ea35493b907dacaf892bfd1bab8b97",
-  "zipSha256": "c26215163dd34e7f46439e7375d4b36d6bc65d974ecfc79ae565438cf5a663cb",
+  "apkSha256": "35f93b63da49b74ca8fbb43f6702ce620819e5f5bd6818e56139d917611c618b",
+  "zipSha256": "2b7eaa92b1ec5bab809a8ad07fadffb9043d4512888d97c9132d08b502319d51",
   "package": "com.aspiro.tidal",
   "minSdk": 33,
-  "helpers": 606,
+  "helpers": 621,
   "patchedInstructions": 9444,
   "fingerprintedResources": 20,
   "paletteExact": true,
   "signatureVerified": true,
-  "evidence": "Manager ZIP import, patch, signing, installation and APK readback on emulator; no authenticated playback proof"
+  "deviceKind": "physical-phone",
+  "evidence": "Manager ZIP import, patch, signing, installation and APK readback on physical-phone; no authenticated playback proof"
 }

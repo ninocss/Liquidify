@@ -21,7 +21,7 @@ final class LinnEvents implements AutoCloseable {
         try {
             URL target=OpenHome.local(transport.services.get("Playlist").control);
             InetAddress local;
-            try(DatagramSocket route=new DatagramSocket()){route.connect(InetAddress.getByName(target.getHost()),target.getPort());local=route.getLocalAddress();}
+            try(DatagramSocket route=new DatagramSocket()){InetAddress address=InetAddress.getByName(target.getHost());if(OpenHome.network!=null)OpenHome.network.bind(route,address);route.connect(address,target.getPort()<0?80:target.getPort());local=route.getLocalAddress();}
             server=new ServerSocket(0,4,local);server.setSoTimeout(1000);
             callback="http://"+local.getHostAddress()+":"+server.getLocalPort()+"/events";
             executor.execute(this::listen);
@@ -55,6 +55,7 @@ final class LinnEvents implements AutoCloseable {
     static Map<String,String> request(String method,String endpoint,Map<String,String> headers) throws Exception {
         URL url=OpenHome.local(endpoint);int port=url.getPort()<0?80:url.getPort();
         try(Socket socket=new Socket()) {
+            if(OpenHome.network!=null)OpenHome.network.bind(socket,InetAddress.getByName(url.getHost()));
             socket.setTcpNoDelay(true);
             socket.connect(new InetSocketAddress(url.getHost(),port),3000);socket.setSoTimeout(3000);
             StringBuilder request=new StringBuilder(method+" "+url.getFile()+" HTTP/1.1\r\nHOST: "+url.getHost()+":"+port+"\r\nConnection: close\r\n");

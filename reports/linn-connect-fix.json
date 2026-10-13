@@ -1,0 +1,59 @@
+{
+  "revision": "2026-10-13-r5",
+  "status": "r3 audible playback confirmed; r5 awaiting install and responsiveness check",
+  "complete": false,
+  "artifacts": {
+    "patchZip": "patches/patches.zip",
+    "patchZipSha256": "d9e784ba543da633fdf1ab28039bf91a63120880b9d6c7f8fa0bbbca13f781ec",
+    "testApk": "research/squareglass-test.apk",
+    "testApkPackage": "dev.nino.tidalglass.test",
+    "testApkSha256": "c96d3f163b2f10beebcf8d9afd4381e2b224210c3ff5ac6bf51ee449ab7f001b",
+    "phoneDownload": "Downloads/Liquidify-Linn-Fix-2026-10-13-r5.zip",
+    "managerInstalledApkSha256": null
+  },
+  "verification": {
+    "unitAndFaultTests": {
+      "passed": 30,
+      "failed": 0
+    },
+    "nativeHostLinkage": "passed",
+    "strictManagerPatches": {
+      "passed": 96,
+      "failed": 0
+    },
+    "testApkSignatureAndAlignment": "passed",
+    "releaseValidation": "passed",
+    "managerRoundtripForThisRevision": "pending",
+    "previousManagerRoundtrip": {
+      "report": "reports/manager-roundtrip.json",
+      "zipSha256": "626b6f6e10372db4799e9a4e49418349c61f44a5b5ce665919c0bcb28816bac1",
+      "apkSha256": "62582998f8b67fef9f99b28419e533eeda60ac2a56fdbbab40fd4c126d891232",
+      "note": "r3 passed Manager roundtrip on Pixel 8; not acceptance of r4."
+    }
+  },
+  "deviceEvidence": {
+    "phone": "Pixel 8",
+    "android": "17",
+    "tidal": "2.200.0 (10004)",
+    "renderer": "Linn Majik DSM",
+    "lastObservedFirmware": "4.118.607",
+    "originalError": "Read timed out / SocketTimeoutException",
+    "originalErrorObservedOnPhone": true,
+    "originalFailedSoapActionIdentified": false,
+    "r3PlayingHandoff": "ACTIVE confirmed by device status and user confirmed audible Feel Good Inc. over Linn",
+    "r3PausedHandoff": "SOAP requests returned HTTP 200; selected track ID did not reach target before 20-second confirmation timeout. Queue restored.",
+    "additionalFindings": [
+      "Unsupported entry in the selected native queue prevents handoff before SOAP requests.",
+      "Failed selection leaves native selected-device state pointing at Linn; subsequent taps do not invoke connect. r3 restores the local selection without starting local audio.",
+      "Empty-queue selection needed a UI entry outside the player. r3 adds Output to main Settings."
+    ]
+  },
+  "pendingAcceptance": [
+    "Import r5 through Manager, patch/install and verify installed APK against this ZIP.",
+    "Repeat paused handoff and validate track ID, seek position, pause state and audible result.",
+    "Play/pause/seek latency measurement and handset responsiveness under status polling.",
+    "20 consecutive handoff cycles, empty queue, album and playlist.",
+    "30 minutes autonomous playback with track changes, locked phone and stopped app.",
+    "Wi-Fi interruption, rejoin, app restart and renderer restart."
+  ]
+}

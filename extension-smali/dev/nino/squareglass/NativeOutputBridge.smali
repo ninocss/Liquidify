@@ -55,6 +55,32 @@
     return-void
 .end method
 
+.method public static restoreLocalSelection(Ljava/lang/Object;)V
+    .locals 3
+
+    invoke-static {}, Lcom/aspiro/wamp/broadcast/m;->a()Lcom/aspiro/wamp/broadcast/h;
+    move-result-object v0
+    instance-of v1, p0, Lp2/c;
+    if-eqz v1, :done
+    check-cast v0, Lcom/aspiro/wamp/broadcast/v;
+    iget-object v1, v0, Lcom/aspiro/wamp/broadcast/v;->c:Lp2/a;
+    instance-of v1, v1, Ldev/nino/squareglass/LinnProvider$Device;
+    if-eqz v1, :done
+    check-cast p0, Lp2/a;
+    iput-object p0, v0, Lcom/aspiro/wamp/broadcast/v;->c:Lp2/a;
+    invoke-virtual {v0, p0}, Lcom/aspiro/wamp/broadcast/v;->m(Lp2/a;)Lcom/aspiro/wamp/broadcast/o;
+    move-result-object v1
+    instance-of v2, v1, Lcom/aspiro/wamp/broadcast/w;
+    if-eqz v2, :notify
+    check-cast v1, Lcom/aspiro/wamp/broadcast/w;
+    const/4 v2, 0x1
+    iput-boolean v2, v1, Lcom/aspiro/wamp/broadcast/w;->d:Z
+    :notify
+    invoke-virtual {v0}, Lcom/aspiro/wamp/broadcast/v;->c()V
+    :done
+    return-void
+.end method
+
 .method public static id(Ljava/lang/Object;)Ljava/lang/String;
     .locals 1
 

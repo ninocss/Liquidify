@@ -149,7 +149,13 @@ fun LiquidBottomTabs(
                     effects = {
                         vibrancy()
                         blur(8f.dp.toPx())
-                        lens(24f.dp.toPx(), 24f.dp.toPx())
+                        if (SquareSettings.motion() && SquareSettings.preset() == 0) {
+                            val refraction = SquareSettings.refraction()
+                            lens((24f * refraction).dp.toPx(), (32f * refraction).dp.toPx())
+                        }
+                    },
+                    highlight = {
+                        Highlight(width = 1.dp, blurRadius = 2.dp, alpha = 0.8f)
                     },
                     layerBlock = {
                         val progress = dampedDragAnimation.pressProgress

@@ -16,6 +16,8 @@ public final class LinnProvider implements o,q {
     final Application app;
     final Handler main=new Handler(Looper.getMainLooper());
     final ScheduledExecutorService io=Executors.newSingleThreadScheduledExecutor();
+    final ScheduledExecutorService controls=Executors.newSingleThreadScheduledExecutor();
+    final ScheduledExecutorService observations=Executors.newSingleThreadScheduledExecutor();
     final ScheduledExecutorService discovery=Executors.newSingleThreadScheduledExecutor();
     final CopyOnWriteArrayList<l> listeners=new CopyOnWriteArrayList<>();
     final ConcurrentHashMap<String,Device> devices=new ConcurrentHashMap<>();
@@ -23,6 +25,11 @@ public final class LinnProvider implements o,q {
     volatile Device connected;
     volatile LinnPlayer player;
     volatile boolean connecting,scanning;
+    enum Phase { DISCONNECTED, CHECKING, READY, TRANSFERRING, CONFIRMING, ACTIVE, RECONNECTING, ERROR }
+    volatile Phase phase=Phase.DISCONNECTED;
+    volatile String status="";
+    volatile int generation;
+    void phase(Phase value,String message){phase=value;status=message;OpenHome.trace.record("attempt="+generation+" phase="+value);SquareOutput.linnProgress(message);}
     private volatile int scanRevision;
     private ScheduledFuture<?> scan;
     private android.net.wifi.WifiManager.MulticastLock multicast;
@@ -32,7 +39,14 @@ public final class LinnProvider implements o,q {
         Device(OpenHome transport){super("LINN_"+transport.uuid,transport.name,0);this.transport=transport;}
         @Override public boolean a(){return true;}
     }
-    public LinnProvider(Application app){this.app=app;instance=this;}
+    public LinnProvider(Application app){
+        this.app=app;instance=this;
+        OpenHome.trace=message -> android.util.Log.i("SquareLinn",message);
+        try{OpenHome.network=new LinnNetwork(app,() -> main.post(() -> {
+            if(scanning)startScanning();
+            LinnPlayer active=player;if(active!=null)active.nextRecovery=0;
+        }));}catch(RuntimeException failure){OpenHome.trace.record("network_binding=unavailable");}
+    }
     public o get(){return this;}
     public boolean isAvailable(){return true;}
     public void refreshAvailability(){}
@@ -53,7 +67,8 @@ public final class LinnProvider implements o,q {
         if(location.isEmpty() || prefs.getString("sessionUuid","").isEmpty())return;
         k0 local;
         try{local=NativeLinnBridge.player();}catch(RuntimeException failure){main.postDelayed(() -> resume(attempt+1),2000);return;}
-        if(local==null || !local.isLocal()){main.postDelayed(() -> resume(attempt+1),2000);return;}
+        if(local==null || !local.isLocal() || local.getState()==com.aspiro.wamp.enums.MusicServiceState.PLAYING)return;
+        int revision=generation;
         io.execute(() -> {
             try {
                 OpenHome transport;
@@ -67,10 +82,11 @@ public final class LinnProvider implements o,q {
                 }
                 Device device=new Device(transport);LinnPlayer restored=new LinnPlayer(this,device,local);restored.reattach();
                 main.post(() -> {
-                    if(connected!=null || connecting)return;
+                    if(connected!=null || connecting || revision!=generation || local.getState()==com.aspiro.wamp.enums.MusicServiceState.PLAYING){restored.close();return;}
                     local.onActionPause();restored.restoreNativeQueue();
                     devices.put(device.a,device);connected=device;player=restored;
                     NativeLinnBridge.activate(restored);for(l listener:listeners)listener.a(this);restored.start();
+                    phase(Phase.ACTIVE,"");
                 });
             }catch(Exception failure){fail("Could not reattach Linn. Its device queue was left unchanged.");}
         });
@@ -127,40 +143,55 @@ public final class LinnProvider implements o,q {
         Device device=(Device)item;k0 previous=NativeLinnBridge.player();
         if(previous==null || !previous.isLocal()){fail("Switch to This phone before connecting Linn.");return;}
         LinnPlayer candidate=new LinnPlayer(this,device,previous);
-        try {candidate.capture();}catch(Exception failure){fail(failure.getMessage());return;}
+        if(previous.getPlayQueue()==null){fail("TIDAL player is still starting. Retry shortly.");return;}
+        boolean empty=previous.getPlayQueue()==null || previous.getPlayQueue().getItems().isEmpty();
+        try {if(!empty)candidate.capture();}catch(Exception failure){fail(failure.getMessage());return;}
         connecting=true;error="";
+        int revision=++generation;
+        candidate.generation=revision;
+        phase(Phase.CHECKING,"Gerät prüfen…");
         io.execute(() -> {
+            OpenHome.attempt.set(Integer.toString(revision));
             android.util.Log.i("SquareLinn","Queue transfer started");
             try {
-                candidate.transfer();
+                device.transport.preflight();
+                if(empty){candidate.prepareReady();candidate.adoptExisting();}else candidate.transfer();
                 main.post(() -> {
+                    if(revision!=generation){candidate.close();return;}
                     player=candidate;connected=device;connecting=false;
                     NativeLinnBridge.activate(candidate);
                     app.getSharedPreferences("squareglass_linn",0).edit().putString("location",device.transport.location)
                         .putString("uuid",device.transport.uuid).apply();
                     for(l listener:listeners)listener.a(this);
                     candidate.start();
+                    if(!candidate.ready && empty)candidate.restoreNativeQueue();
+                    phase(candidate.ready?Phase.READY:Phase.ACTIVE,candidate.ready?"Bereit – Musik auswählen":"");
                 });
             } catch(Exception | LinkageError failure){android.util.Log.e("SquareLinn","Linn adapter connection failed: "+failure.getClass().getSimpleName());main.post(() -> {
-                connecting=false;fail(failure.getMessage());
-                if(previousOutput!=null)NativeOutputBridge.select(previousOutput);
-            });}
+                if(revision!=generation)return;
+                connecting=false;fail(explain(failure));
+                // Selecting the local provider here can start audio while a timed-out Linn is playing.
+            });}finally{OpenHome.attempt.remove();}
         });
     }
     public void disconnect(o.a callback){
         LinnPlayer active=player;
-        if(active==null){NativeLinnBridge.disconnected(callback);return;}
+        if(active==null){++generation;connecting=false;phase(Phase.DISCONNECTED,"");NativeLinnBridge.disconnected(callback);return;}
         io.execute(() -> {
             try {
-                active.device.transport.call("Playlist","Pause");
+                if(!active.ready){
+                    active.device.transport.call("Playlist","Pause");
+                    active.device.transport.confirm(Long.parseLong(active.device.transport.read("Playlist","Id")),"Paused",20000);
+                }
                 active.state=com.aspiro.wamp.enums.MusicServiceState.PAUSED;
                 main.post(() -> {
                     connected=null;player=null;active.close();
+                    ++generation;phase(Phase.DISCONNECTED,"");
                     app.getSharedPreferences("squareglass_linn",0).edit().remove("sessionUuid").remove("queue").remove("mapping").apply();
                     NativeLinnBridge.publish(com.aspiro.wamp.enums.MusicServiceState.PAUSED,active.position,active.duration);
                     NativeLinnBridge.activate(active.previous);
                     // Return paused. No unsolicited local audio on network loss or handback.
-                    active.previous.onActionPause();active.previous.onActionPlayPosition(active.index,false,false);active.previous.onActionSeekTo(active.position);
+                    active.previous.onActionPause();if(!active.ready){active.previous.onActionPlayPosition(active.index,false,false);active.previous.onActionSeekTo(active.position);}
                     for(l listener:listeners)listener.d(this);
                     NativeLinnBridge.disconnected(callback);
                 });
@@ -168,17 +199,27 @@ public final class LinnProvider implements o,q {
         });
     }
     void fail(String message){
+        phase=Phase.ERROR;
         error=message==null?"Linn request failed. Retry.":message;
+        status=error;
         android.util.Log.w("SquareLinn",error);
-        main.post(() -> {Toast.makeText(app,error,Toast.LENGTH_LONG).show();SquareOutput.linnFailure(error);});
+        main.post(() -> {
+            if(player==null && !connecting)NativeOutputBridge.restoreLocalSelection(previousOutput);
+            Toast.makeText(app,error,Toast.LENGTH_LONG).show();SquareOutput.linnFailure(error);
+        });
+    }
+    static String explain(Throwable failure){
+        String message=failure.getMessage();
+        if(failure.getSuppressed().length>0)message+=". Wiederherstellung nicht bestätigt; Gerätezustand vor erneutem Versuch prüfen.";
+        return message;
     }
     public static Object override(Object proposed){
         LinnProvider provider=instance;
         return provider!=null && provider.connected!=null && provider.player!=null?provider.player:proposed;
     }
-    public static String label(Object device){return device instanceof Device?"Linn Majik DSM · OpenHome":null;}
+    public static String label(Object device){return device instanceof Device && instance!=null && instance.connected!=null && ((Device)device).a.equals(instance.connected.a) && !instance.status.isEmpty()?instance.status:device instanceof Device?"Linn Majik DSM · OpenHome":null;}
     static Object previousOutput;
-    public static void prepareSelection(Object item){if(item instanceof Device){android.util.Log.i("SquareLinn","Linn output selected");previousOutput=NativeOutputBridge.active();}}
+    public static void prepareSelection(Object item){if(item instanceof Device){android.util.Log.i("SquareLinn","Linn output selected");previousOutput=NativeOutputBridge.active();}else if(instance!=null && instance.connecting){++instance.generation;instance.connecting=false;instance.phase(Phase.DISCONNECTED,"");}}
     public static Object confirmed(Object nativeActive){
         LinnProvider p=instance;
         return nativeActive instanceof Device && (p==null || p.connected==null)?previousOutput:nativeActive;

@@ -6,6 +6,9 @@ import android.app.Application;
 import android.app.Dialog;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
@@ -35,8 +38,20 @@ public final class SquareOutput {
         Request request=(Request)token;
         main.post(() -> request.session.received(request.revision,value,error));
     }
-    public static boolean showing(Dialog dialog) { return current!=null && current.dialog==dialog; }
+    public static boolean showing(Dialog dialog) { return dialog!=null && current!=null && current.dialog==dialog; }
     public static void dismissed(Dialog dialog) { if(showing(dialog)) current.close(); }
+    /** Settings entry is available before a native player/queue dialog exists. */
+    public static void showFromSettings(Activity activity) {
+        if(activity==null || activity.isFinishing() || activity.isDestroyed())return;
+        if(current!=null)current.close();
+        View parent=activity.getWindow().getDecorView();
+        Rect frame=new Rect();parent.getWindowVisibleDisplayFrame(frame);
+        float density=activity.getResources().getDisplayMetrics().density;
+        Rect anchor=new Rect(frame.right-(int)(48*density),frame.top,
+            frame.right-(int)(24*density),frame.top+(int)(48*density));
+        Session session=new Session(null,activity,anchor,parent);current=session;
+        try{session.open();}catch(RuntimeException error){session.close();throw error;}
+    }
     public static boolean show(Dialog dialog) {
         if(SquareSettings.themeEnabled()==0) return false;
         Activity activity=dialog.getOwnerActivity();
@@ -84,7 +99,7 @@ public final class SquareOutput {
             view.setPadding(dp(16),dp(8),dp(16),dp(8));return view;
         }
         void open() {
-            NativeOutputBridge.discard(dialog);
+            if(dialog!=null)NativeOutputBridge.discard(dialog);
             Rect frame=new Rect();activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
             width=Math.max(1,Math.min(dp(320),frame.width()-dp(24)));
             maxHeight=Math.max(1,frame.height()-dp(24));
@@ -135,6 +150,10 @@ public final class SquareOutput {
             for(Object item:(List<?>)value) if(item!=null) unique.put(NativeOutputBridge.id(item),item);
             devices.clear();devices.addAll(unique.values());
             Object active=NativeOutputBridge.active();
+            LinnProvider linn=LinnProvider.instance;
+            if(linn!=null && linn.connecting && selection.target()!=null && selection.target().startsWith("LINN_")){
+                selection.begin(selection.target(),SystemClock.uptimeMillis());message=linn.status;
+            }
             int result=selection.observe(active==null?null:NativeOutputBridge.id(active),SystemClock.uptimeMillis());
             if(result==1) {message="";retryDevice=null;}
             if(result==-1) message="Connection was not confirmed. Tap here to retry.";
@@ -160,10 +179,36 @@ public final class SquareOutput {
         void heading(LinearLayout box,String label) {TextView title=text(label,11);title.setAccessibilityHeading(true);box.addView(title);}
         String name(Object item) {return NativeOutputBridge.local(item)?"This phone":NativeOutputBridge.name(item);}
         String type(Object item) {String linn=LinnProvider.label(item);if(linn!=null)return linn;int resource=NativeOutputBridge.type(item);return resource>0?activity.getString(resource):"";}
+        final class OutputGlyph extends View {
+            final boolean phone;
+            final Paint paint=new Paint(Paint.ANTI_ALIAS_FLAG);
+            OutputGlyph(boolean isPhone){super(activity);phone=isPhone;setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);}
+            void line(Canvas c,float x1,float y1,float x2,float y2){c.drawLine(x1,y1,x2,y2,paint);}
+            @Override protected void onDraw(Canvas canvas){
+                super.onDraw(canvas);
+                float d=getResources().getDisplayMetrics().density;
+                canvas.save();canvas.translate((getWidth()-32*d)/2f,(getHeight()-40*d)/2f);canvas.scale(d,d);
+                paint.setColor(SquarePalette.ink(SquarePalette.isDark()));paint.setStyle(Paint.Style.STROKE);
+                paint.setStrokeWidth(1.8f);paint.setStrokeCap(Paint.Cap.ROUND);paint.setStrokeJoin(Paint.Join.ROUND);
+                if(phone){
+                    canvas.drawRoundRect(8,4,24,36,3.5f,3.5f,paint);
+                    line(canvas,13,8,19,8);canvas.drawCircle(16,31.5f,0.8f,paint);
+                }else{
+                    // Compact hi-fi renderer: display, control keys and speaker drivers.
+                    canvas.drawRoundRect(2,9,30,31,3,3,paint);
+                    canvas.drawRoundRect(6,13,17,19,1,1,paint);
+                    line(canvas,7,24,13,24);line(canvas,7,27,13,27);
+                    canvas.drawCircle(22,20,3.1f,paint);canvas.drawCircle(22,20,0.8f,paint);
+                    canvas.drawCircle(27,15,0.7f,paint);canvas.drawCircle(27,25,0.7f,paint);
+                }
+                paint.setStyle(Paint.Style.FILL);canvas.restore();
+            }
+        }
         void row(LinearLayout box,Object item,boolean active) {
             boolean pending=Objects.equals(selection.target(),NativeOutputBridge.id(item));
             LinearLayout row=new LinearLayout(activity);row.setGravity(Gravity.CENTER_VERTICAL);row.setMinimumHeight(dp(64));
-            TextView icon=text(NativeOutputBridge.local(item)?"▯":"▣",22);row.addView(icon,new LinearLayout.LayoutParams(dp(48),-2));
+            OutputGlyph icon=new OutputGlyph(NativeOutputBridge.local(item));
+            row.addView(icon,new LinearLayout.LayoutParams(dp(48),dp(48)));
             LinearLayout labels=new LinearLayout(activity);labels.setOrientation(LinearLayout.VERTICAL);
             TextView title=text(name(item),16);title.setPadding(0,dp(8),0,0);labels.addView(title);
             TextView subtitle=text(pending?"Connecting…":type(item),12);subtitle.setPadding(0,0,0,dp(8));labels.addView(subtitle);

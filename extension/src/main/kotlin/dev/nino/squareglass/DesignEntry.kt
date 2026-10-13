@@ -32,6 +32,12 @@ object DesignEntry {
         // model's callback belongs exclusively to the main Settings page.
         if(!items.any { it is jm.f.a && it.e?.javaClass?.name==
             "com.aspiro.wamp.settings.items.profile.SettingsItemOfflineMode\$viewState\$1" }) return
+        scope.item(key="squareglass.output") {
+            val context=LocalContext.current
+            Row("Output", "Choose a device before starting music") {
+                activity(context)?.let { SquareOutput.showFromSettings(it) }
+            }
+        }
         scope.item(key="squareglass.design.v2") { Entry() }
     }
     private fun activity(context: Context): Activity? = when(context) {

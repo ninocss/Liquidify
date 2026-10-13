@@ -23,6 +23,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("apk", type=Path)
     parser.add_argument("--package", default="dev.nino.squareglass.qa")
+    parser.add_argument("--device-kind", choices=["emulator", "physical-phone"], default="emulator")
     args = parser.parse_args()
     report = json.loads((ROOT / "reports/package-alpha.json").read_text())
     pack_path = ROOT / "dist" / report["file"]
@@ -83,7 +84,8 @@ def main():
     result = dict(passed=True, apkSha256=digest(args.apk.read_bytes()), zipSha256=report["sha256"],
         package=args.package, minSdk=33, helpers=len(helpers), patchedInstructions=added_instructions,
         fingerprintedResources=len(design["fonts"])+len(design["themeXml"]), paletteExact=True,
-        signatureVerified=True, evidence="Manager ZIP import, patch, signing, installation and APK readback on emulator; no authenticated playback proof")
+        signatureVerified=True, deviceKind=args.device_kind,
+        evidence=f"Manager ZIP import, patch, signing, installation and APK readback on {args.device_kind}; no authenticated playback proof")
     (ROOT / "reports/manager-roundtrip.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result))
 

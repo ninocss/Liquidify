@@ -16,7 +16,12 @@ OBJECT_METHODS = {
     "getClass()Ljava/lang/Class;", "notify()V", "notifyAll()V",
     "wait()V", "wait(J)V", "wait(JI)V", "clone()Ljava/lang/Object;", "finalize()V",
 }
-PLATFORM_INHERITED = {"Ljava/lang/Enum;": {"ordinal()I", "name()Ljava/lang/String;"}}
+PLATFORM_INHERITED = {"Ljava/lang/Enum;": {"ordinal()I", "name()Ljava/lang/String;"},
+                      "Ljava/io/IOException;": {"getMessage()Ljava/lang/String;"},
+                      # Public View APIs referenced through app-defined subclasses.
+                      "Landroid/view/View;": {"getWidth()I", "getHeight()I",
+                          "getResources()Landroid/content/res/Resources;",
+                          "setImportantForAccessibility(I)V"}}
 
 
 def audit(host: dict, extension: dict, refs: dict) -> dict:
@@ -30,6 +35,9 @@ def audit(host: dict, extension: dict, refs: dict) -> dict:
         if owner in seen:
             return False
         seen.add(owner)
+        # Java arrays expose Object.clone; their element type is audited separately.
+        if owner.startswith("["):
+            return kind == "methods" and member in OBJECT_METHODS
         if platform(owner):
             # Reaching Object does not make every unresolved method valid.
             return kind == "methods" and member in (OBJECT_METHODS | PLATFORM_INHERITED.get(owner, set()))

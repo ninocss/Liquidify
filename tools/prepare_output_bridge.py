@@ -34,6 +34,28 @@ def main():
     return-void''')
     source += method('active()Ljava/lang/Object;', 1, manager() + f'\n    invoke-interface {{v0}}, {MANAGER}->e()Lp2/a;\n    move-result-object v0\n    invoke-static {{v0}}, Ldev/nino/squareglass/LinnProvider;->confirmed(Ljava/lang/Object;)Ljava/lang/Object;\n    move-result-object v0\n    return-object v0')
     source += method('select(Ljava/lang/Object;)V', 1, manager() + f'\n    invoke-static {{p0}}, Ldev/nino/squareglass/LinnProvider;->prepareSelection(Ljava/lang/Object;)V\n    check-cast p0, Lp2/a;\n    invoke-interface {{v0, p0}}, {MANAGER}->j(Lp2/a;)V\n    return-void')
+    # Failed Linn selection must release v.c without calling the local provider's
+    # connect(), which can reactivate local audio after an uncertain remote write.
+    source += method('restoreLocalSelection(Ljava/lang/Object;)V', 3, manager() + '''
+    instance-of v1, p0, Lp2/c;
+    if-eqz v1, :done
+    check-cast v0, Lcom/aspiro/wamp/broadcast/v;
+    iget-object v1, v0, Lcom/aspiro/wamp/broadcast/v;->c:Lp2/a;
+    instance-of v1, v1, Ldev/nino/squareglass/LinnProvider$Device;
+    if-eqz v1, :done
+    check-cast p0, Lp2/a;
+    iput-object p0, v0, Lcom/aspiro/wamp/broadcast/v;->c:Lp2/a;
+    invoke-virtual {v0, p0}, Lcom/aspiro/wamp/broadcast/v;->m(Lp2/a;)Lcom/aspiro/wamp/broadcast/o;
+    move-result-object v1
+    instance-of v2, v1, Lcom/aspiro/wamp/broadcast/w;
+    if-eqz v2, :notify
+    check-cast v1, Lcom/aspiro/wamp/broadcast/w;
+    const/4 v2, 0x1
+    iput-boolean v2, v1, Lcom/aspiro/wamp/broadcast/w;->d:Z
+    :notify
+    invoke-virtual {v0}, Lcom/aspiro/wamp/broadcast/v;->c()V
+    :done
+    return-void''')
     for name, field in [('id', 'a'), ('name', 'b')]:
         source += method(name + '(Ljava/lang/Object;)Ljava/lang/String;', 1,
                          f'    check-cast p0, Lp2/a;\n    iget-object v0, p0, Lp2/a;->{field}:Ljava/lang/String;\n    return-object v0')

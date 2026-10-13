@@ -1,5 +1,51 @@
 # Linn OpenHome output — Liquidify 1.0.0 Beta
 
+## 2026-10-12 reliability revision — phone acceptance pending
+
+This revision separates an empty-queue Ready selection from a playback handoff.
+Selecting Ready does not change the device source, queue or transport. An existing
+TIDAL Playlist source can be adopted; other sources remain untouched until an
+explicit music start. Source selection uses the advertised Playlist type/index,
+including renamed sources. Capabilities and renderer OAuth are checked first.
+
+SOAP faults retain HTTP/action/code context with allowlisted descriptions. LAN
+sockets bind to Wi-Fi/Ethernet rather than changing the process network. Read-only
+requests get at most two transient retries; writes do not. Lost Insert responses
+are reconciled using the exact queue order, URI and metadata. Ambiguous writes
+stop recovery rather than risking duplicate tracks or destroying another queue.
+Rollback never uses DeleteAll and preserves the original failure if recovery fails.
+The UI distinguishes checking, ready, transferring, confirming and reconnecting.
+The 2026-10-13 follow-up waits for the selected track ID after asynchronous SeekId
+before applying position and pause. Position zero does not issue an unnecessary
+seek against the previous stream. One deadline bounds the complete selection.
+Active transport buttons update the local player state immediately and run on a
+dedicated serialized control worker. Status polling and OpenHome events run on a
+separate worker, so a slow status request cannot queue ahead of Play, Pause or Seek.
+The fallback status interval is two seconds. Output rows draw simple phone and
+hi-fi renderer icons that remain legible at the existing touch size.
+Buffering gets a bounded confirmation interval; a failed observation no longer
+closes the session. Three failed cycles trigger UUID rediscovery with backoff.
+
+`tests/LinnFaultChecks.java` uses an actual local HTTP server to test SOAP faults,
+redaction, read retries, non-retried writes, delayed playback, response deadlines,
+lost Insert replies, duplicate occurrences and simultaneous foreign insertion.
+These protocol checks do not prove native Android lifecycle or audible playback.
+Earlier Alpha22 hardware evidence below is historical and is not acceptance of
+this revision. See `reports/linn-connect-fix.json` for current artifact hashes and
+remaining phone/renderer checks. No successful phone handoff is claimed until
+the original failure is reproduced and the revised build passes on that phone.
+
+On the Pixel 8, r3 reproduced a paused-handoff confirmation timeout with all SOAP
+actions returning HTTP 200. A playing handoff then reached Active and audible
+Majik playback was confirmed by the user. The r4 correction still needs phone
+acceptance; that r3 result does not certify r4 or the full acceptance matrix.
+
+For read-only phone diagnostics run `python tools/linn_collect_diagnostics.py`.
+The default package is the installed TIDAL; the separate test APK uses
+`--package dev.nino.tidalglass.test`. Output stays under ignored `research/`.
+Open Output, choose the Linn once, then collect again. The collector neither
+clears logs nor changes accounts, playback or installed packages.
+
 The native TIDAL broadcast registry now includes a Linn provider. The Output
 button opens the existing 320 dp anchored AndroidLiquidGlass popup. Device names
 and UUIDs come from SSDP/device descriptions. The active row appears after the
@@ -13,7 +59,8 @@ the release's `patches.zip`. Phone and renderer must share a LAN.
 Sign in to TIDAL for the renderer once in the Linn app. The Android account is
 not copied to it. A missing valid Linn TIDAL login produces an explicit error.
 
-Open an online music queue, open Output and choose the discovered Majik. The
+Choose Output in the main Settings page to select a device before choosing music,
+or open an online music queue and use the player's Output button. Choose the discovered Majik. The
 provider transfers the queue, preserving duplicate-title occurrences, selected
 item, position and pause/play state. Existing volume and mute are preserved.
 The application does not force mute during normal use.
