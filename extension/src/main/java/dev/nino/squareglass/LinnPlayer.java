@@ -19,17 +19,26 @@ public final class LinnPlayer implements k0 {
     final LinnProvider provider;
     volatile LinnProvider.Device device;
     final k0 previous;
+    k0 sourcePlayer;
     final y queue;
     final List<MediaItem> tracks=new ArrayList<>();
     final List<Long> remote=new ArrayList<>();
     final List<Integer> nativeIndices=new ArrayList<>();
+    final List<String> occurrences=new ArrayList<>();
+    final LinnCommandQueue latest;
+    final LinnTrackSelection selection;
+    final java.util.concurrent.atomic.AtomicLong controlRevision=new java.util.concurrent.atomic.AtomicLong();
+    volatile long completedControl,lastFullObservation;
     volatile int position,duration;
     volatile MusicServiceState state=MusicServiceState.PAUSED;
-    int index;
-    boolean wasPlaying,syncing;
+    volatile int index;
+    boolean wasPlaying;
+    volatile boolean syncing;
     volatile boolean ready;
-    int failedObservations;
-    long nextRecovery;
+    volatile boolean transferred;
+    volatile boolean rollbackConfirmed=true;
+    volatile int failedObservations;
+    volatile long nextRecovery;
     int generation;
     volatile boolean closed;
     final java.util.concurrent.atomic.AtomicBoolean eventQueued=new java.util.concurrent.atomic.AtomicBoolean();
@@ -40,12 +49,17 @@ public final class LinnPlayer implements k0 {
     LinnEvents events;
     VolumeProviderCompat volume;
     LinnPlayer(LinnProvider provider,LinnProvider.Device device,k0 previous){
-        this.provider=provider;this.device=device;this.previous=previous;queue=previous.getPlayQueue();
+        this.provider=provider;this.device=device;this.sourcePlayer=previous;
+        this.previous=previous instanceof LinnPlayer?((LinnPlayer)previous).previous:previous;
+        queue=previous.getPlayQueue();latest=new LinnCommandQueue(provider.controls);
+        selection=new LinnTrackSelection(provider.controls,() -> this.device.transport,() -> !closed && !syncing && !provider.connecting,
+            () -> {completedControl=controlRevision.get();eventChanged();},
+            failure -> {completedControl=controlRevision.get();provider.fail(failure.getMessage());eventChanged();});
         generation=provider.generation;
     }
     void capture() throws Exception {
         if(queue==null || queue.getItems().isEmpty())throw new Exception("Open an online TIDAL track first.");
-        tracks.clear();
+        tracks.clear();occurrences.clear();
         for(u0 item:queue.getItems()) {
             MediaItem media=item.getMediaItem();
             if(!(media instanceof Track) || ((Track)media).isUpload() || media.getId()<=0){
@@ -53,10 +67,11 @@ public final class LinnPlayer implements k0 {
                 throw new Exception("Linn: Titel "+(tracks.size()+1)+" der Warteschlange ist nicht unterstützt ("+reason+"). Bitte eine reine Online-Musikqueue wählen.");
             }
             tracks.add(media);
+            occurrences.add(item.getUid()+":"+media.getId());
         }
         index=queue.getCurrentItemPosition();
         if(index<0 || index>=tracks.size())throw new Exception("Current queue position is unavailable.");
-        position=previous.getCurrentMediaPosition();wasPlaying=previous.getState()==MusicServiceState.PLAYING;
+        position=sourcePlayer.getCurrentMediaPosition();wasPlaying=sourcePlayer.getState()==MusicServiceState.PLAYING;
         shuffled=queue.isShuffled();repeat=queue.getRepeatMode();
         signature=snapshotSignature();
     }
@@ -64,88 +79,98 @@ public final class LinnPlayer implements k0 {
         String title=OpenHome.escape(track.getDisplayTitle()),artist=OpenHome.escape(track.getArtistNames()==null?"":track.getArtistNames());
         return "<DIDL-Lite xmlns=\"urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:upnp=\"urn:schemas-upnp-org:metadata-1-0/upnp/\"><item id=\""+track.getId()+"\" parentID=\"0\" restricted=\"1\"><dc:title>"+title+"</dc:title><upnp:artist>"+artist+"</upnp:artist><upnp:class>object.item.audioItem.musicTrack</upnp:class><res>"+OpenHome.escape(uri)+"</res></item></DIDL-Lite>";
     }
+    android.content.SharedPreferences sessionPreferences(){
+        String key=java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(device.uuid.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        android.content.SharedPreferences saved=provider.app.getSharedPreferences("squareglass_linn_session_"+key,0);
+        if(device.uuid.equals(saved.getString("sessionUuid","")))return saved;
+        return provider.app.getSharedPreferences("squareglass_linn",0);
+    }
     void transfer() throws Exception {
-        SquareOutput.linnProgress("Preparing Linn queue…");
-        OpenHome s=device.transport;int max=Integer.parseInt(s.read("Playlist","TracksMax"));
-        android.util.Log.i("SquareLinn","Queue capacity read");
-        List<Long> original=s.ids();
-        int count=repeat==RepeatMode.SINGLE?1:tracks.size();
-        LinnQueuePlan.capacity(original.size(),count,max);
-        s.preflight();token=s.tidalTokenId();String source=s.read("Product","SourceIndex");
-        int playlistSource=s.playlistIndex();
-        android.util.Log.i("SquareLinn","Device TIDAL login verified");
+        provider.phase(LinnProvider.Phase.CHECKING,"Gerät prüfen…");
+        OpenHome s=device.transport;
+        token=s.preflight();int max=Integer.parseInt(s.read("Playlist","TracksMax"));
+        String source=s.read("Product","SourceIndex");int playlistSource=s.playlistIndex();
         String oldState=s.read("Playlist","TransportState"),oldId=s.read("Playlist","Id");
-        boolean committed=false,conflict=false,switched=false;
         String oldRepeat=s.read("Playlist","Repeat"),oldShuffle=s.read("Playlist","Shuffle");
-        List<Long> remainingOriginal=new ArrayList<>(original);
-        Map<Long,Map<String,String>> backup=s.readTracks(original);
-        SquareOutput.linnProgress("Preparing Linn queue…");
         int oldPosition=Integer.parseInt(s.call("Time","Time").get("Seconds"));
         int level=Integer.parseInt(s.read("Volume","Volume"));
-        try {
-            long after=original.isEmpty()?0:original.get(original.size()-1);
-            for(int nativeIndex=0;nativeIndex<tracks.size();nativeIndex++) {
-                if(generation!=provider.generation)throw new IOException("Linn handoff was cancelled");
-                if(repeat==RepeatMode.SINGLE && nativeIndex!=index)continue;
-                MediaItem track=tracks.get(nativeIndex);
-                String uri=OpenHome.tidalUri(track.getId(),token);
-                after=s.insertConfirmed(LinnQueuePlan.expected(original,remote),after,uri,metadata(track,uri));
-                remote.add(after);
-                nativeIndices.add(nativeIndex);
-                provider.phase(LinnProvider.Phase.TRANSFERRING,"Warteschlange "+remote.size()+"/"+count);
-            }
-            // Pause the local adapter on the main thread before activating remote transport.
-            if(!s.ids().equals(LinnQueuePlan.expected(original,remote))){conflict=true;throw new Exception("Linn queue changed during transfer. Retry.");}
-            if(generation!=provider.generation)throw new IOException("Linn handoff was cancelled");
-            FutureTask<Void> pause=new FutureTask<>(() -> {if(provider.player==null)position=previous.getCurrentMediaPosition();previous.onActionPause();return null;});
-            provider.main.post(pause);pause.get(5,TimeUnit.SECONDS);
-            provider.phase(LinnProvider.Phase.CONFIRMING,"Wiedergabe startet…");
-            switched=true;
-            s.call("Playlist","Pause");
-            s.call("Product","SetSourceIndex",Integer.toString(playlistSource));
+        List<LinnQueueTransaction.Track> incoming=new ArrayList<>();
+        for(int at=0;at<tracks.size();at++){
+            if(repeat==RepeatMode.SINGLE && at!=index)continue;
+            MediaItem track=tracks.get(at);String uri=OpenHome.tidalUri(track.getId(),token);
+            incoming.add(new LinnQueueTransaction.Track(occurrences.get(at),uri,metadata(track,uri)));nativeIndices.add(at);
+        }
+        List<String> knownKeys=new ArrayList<>();List<Long> knownIds=new ArrayList<>();
+        android.content.SharedPreferences saved=sessionPreferences();
+        if(device.uuid.equals(saved.getString("sessionUuid","")))try{
+            org.json.JSONArray keys=new org.json.JSONArray(saved.getString("occurrences","[]"));
+            for(int i=0;i<keys.length();i++)knownKeys.add(keys.getString(i));
+            for(String entry:saved.getString("mapping","").split(","))if(!entry.isEmpty())knownIds.add(Long.parseLong(entry.split(":")[0]));
+        }catch(Exception invalid){knownKeys.clear();knownIds.clear();}
+        LinnQueueTransaction transaction=new LinnQueueTransaction(s,incoming,knownKeys,knownIds,max);
+        boolean committed=false,switched=false;
+        try{
+            transaction.stage(() -> generation==provider.generation && !closed,
+                count -> provider.phase(LinnProvider.Phase.TRANSFERRING,"Warteschlange "+count+"/"+incoming.size()));
+            remote.addAll(transaction.remote);
+            LinnQueueTransaction.requireCurrent(() -> generation==provider.generation && !closed);
             int selected=nativeIndices.indexOf(index);
-            s.call("Playlist","SetRepeat",repeat==RepeatMode.OFF?"0":"1");
-            s.call("Playlist","SetShuffle",shuffled?"1":"0");
-            s.selectTrack(remote.get(selected),position,wasPlaying);
-            for(long id:original){
-                if(!s.ids().equals(LinnQueuePlan.expected(remainingOriginal,remote)))throw new OpenHome.Fault(OpenHome.Failure.CONFLICT,"Queue commit",0,"","Linn queue changed in another controller",null);
-                s.call("Playlist","DeleteId",Long.toString(id));remainingOriginal.remove(id);
-                SquareOutput.linnProgress("Finishing Linn connection…");
-            }
-            committed=true;
-            android.util.Log.i("SquareLinn","Device queue committed; creating remote volume adapter");
-            volume=new VolumeProviderCompat(VolumeProviderCompat.VOLUME_CONTROL_ABSOLUTE,100,level) {
-                @Override public void onSetVolumeTo(int value){command(() -> {device.transport.call("Volume","SetVolumeNoUnmute",Integer.toString(Math.max(0,Math.min(100,value))));});}
-                @Override public void onAdjustVolume(int direction){if(direction!=0)command(() -> {device.transport.call("Volume",direction>0?"VolumeIncNoUnmute":"VolumeDecNoUnmute");});}
-            };
-            android.util.Log.i("SquareLinn","Queue transfer complete");
-        } catch(Exception failure) {
-            if(!committed)try {
-                // Uncertain writes or another controller must never trigger destructive rollback.
-                boolean uncertain=failure instanceof OpenHome.Fault && ((OpenHome.Fault)failure).kind==OpenHome.Failure.UNCERTAIN;
-                if(conflict || uncertain || !s.ids().equals(LinnQueuePlan.expected(remainingOriginal,remote)))throw new IOException("Recovery paused: device state must be checked before retrying");
-                if(switched)s.call("Playlist","Stop");
-                List<Long> expected=LinnQueuePlan.expected(remainingOriginal,remote);
-                for(long id:remote){if(!s.ids().equals(expected))throw new IOException("Queue changed during recovery");s.call("Playlist","DeleteId",Long.toString(id));expected.remove(id);}
-                long after=0;
-                for(long id:original){
-                    if(!s.ids().equals(expected))throw new IOException("Queue changed during recovery");
-                    if(expected.contains(id)){after=id;continue;}
-                    Map<String,String> track=backup.get(id);
-                    long restored=s.insertConfirmed(expected,after,track.get("Uri"),track.get("Metadata"));
-                    expected.add(after==0?0:expected.indexOf(after)+1,restored);after=restored;
-                    if(Long.toString(id).equals(oldId))oldId=Long.toString(restored);
+            boolean sameStream=provider.player!=null && provider.player.device.uuid.equals(device.uuid) &&
+                source.equals(Integer.toString(playlistSource)) && oldId.equals(Long.toString(remote.get(selected)));
+            if(!sameStream){
+                FutureTask<Void> pause=new FutureTask<>(() -> {
+                    if(sourcePlayer.isLocal())position=sourcePlayer.getCurrentMediaPosition();
+                    if(sourcePlayer.isLocal())sourcePlayer.onActionPause();
+                    return null;
+                });
+                provider.main.post(pause);pause.get(5,TimeUnit.SECONDS);
+                if(sourcePlayer instanceof LinnPlayer && !((LinnPlayer)sourcePlayer).device.uuid.equals(device.uuid)){
+                    LinnPlayer old=(LinnPlayer)sourcePlayer;
+                    old.device.transport.call("Playlist","Pause");
+                    old.device.transport.confirm(Long.parseLong(old.device.transport.read("Playlist","Id")),"Paused",5000);
+                    position=Integer.parseInt(old.device.transport.call("Time","Time").get("Seconds"))*1000;
+                    int at=old.remote.indexOf(Long.parseLong(old.device.transport.read("Playlist","Id")));
+                    if(at>=0)index=old.nativeIndices.get(at);
+                    selected=nativeIndices.indexOf(index);
                 }
+            }
+            provider.phase(LinnProvider.Phase.CONFIRMING,"Wiedergabe bestätigen…");
+            switched=true;
+            if(!sameStream)s.call("Playlist","Pause");
+            if(!source.equals(Integer.toString(playlistSource)))s.call("Product","SetSourceIndex",Integer.toString(playlistSource));
+            if(!oldRepeat.equals(repeat==RepeatMode.OFF?"0":"1"))s.call("Playlist","SetRepeat",repeat==RepeatMode.OFF?"0":"1");
+            if(!oldShuffle.equals(shuffled?"1":"0"))s.call("Playlist","SetShuffle",shuffled?"1":"0");
+            if(!sameStream)s.selectTrack(remote.get(selected),position,wasPlaying);
+            else if(!oldState.equals(wasPlaying?"Playing":"Paused")){
+                s.call("Playlist",wasPlaying?"Play":"Pause");s.confirm(remote.get(selected),wasPlaying?"Playing":"Paused",5000);
+            }
+            transaction.commit(() -> generation==provider.generation && !closed);committed=true;
+            state=wasPlaying?MusicServiceState.PLAYING:MusicServiceState.PAUSED;
+            createVolume(level);
+            OpenHome.trace.record("queue_reused="+transaction.retained.size()+" queue_inserted="+transaction.inserted.size());
+        }catch(Exception failure){
+            if(!committed)try{
+                if(failure instanceof OpenHome.Fault && ((OpenHome.Fault)failure).kind==OpenHome.Failure.UNCERTAIN)
+                    throw new IOException("Recovery paused: device write outcome is uncertain");
+                OpenHome.deadline.set(System.nanoTime()+TimeUnit.SECONDS.toNanos(15));
+                transaction.verifyRollback();
+                if(switched)s.call("Playlist","Stop");
+                Map<Long,Long> restored=transaction.rollback();
                 if(switched){
                     s.call("Playlist","SetRepeat",oldRepeat);s.call("Playlist","SetShuffle",oldShuffle);
-                    if(!"0".equals(oldId)){s.call("Playlist","SeekId",oldId);s.call("Playlist","SeekSecondAbsolute",Integer.toString(oldPosition));}
+                    if(!"0".equals(oldId))s.selectTrack(restored.get(Long.parseLong(oldId)),oldPosition*1000,"Playing".equals(oldState));
                     s.call("Product","SetSourceIndex",source);
                     s.call("Playlist","Playing".equals(oldState)?"Play":"Stopped".equals(oldState)?"Stop":"Pause");
-                    // Remain locally paused after an attempted handoff; do not produce double audio.
                 }
-            }catch(Exception recovery){failure.addSuppressed(recovery);OpenHome.trace.record("recovery=unconfirmed original="+failure.getClass().getSimpleName());}
+            }catch(Exception recovery){rollbackConfirmed=false;failure.addSuppressed(recovery);OpenHome.trace.record("recovery=unconfirmed original="+failure.getClass().getSimpleName());}
             throw failure;
         }
+    }
+    void createVolume(int level){
+        volume=new VolumeProviderCompat(VolumeProviderCompat.VOLUME_CONTROL_ABSOLUTE,100,level){
+            public void onSetVolumeTo(int value){commandLatest("volume",() -> device.transport.call("Volume","SetVolumeNoUnmute",Integer.toString(Math.max(0,Math.min(100,value)))));}
+            public void onAdjustVolume(int direction){if(direction!=0)command(() -> device.transport.call("Volume",direction>0?"VolumeIncNoUnmute":"VolumeDecNoUnmute"));}
+        };
     }
     static void seekConfirmed(OpenHome device,int millis) throws Exception {
         device.seekConfirmed(millis);
@@ -154,11 +179,8 @@ public final class LinnPlayer implements k0 {
     void prepareReady()throws Exception {
         ready=true;signature=snapshotSignature();
         int level=Integer.parseInt(device.transport.read("Volume","Volume"));
-        volume=new VolumeProviderCompat(VolumeProviderCompat.VOLUME_CONTROL_ABSOLUTE,100,level){
-            public void onSetVolumeTo(int value){command(() -> device.transport.call("Volume","SetVolumeNoUnmute",Integer.toString(Math.max(0,Math.min(100,value)))));}
-            public void onAdjustVolume(int direction){if(direction!=0)command(() -> device.transport.call("Volume",direction>0?"VolumeIncNoUnmute":"VolumeDecNoUnmute"));}
-        };
-        provider.app.getSharedPreferences("squareglass_linn",0).edit().remove("sessionUuid").remove("queue").remove("mapping").apply();
+        createVolume(level);
+        provider.app.getSharedPreferences("squareglass_linn",0).edit().putBoolean("autoResume",false).apply();
     }
     void adoptExisting()throws Exception{
         if(!device.transport.playlistSource())return;
@@ -172,38 +194,80 @@ public final class LinnPlayer implements k0 {
         shuffled="1".equals(device.transport.read("Playlist","Shuffle"));
         repeat="1".equals(device.transport.read("Playlist","Repeat"))?RepeatMode.ALL:RepeatMode.OFF;
     }
-    void start(){if(!ready)persist();poll=provider.observations.scheduleWithFixedDelay(this::observe,0,2,TimeUnit.SECONDS);
-        events=new LinnEvents(device.transport,this::eventChanged);events.start();}
-    void eventChanged(){if(!closed && eventQueued.compareAndSet(false,true))provider.observations.execute(() -> {try{observe();}finally{eventQueued.set(false);}});}
-    void close(){closed=true;if(poll!=null)poll.cancel(false);if(events!=null)events.close();}
+    void start(){sourcePlayer=previous;if(!ready)persist();poll=provider.observations.scheduleWithFixedDelay(this::observe,0,2,TimeUnit.SECONDS);
+        events=new LinnEvents(device.transport,this::eventChanged,this::eventReceived);events.start();}
+    void eventReceived(LinnEvent event){
+        long revision=controlRevision.get();
+        provider.main.post(() -> {
+            if(closed || syncing || (selection.active() && !"Volume".equals(event.service)) || provider.connecting || revision!=controlRevision.get() || completedControl<revision)return;
+            if(!"Volume".equals(event.service) && !snapshotSignature().equals(signature)){eventChanged();return;}
+            try{
+                Map<String,String> values=event.values;boolean reconcile=false;
+                if("Product".equals(event.service)){if(values.containsKey("SourceXmlChangeCount"))device.transport.invalidateSources();reconcile=true;}
+                if("Playlist".equals(event.service)){
+                    if(values.containsKey("IdArray") && !OpenHome.decodeIds(values.get("IdArray")).equals(remote))reconcile=true;
+                    if(values.containsKey("Id")){int at=remote.indexOf(Long.parseLong(values.get("Id")));if(at>=0){
+                        int current=nativeIndices.get(at);if(current!=index){index=current;position=0;}
+                    }else reconcile=true;}
+                    String transport=values.get("TransportState");
+                    if(transport!=null && !"Buffering".equals(transport))state="Playing".equals(transport)?MusicServiceState.PLAYING:"Paused".equals(transport)?MusicServiceState.PAUSED:MusicServiceState.STOPPED;
+                }
+                if("Time".equals(event.service)){
+                    if(values.containsKey("Seconds"))position=(int)Math.min(Integer.MAX_VALUE,Long.parseLong(values.get("Seconds"))*1000);
+                    if(values.containsKey("Duration"))duration=(int)Math.min(Integer.MAX_VALUE,Long.parseLong(values.get("Duration"))*1000);
+                }
+                if(index>=0 && index<queue.getItems().size() && queue.getCurrentItemPosition()!=index)queue.goTo(index,false);
+                NativeLinnBridge.publish(state,position,duration);
+                if("Volume".equals(event.service) && values.containsKey("Volume")){
+                    long level=Long.parseLong(values.get("Volume"));if(level<=100 && volume!=null){volume.setCurrentVolume((int)level);provider.nativeVolume.changed((int)level);}
+                }
+                if(reconcile)eventChanged();
+            }catch(Exception invalid){eventChanged();}
+        });
+    }
+    void eventChanged(){if(!closed && eventQueued.compareAndSet(false,true))provider.observations.execute(() -> {try{observe(true);}finally{eventQueued.set(false);}});}
+    void close(){closed=true;selection.close();if(poll!=null)poll.cancel(false);if(events!=null)events.close();}
     void readdress(LinnProvider.Device replacement){
         if(provider.player!=this)return;
+        selection.close();completedControl=controlRevision.incrementAndGet();
         device=replacement;if(events!=null)events.close();
-        events=new LinnEvents(device.transport,this::eventChanged);events.start();
+        events=new LinnEvents(device.transport,this::eventChanged,this::eventReceived);events.start();
         if(closed){closed=false;poll=provider.observations.scheduleWithFixedDelay(this::observe,0,2,TimeUnit.SECONDS);}
-        provider.app.getSharedPreferences("squareglass_linn",0).edit().putString("location",device.transport.location).apply();
+        provider.app.getSharedPreferences("squareglass_linn",0).edit().putString("sessionLocation",device.transport.location).apply();
+        eventChanged();
     }
-    void observe(){
-        if(closed || syncing)return;
+    void observe(){observe(false);}
+    void observe(boolean force){
+        if(closed || syncing || selection.active() || provider.connecting)return;
+        long revision=controlRevision.get();if(completedControl<revision)return;
         if(failedObservations>=3){recover();return;}
         OpenHome.deadline.set(System.nanoTime()+TimeUnit.SECONDS.toNanos(6));
         try {
             OpenHome s=device.transport;
+            if(!force && !ready && events!=null && events.healthy() && System.nanoTime()-lastFullObservation<TimeUnit.SECONDS.toNanos(30)){
+                Map<String,String> timing=s.call("Time","Time");
+                int observedPosition=Integer.parseInt(timing.get("Seconds"))*1000,observedDuration=Integer.parseInt(timing.get("Duration"))*1000;
+                failedObservations=0;if(provider.phase==LinnProvider.Phase.RECONNECTING)provider.phase(LinnProvider.Phase.ACTIVE,"");
+                provider.main.post(() -> {if(!closed && !syncing && revision==controlRevision.get()){position=observedPosition;duration=observedDuration;NativeLinnBridge.publish(state,position,duration);}});return;
+            }
             if(ready){s.read("Playlist","TransportState");failedObservations=0;if(provider.phase==LinnProvider.Phase.RECONNECTING)provider.phase(LinnProvider.Phase.READY,"Bereit – Musik auswählen");return;}
             if(!s.playlistSource()){ready=true;state=MusicServiceState.PAUSED;provider.phase(LinnProvider.Phase.READY,"Andere Quelle aktiv – Musik auswählen");return;}
             List<Long> actual=s.ids();
             if(!actual.equals(remote) && !syncing){adoptRemote(actual);return;}
             long id=Long.parseLong(s.read("Playlist","Id"));
             Map<String,String> timing=s.call("Time","Time");
-            position=Integer.parseInt(timing.get("Seconds"))*1000;duration=Integer.parseInt(timing.get("Duration"))*1000;
+            int observedPosition=Integer.parseInt(timing.get("Seconds"))*1000,observedDuration=Integer.parseInt(timing.get("Duration"))*1000;
             String transport=s.read("Playlist","TransportState");
-            state="Playing".equals(transport)?MusicServiceState.PLAYING:"Paused".equals(transport)?MusicServiceState.PAUSED:MusicServiceState.STOPPED;
+            MusicServiceState observedState="Buffering".equals(transport)?state:"Playing".equals(transport)?MusicServiceState.PLAYING:"Paused".equals(transport)?MusicServiceState.PAUSED:MusicServiceState.STOPPED;
             int at=LinnQueuePlan.confirmedIndex(remote,id);int current=at<0?-1:nativeIndices.get(at);
             int level=Integer.parseInt(s.read("Volume","Volume"));
             failedObservations=0;
+            lastFullObservation=System.nanoTime();
             if(provider.phase==LinnProvider.Phase.RECONNECTING)provider.phase(LinnProvider.Phase.ACTIVE,"");
             provider.main.post(() -> {
-                if(closed || syncing)return;
+                if(closed || syncing || revision!=controlRevision.get())return;
+                state=observedState;
+                position=observedPosition;duration=observedDuration;
                 if(!snapshotSignature().equals(signature)){
                     if(queue.getItems().isEmpty()) {
                         signature=snapshotSignature();command(() -> {
@@ -221,25 +285,43 @@ public final class LinnPlayer implements k0 {
                 NativeLinnBridge.publish(state,position,duration);volume.setCurrentVolume(level);provider.nativeVolume.changed(level);
             });
         }catch(Exception failure){
+            if(closed || syncing || provider.connecting || revision!=controlRevision.get())return;
             failedObservations++;
             provider.phase(LinnProvider.Phase.RECONNECTING,"Verbindung unterbrochen – erneut verbinden…");
             OpenHome.trace.record("observation_failed count="+failedObservations+" type="+failure.getClass().getSimpleName());
         }finally{OpenHome.deadline.remove();}
     }
     void recover(){
-        long now=System.nanoTime();if(now<nextRecovery)return;
+        long now=System.nanoTime();if(now<nextRecovery || closed || syncing || provider.connecting)return;
         nextRecovery=now+TimeUnit.SECONDS.toNanos(Math.min(30,1L<<Math.min(5,failedObservations-3)));
+        OpenHome.deadline.set(now+TimeUnit.SECONDS.toNanos(8));
         try{
-            Set<String> locations=new LinkedHashSet<>();locations.add(device.transport.location);locations.addAll(OpenHome.discover(1500));
-            for(String location:locations)try{
-                OpenHome transport=new OpenHome(location);
-                if(!transport.uuid.equals(device.transport.uuid))continue;
-                transport.read("Playlist","TransportState");
-                LinnProvider.Device replacement=new LinnProvider.Device(transport);
-                readdress(replacement);provider.connected=replacement;provider.devices.put(replacement.a,replacement);
-                failedObservations=0;provider.phase(ready?LinnProvider.Phase.READY:LinnProvider.Phase.ACTIVE,ready?"Bereit – Musik auswählen":"");return;
-            }catch(Exception ignored){}
-        }catch(Exception ignored){}
+            OpenHome[] found={null};
+            OpenHome.deadline.set(System.nanoTime()+TimeUnit.SECONDS.toNanos(2));
+            try{
+                OpenHome known=new OpenHome(device.location);
+                if(known.uuid.equals(device.uuid)){known.read("Playlist","TransportState");found[0]=known;}
+            }catch(Exception unavailable){}
+            OpenHome.deadline.set(now+TimeUnit.SECONDS.toNanos(8));
+            if(found[0]==null)try(LinnDiscovery scan=new LinnDiscovery()){
+                scan.search(null,2000,result -> {
+                    if(found[0]!=null || (!result.uuid.isEmpty() && !result.uuid.equals(device.uuid)))return;
+                    try{
+                        OpenHome candidate=new OpenHome(result.location);
+                        if(candidate.uuid.equals(device.uuid)){candidate.read("Playlist","TransportState");found[0]=candidate;scan.close();}
+                    }catch(Exception ignored){}
+                });
+            }
+            if(found[0]!=null){
+                LinnProvider.Device replacement=new LinnProvider.Device(found[0]);failedObservations=0;
+                provider.controls.execute(() -> {
+                    if(closed || syncing || provider.connecting || provider.player!=this)return;
+                    readdress(replacement);provider.connected=replacement;provider.devices.put(replacement.a,replacement);
+                    provider.phase(ready?LinnProvider.Phase.READY:LinnProvider.Phase.ACTIVE,ready?"Bereit – Musik auswählen":"");
+                });
+                return;
+            }
+        }catch(Exception ignored){}finally{OpenHome.deadline.remove();}
         failedObservations++;
     }
     interface Action {void run() throws Exception;}
@@ -277,25 +359,34 @@ public final class LinnPlayer implements k0 {
         });
     }
     void command(Action action){
-        if(closed || syncing)return;
+        submit(null,action,3000);
+    }
+    void commandLatest(String key,Action action){submit(key,action,3000);}
+    void submit(String key,Action action,long budget){
+        if(closed || syncing || provider.connecting)return;
+        long revision=controlRevision.incrementAndGet();
         final long queued=System.nanoTime();
-        provider.controls.execute(() -> {
+        Runnable work=() -> {
             if(closed || syncing)return;
             OpenHome.trace.record("control_queue_ms="+TimeUnit.NANOSECONDS.toMillis(System.nanoTime()-queued));
+            OpenHome.deadline.set(System.nanoTime()+TimeUnit.MILLISECONDS.toNanos(budget));
             try{action.run();}
             catch(Exception failure){provider.fail(failure.getMessage());}
-        });
+            finally{completedControl=Math.max(completedControl,revision);OpenHome.deadline.remove();eventChanged();}
+        };
+        if(key==null)provider.controls.execute(work);else latest.execute(key,work);
     }
     void optimistic(MusicServiceState target){
         state=target;provider.main.post(() -> {if(!closed)NativeLinnBridge.publish(state,position,duration);});
     }
     void synchronize(int target,boolean play,int millis){
         if(syncing || closed)return;syncing=true;
-        LinnPlayer replacement=new LinnPlayer(provider,device,previous);
+        LinnPlayer replacement=new LinnPlayer(provider,device,this);
         try{replacement.capture();replacement.index=target;replacement.wasPlaying=play;replacement.position=millis;}
         catch(Exception failure){syncing=false;provider.fail(failure.getMessage());return;}
-        provider.io.execute(() -> {
+        provider.controls.execute(() -> {
             int revision=provider.generation;
+            OpenHome.deadline.set(System.nanoTime()+TimeUnit.MILLISECONDS.toNanos(Math.min(120000,20000L+replacement.tracks.size()*150L)));
             try {
                 replacement.transfer();
                 provider.main.post(() -> {
@@ -305,13 +396,16 @@ public final class LinnPlayer implements k0 {
                     for(com.aspiro.wamp.broadcast.l listener:provider.listeners)listener.c();
                 });
             }catch(Exception failure){provider.main.post(() -> {if(closed || revision!=provider.generation)return;if(!ready)restoreNativeQueue();syncing=false;provider.fail(LinnProvider.explain(failure));});}
+            finally{OpenHome.deadline.remove();}
         });
     }
     void select(int target,boolean play){
+        if(closed || syncing || provider.connecting)return;
         if(target<0 || target>=queue.getItems().size())return;
         if(ready || !snapshotSignature().equals(signature) || !nativeIndices.contains(target)){synchronize(target,play,0);return;}
         int at=nativeIndices.indexOf(target);
-        command(() -> device.transport.selectTrack(remote.get(at),0,play));
+        index=target;position=0;optimistic(play?MusicServiceState.PLAYING:MusicServiceState.PAUSED);
+        controlRevision.incrementAndGet();selection.select(remote.get(at),0,play);
     }
     void persist(){
         try {
@@ -319,15 +413,20 @@ public final class LinnPlayer implements k0 {
             ByteArrayOutputStream bytes=new ByteArrayOutputStream();try(ObjectOutputStream out=new ObjectOutputStream(bytes)){out.writeObject(saved);}
             if(bytes.size()>4*1024*1024)throw new IOException("Queue snapshot too large");
             StringBuilder mapping=new StringBuilder();for(int i=0;i<remote.size();i++)mapping.append(remote.get(i)).append(':').append(nativeIndices.get(i)).append(',');
-            provider.app.getSharedPreferences("squareglass_linn",0).edit().putString("sessionUuid",device.transport.uuid)
-                .putString("queue",Base64.encodeToString(bytes.toByteArray(),Base64.NO_WRAP)).putString("mapping",mapping.toString())
-                .putBoolean("shuffled",shuffled).putString("repeat",repeat.name()).apply();
+            org.json.JSONArray keys=new org.json.JSONArray();
+            for(int at:nativeIndices)keys.put(occurrences.get(at));
+            String key=java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(device.uuid.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            for(String file:new String[]{"squareglass_linn","squareglass_linn_session_"+key})
+                provider.app.getSharedPreferences(file,0).edit().putString("sessionUuid",device.uuid)
+                    .putString("sessionLocation",device.location)
+                    .putString("queue",Base64.encodeToString(bytes.toByteArray(),Base64.NO_WRAP)).putString("mapping",mapping.toString())
+                    .putString("occurrences",keys.toString()).putBoolean("shuffled",shuffled).putString("repeat",repeat.name()).apply();
         }catch(Exception failure){provider.fail("Linn is connected; saving its reconnect state failed.");}
     }
     @SuppressWarnings("unchecked")
     void reattach() throws Exception {
         if(!device.transport.playlistSource())throw new IOException("Another Linn source is active");
-        android.content.SharedPreferences prefs=provider.app.getSharedPreferences("squareglass_linn",0);
+        android.content.SharedPreferences prefs=sessionPreferences();
         shuffled=prefs.getBoolean("shuffled",false);repeat=RepeatMode.valueOf(prefs.getString("repeat","OFF"));
         if(!device.transport.uuid.equals(prefs.getString("sessionUuid","")))throw new IOException("Different Linn session");
         byte[] data=Base64.decode(prefs.getString("queue",""),Base64.NO_WRAP);
@@ -350,10 +449,7 @@ public final class LinnPlayer implements k0 {
         long selected=Long.parseLong(device.transport.read("Playlist","Id"));int at=remote.indexOf(selected);
         if(at<0)throw new IOException("Linn current track is unavailable");index=nativeIndices.get(at);
         int level=Integer.parseInt(device.transport.read("Volume","Volume"));
-        volume=new VolumeProviderCompat(VolumeProviderCompat.VOLUME_CONTROL_ABSOLUTE,100,level) {
-            public void onSetVolumeTo(int value){command(() -> device.transport.call("Volume","SetVolumeNoUnmute",Integer.toString(Math.max(0,Math.min(100,value)))));}
-            public void onAdjustVolume(int direction){if(direction!=0)command(() -> device.transport.call("Volume",direction>0?"VolumeIncNoUnmute":"VolumeDecNoUnmute"));}
-        };
+        createVolume(level);
     }
     void restoreNativeQueue(){
         ItemSource source=new ItemSource("squareglass-linn","Linn queue",ItemSource.NavigationType.None.INSTANCE,null);
@@ -364,18 +460,28 @@ public final class LinnPlayer implements k0 {
         NativeLinnBridge.restoreShuffle(queue,shuffled);
         queue.goTo(index,false);
         signature=snapshotSignature();
+        occurrences.clear();for(u0 item:queue.getItems())occurrences.add(item.getUid()+":"+item.getMediaItem().getId());
     }
     public void onActionPlay(){
         if(ready){select(queue.getCurrentItemPosition(),true);return;}
-        optimistic(MusicServiceState.PLAYING);command(() -> device.transport.call("Playlist","Play"));
+        optimistic(MusicServiceState.PLAYING);
+        if(selection.play(true)){controlRevision.incrementAndGet();return;}
+        command(() -> device.transport.call("Playlist","Play"));
     }
-    public void onActionPause(){if(!ready){optimistic(MusicServiceState.PAUSED);command(() -> device.transport.call("Playlist","Pause"));}}
+    public void onActionPause(){if(!ready){optimistic(MusicServiceState.PAUSED);if(selection.play(false)){controlRevision.incrementAndGet();return;}command(() -> device.transport.call("Playlist","Pause"));}}
     void skip(String action){command(() -> {OpenHome s=device.transport;boolean play="Playing".equals(s.read("Playlist","TransportState"));s.call("Playlist",action);if(!play)s.call("Playlist","Pause");});}
     void singleSkip(boolean previous){int target=NativeLinnBridge.skip(queue,previous);if(target>=0)select(target,state==MusicServiceState.PLAYING);}
-    public void onActionNext(){if(ready)return;if(repeat==RepeatMode.SINGLE)singleSkip(false);else skip("Next");}
-    public void onActionPrevious(boolean force){if(ready)return;if(!force && position>5000)onActionSeekTo(0);else if(repeat==RepeatMode.SINGLE)singleSkip(true);else skip("Previous");}
-    public void onActionSeekTo(int millis){if(!ready){position=Math.max(0,millis);command(() -> seekConfirmed(device.transport,millis));}}
-    public void onActionStop(PlaybackEndReason reason){if(!ready)command(() -> device.transport.call("Playlist","Stop"));}
+    public void onActionNext(){if(ready)return;if(repeat==RepeatMode.SINGLE || selection.active())singleSkip(false);else skip("Next");}
+    public void onActionPrevious(boolean force){if(ready)return;if(!force && position>5000)onActionSeekTo(0);else if(repeat==RepeatMode.SINGLE || selection.active())singleSkip(true);else skip("Previous");}
+    public void onActionSeekTo(int millis){
+        if(ready || closed || syncing || provider.connecting)return;
+        position=Math.max(0,millis);controlRevision.incrementAndGet();
+        if(selection.seek(millis))return;
+        int at=nativeIndices.indexOf(index);
+        if(at>=0)selection.seekCurrent(remote.get(at),millis,state==MusicServiceState.PLAYING);
+        else commandLatest("seek",() -> seekConfirmed(device.transport,millis));
+    }
+    public void onActionStop(PlaybackEndReason reason){if(!ready){selection.close();optimistic(MusicServiceState.STOPPED);command(() -> device.transport.call("Playlist","Stop"));}}
     public void onActionTogglePlayback(){if(state==MusicServiceState.PLAYING)onActionPause();else onActionPlay();}
     public void onActionPlayPosition(int at,boolean keep,boolean play){select(at,play);}
     public void onActivated(int position,k0 old){}

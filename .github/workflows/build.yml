@@ -10,6 +10,26 @@ permissions:
   contents: read
 
 jobs:
+  linn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-36'
+          log-accepted-android-sdk-licenses: false
+      - name: Check Linn protocol, discovery, queue and selection regressions
+        run: |
+          python -m unittest discover -s tests -p 'test_linn*.py' -v
+          python -m unittest discover -s tests -p 'test_output.py' -v
   manager:
     runs-on: ubuntu-latest
     timeout-minutes: 30

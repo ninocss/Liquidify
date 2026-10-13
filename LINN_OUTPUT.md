@@ -1,5 +1,57 @@
 # Linn OpenHome output — Liquidify 1.0.0 Beta
 
+## 2026-10-13 responsiveness revision — physical acceptance pending
+
+The last renderer appears immediately as an unverified remembered row. Its address
+is checked alongside an incremental 2.5-second SSDP search; each valid renderer is
+published separately. Refresh closes the old UDP socket. Description workers are
+bounded, and Linn rows/confirmed selection are delivered directly to the popup,
+so a slow native output provider cannot hold up their appearance. UUID, advertised
+boot/config IDs, leases and network changes govern discovery refresh. A remembered
+row is not proof that its renderer is online.
+
+Device descriptions and actual SCPD argument definitions use bounded five-minute
+process caches. Discovery loads only the device description; capabilities are
+warmed separately. Each handoff reads renderer TIDAL OAuth once. SourceXml is
+cached and invalidated by Product events. App reattachment checks player readiness
+every 250 ms for up to ten seconds rather than imposing the old startup delay.
+
+Confirmed session snapshots are stored separately for each UUID, with native
+occurrence keys and remote IDs but without device URIs or OAuth identifiers.
+Choosing This phone disables automatic reattachment while keeping the snapshot.
+A transfer retains the longest ordered set of matching occurrences only after
+confirming actual IDs, URIs and metadata. Identical queues require zero Insert or
+DeleteId calls; append/removal/reorder changes stage only the necessary entries.
+Staging capacity still includes the old queue and newly inserted entries. Writes
+are serialized, lost Insert replies are reconciled, and rollback stops on foreign
+edits or uncertain writes. Repeat Single keeps its special one-track queue.
+
+Validated GENA payloads update native state directly. With recent callbacks,
+periodic position reads replace full observations between 30-second reconciliations;
+without callbacks, full polling remains at two seconds. New controls invalidate
+older observations. Pending absolute volume controls are coalesced. Track selection
+and seeking confirm asynchronously on the control worker, yielding between reads.
+New track targets supersede old ones; Pause/Play/Seek intent during a pending track
+change applies only after its ID is confirmed. Seeking the existing stream does not
+restart it or change its transport state. Selection deadlines are bounded and the
+popup's progress messages no longer reset its timeout. A pending Linn connection
+can be cancelled with guarded recovery.
+
+The popup supports direct Linn-to-Linn switching with one active output. It prepares
+the destination before confirming the old renderer's pause and moving current
+position/selection. Native output selection changes after destination confirmation.
+This phone handback remains paused and uses current device position/ID. Cast, Sonos
+and other native providers continue through their existing disconnect callbacks.
+
+`tests/LinnPerformanceChecks.java` exercises local HTTP, UDP and GENA fixtures for
+incremental discovery/cancel, lazy metadata caches, identical/full queues, duplicate
+occurrences, append/reorder, cancelled/partial commits, foreign edits, uncertain
+deletes, asynchronous controls and event SID/sequence validation. The Linn checks
+also run in the Build workflow. `reports/linn-performance.json` binds this revision
+to the rebuilt patch ZIP and records validation and remaining hardware acceptance.
+The historical evidence below does not establish latency, audible playback or
+physical Android lifecycle acceptance for this revision.
+
 ## 2026-10-12 reliability revision — phone acceptance pending
 
 This revision separates an empty-queue Ready selection from a playback handoff.
@@ -70,7 +122,7 @@ address or an actual discovered device-description URL. Some firmware does not
 answer unicast SSDP; then the description URL is required. Emulator NAT required
 this fallback. No firmware-specific description path is guessed.
 
-V1 supports one renderer and online TIDAL music. Offline downloads, uploads,
+V1 supports one active renderer, renderer switching and online TIDAL music. Offline downloads, uploads,
 video and multiroom groups are excluded. TracksMax is checked before mutation.
 A reversible handoff temporarily stages new entries beside the old device queue,
 so both must fit. A full renderer may require clearing its old queue through Linn

@@ -33,12 +33,26 @@ def main():
     invoke-interface {{v0}}, {MANAGER}->stopScanning()V
     return-void''')
     source += method('active()Ljava/lang/Object;', 1, manager() + f'\n    invoke-interface {{v0}}, {MANAGER}->e()Lp2/a;\n    move-result-object v0\n    invoke-static {{v0}}, Ldev/nino/squareglass/LinnProvider;->confirmed(Ljava/lang/Object;)Ljava/lang/Object;\n    move-result-object v0\n    return-object v0')
-    source += method('select(Ljava/lang/Object;)V', 1, manager() + f'\n    invoke-static {{p0}}, Ldev/nino/squareglass/LinnProvider;->prepareSelection(Ljava/lang/Object;)V\n    check-cast p0, Lp2/a;\n    invoke-interface {{v0, p0}}, {MANAGER}->j(Lp2/a;)V\n    return-void')
+    source += method('select(Ljava/lang/Object;)V', 2, manager() + f'\n    invoke-static {{p0}}, Ldev/nino/squareglass/LinnProvider;->prepareSelection(Ljava/lang/Object;)V\n    invoke-static {{p0}}, Ldev/nino/squareglass/LinnProvider;->directSelection(Ljava/lang/Object;)Z\n    move-result v1\n    if-nez v1, :done\n    check-cast p0, Lp2/a;\n    invoke-interface {{v0, p0}}, {MANAGER}->j(Lp2/a;)V\n    :done\n    return-void')
+    source += method('confirmSelection(Ljava/lang/Object;)V', 2, manager() + '''
+    invoke-static {p0}, Ldev/nino/squareglass/LinnProvider;->canRestoreSelection(Ljava/lang/Object;)Z
+    move-result v1
+    if-eqz v1, :done
+    check-cast v0, Lcom/aspiro/wamp/broadcast/v;
+    check-cast p0, Lp2/a;
+    iput-object p0, v0, Lcom/aspiro/wamp/broadcast/v;->c:Lp2/a;
+    invoke-virtual {v0}, Lcom/aspiro/wamp/broadcast/v;->c()V
+    :done
+    return-void''')
     # Failed Linn selection must release v.c without calling the local provider's
     # connect(), which can reactivate local audio after an uncertain remote write.
     source += method('restoreLocalSelection(Ljava/lang/Object;)V', 3, manager() + '''
     instance-of v1, p0, Lp2/c;
+    if-nez v1, :restore
+    invoke-static {p0}, Ldev/nino/squareglass/LinnProvider;->canRestoreSelection(Ljava/lang/Object;)Z
+    move-result v1
     if-eqz v1, :done
+    :restore
     check-cast v0, Lcom/aspiro/wamp/broadcast/v;
     iget-object v1, v0, Lcom/aspiro/wamp/broadcast/v;->c:Lp2/a;
     instance-of v1, v1, Ldev/nino/squareglass/LinnProvider$Device;

@@ -8,10 +8,11 @@ class LinnQueueTests(unittest.TestCase):
     def test_lan_xml_and_http_bounds(self):
         output=ROOT/'build/linn-protocol-checks';output.mkdir(parents=True,exist_ok=True)
         android=SDK_HOME / 'platforms/android-36/android.jar'
-        sources=[ROOT/'extension/src/main/java/dev/nino/squareglass'/name for name in ['OpenHome.java','LinnEvents.java','LinnQueuePlan.java']]
-        subprocess.run([str(java_tool('javac')),'-cp',str(android),'-d',str(output),*[str(p) for p in sources],str(ROOT/'tests/OpenHomeChecks.java'),str(ROOT/'tests/LinnFaultChecks.java')],check=True)
+        sources=[ROOT/'extension/src/main/java/dev/nino/squareglass'/name for name in ['OpenHome.java','LinnEvents.java','LinnQueuePlan.java','LinnCache.java','LinnDiscovery.java','LinnEvent.java','LinnQueueTransaction.java','LinnCommandQueue.java','LinnTrackSelection.java']]
+        subprocess.run([str(java_tool('javac')),'-cp',str(android),'-d',str(output),*[str(p) for p in sources],str(ROOT/'tests/OpenHomeChecks.java'),str(ROOT/'tests/LinnFaultChecks.java'),str(ROOT/'tests/LinnPerformanceChecks.java')],check=True)
         subprocess.run([str(java_tool('java')),'-cp',os.pathsep.join([str(output),str(android)]),'dev.nino.squareglass.OpenHomeChecks'],check=True)
         subprocess.run([str(java_tool('java')),'-cp',os.pathsep.join([str(output),str(android)]),'dev.nino.squareglass.LinnFaultChecks'],check=True)
+        subprocess.run([str(java_tool('java')),'-cp',os.pathsep.join([str(output),str(android)]),'dev.nino.squareglass.LinnPerformanceChecks'],check=True)
     def test_capacity_occurrences_and_event_sequence_wrap(self):
         output=ROOT/'build/linn-queue-checks';output.mkdir(parents=True,exist_ok=True)
         subprocess.run([str(java_tool('javac')),'-d',str(output),str(ROOT/'extension/src/main/java/dev/nino/squareglass/LinnQueuePlan.java'),str(ROOT/'tests/LinnQueueChecks.java')],check=True)

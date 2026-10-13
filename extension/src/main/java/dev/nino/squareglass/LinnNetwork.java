@@ -10,7 +10,8 @@ final class LinnNetwork implements OpenHome.NetworkBinding {
     final ConnectivityManager manager;
     LinnNetwork(Application app,Runnable changed){
         manager=(ConnectivityManager)app.getSystemService(Application.CONNECTIVITY_SERVICE);
-        manager.registerNetworkCallback(new NetworkRequest.Builder().addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN).build(),
+        manager.registerNetworkCallback(new NetworkRequest.Builder().addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI).addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET).build(),
             new ConnectivityManager.NetworkCallback(){
                 public void onAvailable(Network n){changed.run();}
                 public void onLost(Network n){changed.run();}

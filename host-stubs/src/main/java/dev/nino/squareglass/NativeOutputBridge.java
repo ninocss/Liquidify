@@ -13,5 +13,6 @@ public final class NativeOutputBridge {
     public static boolean local(Object device) { return false; }
     public static void discard(Object dialog) {}
     public static void select(Object device) {}
+    public static void confirmSelection(Object device) {}
     public static void restoreLocalSelection(Object device) {}
 }

@@ -1,10 +1,10 @@
 {
   "passed": true,
   "hostClasses": 77879,
-  "extensionClasses": 621,
+  "extensionClasses": 659,
   "duplicateClasses": [],
   "missingTypes": [],
   "missingMethods": [],
   "missingFields": [],
-  "sourceDexSha256": "5800043b7e3e4f6048e4c561a63b49c1177ad1595decc9cc43c61ca3222e5ea6"
+  "sourceDexSha256": "f2b3c5bdf5130c456d62000a6e5bf5c32914551d44ff7eb3aa7a516de3319380"
 }

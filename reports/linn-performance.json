@@ -1,0 +1,88 @@
+{
+  "revision": "2026-10-13-fast-connect",
+  "baseCommit": "25d2f09e19b09d97f6a1455b91c125d1d91d4411",
+  "status": "implemented; local validation passed; physical acceptance pending",
+  "physicalAcceptance": false,
+  "artifacts": {
+    "patchZip": "patches/patches.zip",
+    "patchZipSha256": "f291d70e2f12481c2a4151b6e1b263f9b553875b3dce951e3d4b53432e1ca5fc",
+    "extensionDexSha256": "f2b3c5bdf5130c456d62000a6e5bf5c32914551d44ff7eb3aa7a516de3319380",
+    "managerDebugApkSha256": "79ecbdf79227ad2cdd3bf13c2040ea5bb6b289c98b5c73ef0e9591b5c5c93976",
+    "managerInstalledApkSha256": null
+  },
+  "verification": {
+    "repoTests": {
+      "passed": 30,
+      "failed": 0
+    },
+    "managerTests": {
+      "passed": 5,
+      "failed": 0
+    },
+    "nativeHostLinkage": {
+      "passed": true,
+      "extensionClasses": 659,
+      "missingTypes": 0,
+      "missingMethods": 0,
+      "missingFields": 0
+    },
+    "strictPatches": {
+      "passed": 96,
+      "failed": 0
+    },
+    "releaseValidation": true,
+    "managerBundledZipExact": true,
+    "managerDebugSignature": true
+  },
+  "localProtocolEvidence": {
+    "fixture": "tests/LinnPerformanceChecks.java",
+    "physicalRendererContacted": false,
+    "identicalQueue": {
+      "insertCalls": 0,
+      "deleteCalls": 0,
+      "fullCapacityAccepted": true
+    },
+    "append": {
+      "insertCalls": 1,
+      "deleteCalls": 0,
+      "lostResponseReconciled": true
+    },
+    "reorder": {
+      "retainedOccurrences": 3,
+      "insertCalls": 1,
+      "deleteCalls": 1
+    },
+    "discovery": {
+      "firstResultBeforeSearchEnds": true,
+      "cancelClosesSocket": true,
+      "duplicateLocationsCoalesced": true
+    },
+    "events": {
+      "initialNotifyBeforeSubscribeReply": true,
+      "payloadsDelivered": true,
+      "unknownSidRejected": true,
+      "replaysRejected": true
+    },
+    "controls": {
+      "pendingAbsoluteControlsCoalesced": true,
+      "trackConfirmationYieldsWorker": true,
+      "latestTrackTargetWins": true,
+      "pauseAndPositionWaitForSelectedId": true,
+      "currentStreamSeekPreservesTransport": true
+    },
+    "rollback": {
+      "cancelledStageRestored": true,
+      "partialCommitRestored": true,
+      "foreignEditsPreserved": true,
+      "uncertainDeletesStopRecovery": true
+    }
+  },
+  "pendingAcceptance": [
+    "Import this exact ZIP through Manager and bind the installed APK to it.",
+    "Measure remembered/cold discovery and play/pause/seek/title/output-switch latency on Pixel 8 and Majik DSM.",
+    "Exercise empty, 1-, 25-, 200-title and capacity-boundary queues; duplicate titles, shuffle and repeat modes.",
+    "Repeat 20 phone/Linn handoffs, paused and playing; validate queue, selected occurrence, position, volume and mute.",
+    "Validate direct Linn-to-Linn switching with a second compatible renderer.",
+    "Validate Wi-Fi loss/rejoin, changed IP, app/device restart, locked phone and autonomous playback."
+  ]
+}

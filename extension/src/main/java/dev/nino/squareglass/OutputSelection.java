@@ -8,7 +8,8 @@ public final class OutputSelection {
     public int nextRequest() { return ++revision; }
     public boolean accepts(int value) { return value == revision; }
     public void invalidate() { ++revision; }
-    public void begin(String id, long now) { target=id; expires=now+15000; }
+    public void begin(String id, long now) {if(!id.equals(target)){target=id;expires=now+15000;}}
+    public void deadline(String id,long now,long remaining) {target=id;expires=now+Math.max(0,remaining);}
     public String target() { return target; }
     /** 1 confirmed, -1 timed out, 0 pending/idle. */
     public int observe(String active, long now) {

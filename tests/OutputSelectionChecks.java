@@ -16,5 +16,8 @@ public final class OutputSelectionChecks {
         state.invalidate();check(!state.accepts(current));
         // A disconnected session never confirms a pending transfer.
         state.begin("uuid:device",0);check(state.observe(null,100)==0);
+        state.begin("uuid:device",14000);check(state.observe(null,15000)==-1);
+        state.deadline("uuid:long-queue",20000,30000);check(state.observe(null,49000)==0);
+        state.deadline("uuid:long-queue",49500,500);check(state.observe(null,50000)==-1);
     }
 }

@@ -20,6 +20,14 @@ final class OpenHome {
     static volatile Trace trace=message -> {};
     static final ThreadLocal<String> attempt=new ThreadLocal<>();
     static final ThreadLocal<Long> deadline=new ThreadLocal<>();
+    static final LinnCache<String,OpenHome> descriptions=new LinnCache<>(32,TimeUnit.MINUTES.toNanos(5));
+    static final LinnCache<String,Map<String,List<String>>> actionDescriptions=new LinnCache<>(128,TimeUnit.MINUTES.toNanos(5));
+    static OpenHome cached(String url)throws Exception {
+        OpenHome known=descriptions.get(url);
+        if(known!=null)return known;
+        OpenHome loaded=new OpenHome(url);descriptions.put(url,loaded);return loaded;
+    }
+    static void invalidateDescriptions(){descriptions.clear();actionDescriptions.clear();}
     static int timeout(int maximum)throws SocketTimeoutException{
         Long end=deadline.get();if(end==null)return maximum;
         long remaining=TimeUnit.NANOSECONDS.toMillis(end-System.nanoTime());
@@ -49,9 +57,28 @@ final class OpenHome {
     static final int LIMIT=1024*1024;
     final String uuid,name,model,location;
     final Map<String,Service> services=new HashMap<>();
+    private volatile String sourceXml;
+    private volatile long sourceXmlAt;
     static final class Service {
-        String type,control,event;
-        Map<String,List<String>> inputs=new HashMap<>();
+        String type,control,event,scpd,cacheKey;
+        volatile Map<String,List<String>> inputs;
+        synchronized void load()throws Exception {
+            if(inputs!=null)return;
+            Map<String,List<String>> known=actionDescriptions.get(cacheKey);
+            if(known!=null){inputs=known;return;}
+            Map<String,List<String>> parsed=new HashMap<>();
+            NodeList actions=xml(fetch(scpd,null,null)).getElementsByTagNameNS("*","action");
+            for(int a=0;a<actions.getLength();a++) {
+                Element action=(Element)actions.item(a);List<String> argumentsIn=new ArrayList<>();
+                NodeList arguments=action.getElementsByTagNameNS("*","argument");
+                for(int b=0;b<arguments.getLength();b++) {
+                    Element argument=(Element)arguments.item(b);
+                    if("in".equals(text(argument,"direction")))argumentsIn.add(text(argument,"name"));
+                }
+                parsed.put(text(action,"name"),Collections.unmodifiableList(argumentsIn));
+            }
+            inputs=Collections.unmodifiableMap(parsed);actionDescriptions.put(cacheKey,inputs);
+        }
     }
     static String text(Element e,String tag) {
         NodeList list=e.getElementsByTagNameNS("*",tag);
@@ -134,7 +161,7 @@ final class OpenHome {
         String base=text(root,"URLBase");if(base.isEmpty())base=url;local(base);
         Element device=(Element)root.getElementsByTagNameNS("*","device").item(0);
         uuid=text(device,"UDN");name=text(device,"friendlyName");model=text(device,"modelName");
-        if(uuid.isEmpty() || !text(device,"manufacturer").toLowerCase(Locale.ROOT).contains("linn"))
+        if(uuid.isEmpty() || uuid.length()>160 || !text(device,"manufacturer").toLowerCase(Locale.ROOT).contains("linn"))
             throw new IOException("Not a Linn renderer");
         NodeList nodes=device.getElementsByTagNameNS("*","service");
         for(int i=0;i<nodes.getLength();i++) {
@@ -145,17 +172,8 @@ final class OpenHome {
             Service service=new Service();service.type=type;
             service.control=new URL(new URL(base),text(node,"controlURL")).toString();local(service.control);
             service.event=new URL(new URL(base),text(node,"eventSubURL")).toString();local(service.event);
-            Document scpd=xml(fetch(new URL(new URL(base),text(node,"SCPDURL")).toString(),null,null));
-            NodeList actions=scpd.getElementsByTagNameNS("*","action");
-            for(int a=0;a<actions.getLength();a++) {
-                Element action=(Element)actions.item(a);List<String> inputs=new ArrayList<>();
-                NodeList arguments=action.getElementsByTagNameNS("*","argument");
-                for(int b=0;b<arguments.getLength();b++) {
-                    Element argument=(Element)arguments.item(b);
-                    if("in".equals(text(argument,"direction")))inputs.add(text(argument,"name"));
-                }
-                service.inputs.put(text(action,"name"),inputs);
-            }
+            service.scpd=new URL(new URL(base),text(node,"SCPDURL")).toString();local(service.scpd);
+            service.cacheKey=uuid+"|"+type+"|"+service.scpd;
             services.put(key,service);
         }
         if(!services.containsKey("Playlist") || !services.containsKey("OAuth"))throw new IOException("OpenHome TIDAL services unavailable");
@@ -163,7 +181,9 @@ final class OpenHome {
     static String escape(String value) {return value.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;").replace("\"","&quot;").replace("'","&apos;");}
     Map<String,String> call(String kind,String action,String... arguments) throws Exception {
         Service service=services.get(kind);
-        if(service==null || !service.inputs.containsKey(action))throw new IOException("Unsupported device action: "+kind+"."+action);
+        if(service==null)throw new IOException("Unsupported device service: "+kind);
+        service.load();
+        if(!service.inputs.containsKey(action))throw new IOException("Unsupported device action: "+kind+"."+action);
         List<String> inputs=service.inputs.get(action);
         if(inputs.size()!=arguments.length)throw new IOException("SOAP argument mismatch");
         StringBuilder body=new StringBuilder("<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"><s:Body><u:")
@@ -181,25 +201,31 @@ final class OpenHome {
         return result;
     }
     String read(String service,String action) throws Exception {return call(service,action).get("Value");}
-    void preflight() throws Exception {
+    String preflight() throws Exception {checkCapabilities();return tidalTokenId();}
+    void checkCapabilities() throws Exception {
         for(String kind:Arrays.asList("Playlist","Product","Time","Volume","OAuth"))
             if(!services.containsKey(kind))throw new IOException("Missing Linn service: "+kind);
         String[][] required={
             {"Playlist","TracksMax","IdArray","ReadList","Insert","DeleteId","TransportState","Id","Pause","Play","Stop","SeekId","SeekSecondAbsolute","Repeat","Shuffle","SetRepeat","SetShuffle"},
             {"Product","SourceIndex","SourceXml","SetSourceIndex"},{"Time","Time"},
             {"Volume","Volume","SetVolumeNoUnmute","VolumeIncNoUnmute","VolumeDecNoUnmute"},{"OAuth","GetServiceStatus"}};
-        for(String[] group:required)for(int i=1;i<group.length;i++)
-            if(!services.get(group[0]).inputs.containsKey(group[i]))throw new IOException("Unsupported Linn action: "+group[0]+"."+group[i]);
-        tidalTokenId();
+        for(String[] group:required){Service service=services.get(group[0]);service.load();for(int i=1;i<group.length;i++)
+            if(!service.inputs.containsKey(group[i]))throw new IOException("Unsupported Linn action: "+group[0]+"."+group[i]);}
+    }
+    void invalidateSources(){sourceXml=null;}
+    String sources()throws Exception {
+        String cached=sourceXml;
+        if(cached!=null && System.nanoTime()-sourceXmlAt<TimeUnit.MINUTES.toNanos(5))return cached;
+        cached=read("Product","SourceXml");sourceXmlAt=System.nanoTime();sourceXml=cached;return cached;
     }
     int playlistIndex()throws Exception{
-        NodeList sources=xml(read("Product","SourceXml").getBytes(StandardCharsets.UTF_8)).getElementsByTagName("Source");
+        NodeList sources=xml(sources().getBytes(StandardCharsets.UTF_8)).getElementsByTagName("Source");
         for(int i=0;i<sources.getLength();i++)if("Playlist".equals(text((Element)sources.item(i),"Type")))return i;
         throw new IOException("Linn Playlist source unavailable");
     }
     boolean playlistSource()throws Exception{
         int index=Integer.parseInt(read("Product","SourceIndex"));
-        NodeList sources=xml(read("Product","SourceXml").getBytes(StandardCharsets.UTF_8)).getElementsByTagName("Source");
+        NodeList sources=xml(sources().getBytes(StandardCharsets.UTF_8)).getElementsByTagName("Source");
         return index>=0 && index<sources.getLength() && "Playlist".equals(text((Element)sources.item(index),"Type"));
     }
     long insertConfirmed(List<Long> before,long after,String uri,String metadata) throws Exception {
@@ -267,7 +293,10 @@ final class OpenHome {
         }finally{if(previous==null)deadline.remove();else deadline.set(previous);}
     }
     List<Long> ids() throws Exception {
-        byte[] bytes=java.util.Base64.getDecoder().decode(call("Playlist","IdArray").get("Array"));
+        return decodeIds(call("Playlist","IdArray").get("Array"));
+    }
+    static List<Long> decodeIds(String encoded)throws Exception {
+        byte[] bytes=java.util.Base64.getDecoder().decode(encoded);
         if(bytes.length%4!=0)throw new IOException("Invalid queue IDs");
         List<Long> ids=new ArrayList<>();
         for(int i=0;i<bytes.length;i+=4)ids.add(((bytes[i]&255L)<<24)|((bytes[i+1]&255L)<<16)|((bytes[i+2]&255L)<<8)|(bytes[i+3]&255L));
@@ -310,26 +339,7 @@ final class OpenHome {
     }
     static Set<String> discover(String host,int millis) throws Exception {
         Set<String> locations=new LinkedHashSet<>();
-        try(DatagramSocket socket=new DatagramSocket()) {
-            byte[] message=("M-SEARCH * HTTP/1.1\r\nHOST: 239.255.255.250:1900\r\nMAN: \"ssdp:discover\"\r\nMX: 2\r\nST: urn:av-openhome-org:service:Playlist:1\r\n\r\n").getBytes(StandardCharsets.US_ASCII);
-            InetAddress target=InetAddress.getByName(host==null?"239.255.255.250":host);
-            if(network!=null)network.bind(socket,target);
-            if(host!=null && (!target.isSiteLocalAddress() || target.isLoopbackAddress()))throw new IOException("Enter a local network IP address");
-            socket.send(new DatagramPacket(message,message.length,target,1900));
-            long deadline=System.currentTimeMillis()+millis;byte[] buffer=new byte[65507];
-            while(System.currentTimeMillis()<deadline) {
-                socket.setSoTimeout((int)Math.max(1,deadline-System.currentTimeMillis()));
-                DatagramPacket packet=new DatagramPacket(buffer,buffer.length);
-                try{socket.receive(packet);}catch(SocketTimeoutException end){break;}
-                String raw=new String(packet.getData(),0,packet.getLength(),StandardCharsets.ISO_8859_1);
-                if(!raw.startsWith("HTTP/1.1 200"))continue;
-                for(String line:raw.split("\r\n"))if(line.toLowerCase(Locale.ROOT).startsWith("location:")) {
-                    String location=line.substring(9).trim();local(location);
-                    // Do not follow an SSDP response to a different host.
-                    if(InetAddress.getByName(new URL(location).getHost()).equals(packet.getAddress()))locations.add(location);
-                }
-            }
-        }
+        try(LinnDiscovery scan=new LinnDiscovery()){scan.search(host,millis,result -> locations.add(result.location));}
         return locations;
     }
 }
