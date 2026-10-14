@@ -19,12 +19,19 @@
         "dev/nino/squareglass/AccessoryGlass$3.smali",
         "dev/nino/squareglass/AccessoryGlass.smali",
         "dev/nino/squareglass/ArtworkLoader.smali",
+        "dev/nino/squareglass/BackdropCapturePolicy.smali",
         "dev/nino/squareglass/ComposableSingletons$DesignEntryKt$0.smali",
-        "dev/nino/squareglass/ComposableSingletons$DesignEntryKt$1.smali",
-        "dev/nino/squareglass/ComposableSingletons$DesignEntryKt$2.smali",
         "dev/nino/squareglass/ComposableSingletons$DesignEntryKt.smali",
         "dev/nino/squareglass/ComposableSingletons$SearchChromeKt$0.smali",
         "dev/nino/squareglass/ComposableSingletons$SearchChromeKt.smali",
+        "dev/nino/squareglass/ComposeSheetGlass$0.smali",
+        "dev/nino/squareglass/ComposeSheetGlass$1.smali",
+        "dev/nino/squareglass/ComposeSheetGlass$2.smali",
+        "dev/nino/squareglass/ComposeSheetGlass$3.smali",
+        "dev/nino/squareglass/ComposeSheetGlass$4.smali",
+        "dev/nino/squareglass/ComposeSheetGlass$Sample.smali",
+        "dev/nino/squareglass/ComposeSheetGlass$surface$lambda$1$0$$inlined$onDispose$1.smali",
+        "dev/nino/squareglass/ComposeSheetGlass.smali",
         "dev/nino/squareglass/CoverColors.smali",
         "dev/nino/squareglass/CoverLoader$0.smali",
         "dev/nino/squareglass/CoverLoader$1.smali",
@@ -45,6 +52,12 @@
         "dev/nino/squareglass/DesignEntry$20.smali",
         "dev/nino/squareglass/DesignEntry$21.smali",
         "dev/nino/squareglass/DesignEntry$22.smali",
+        "dev/nino/squareglass/DesignEntry$23.smali",
+        "dev/nino/squareglass/DesignEntry$24.smali",
+        "dev/nino/squareglass/DesignEntry$25.smali",
+        "dev/nino/squareglass/DesignEntry$26.smali",
+        "dev/nino/squareglass/DesignEntry$27.smali",
+        "dev/nino/squareglass/DesignEntry$28.smali",
         "dev/nino/squareglass/DesignEntry$3.smali",
         "dev/nino/squareglass/DesignEntry$4.smali",
         "dev/nino/squareglass/DesignEntry$5.smali",
@@ -65,6 +78,7 @@
         "dev/nino/squareglass/GlassMotion$4.smali",
         "dev/nino/squareglass/GlassMotion$5.smali",
         "dev/nino/squareglass/GlassMotion$6.smali",
+        "dev/nino/squareglass/GlassMotion$7.smali",
         "dev/nino/squareglass/GlassMotion.smali",
         "dev/nino/squareglass/GlassPanels$0.smali",
         "dev/nino/squareglass/GlassPanels$1.smali",
@@ -241,7 +255,6 @@
         "dev/nino/squareglass/NativeIconGlass$0.smali",
         "dev/nino/squareglass/NativeIconGlass$1.smali",
         "dev/nino/squareglass/NativeIconGlass$State.smali",
-        "dev/nino/squareglass/NativeIconGlass$attach$2$1$1.smali",
         "dev/nino/squareglass/NativeIconGlass.smali",
         "dev/nino/squareglass/NativeIconMotion.smali",
         "dev/nino/squareglass/NativeLinnBridge.smali",
@@ -277,6 +290,7 @@
         "dev/nino/squareglass/NativeTabs.smali",
         "dev/nino/squareglass/NativeTheme.smali",
         "dev/nino/squareglass/NativeViewBackdrop$0.smali",
+        "dev/nino/squareglass/NativeViewBackdrop$Companion.smali",
         "dev/nino/squareglass/NativeViewBackdrop.smali",
         "dev/nino/squareglass/OpenHome$0.smali",
         "dev/nino/squareglass/OpenHome$1.smali",
@@ -334,6 +348,10 @@
         "dev/nino/squareglass/PlayerWindow$Snapshot$1.smali",
         "dev/nino/squareglass/PlayerWindow$Snapshot.smali",
         "dev/nino/squareglass/PlayerWindow.smali",
+        "dev/nino/squareglass/PlaylistSearch$1.smali",
+        "dev/nino/squareglass/PlaylistSearch.smali",
+        "dev/nino/squareglass/PlaylistSortMenu$0.smali",
+        "dev/nino/squareglass/PlaylistSortMenu.smali",
         "dev/nino/squareglass/ProbeDiagnostics$1.smali",
         "dev/nino/squareglass/ProbeDiagnostics$2.smali",
         "dev/nino/squareglass/ProbeDiagnostics.smali",
@@ -346,6 +364,8 @@
         "dev/nino/squareglass/RecommendationUpdates$Revision.smali",
         "dev/nino/squareglass/RecommendationUpdates.smali",
         "dev/nino/squareglass/SearchChrome.smali",
+        "dev/nino/squareglass/SheetChrome$1.smali",
+        "dev/nino/squareglass/SheetChrome.smali",
         "dev/nino/squareglass/SleepDeadline.smali",
         "dev/nino/squareglass/SleepTimer$0.smali",
         "dev/nino/squareglass/SleepTimer$1.smali",
@@ -638,10 +658,7 @@
         "dev/nino/squareglass/material/LiquidBottomTabsKt$16.smali",
         "dev/nino/squareglass/material/LiquidBottomTabsKt$17.smali",
         "dev/nino/squareglass/material/LiquidBottomTabsKt$18.smali",
-        "dev/nino/squareglass/material/LiquidBottomTabsKt$19.smali",
         "dev/nino/squareglass/material/LiquidBottomTabsKt$2.smali",
-        "dev/nino/squareglass/material/LiquidBottomTabsKt$20.smali",
-        "dev/nino/squareglass/material/LiquidBottomTabsKt$21.smali",
         "dev/nino/squareglass/material/LiquidBottomTabsKt$3.smali",
         "dev/nino/squareglass/material/LiquidBottomTabsKt$4.smali",
         "dev/nino/squareglass/material/LiquidBottomTabsKt$5.smali",
@@ -690,7 +707,7 @@
         "dev/nino/squareglass/material/shapes/path/PathSegmentsKt.smali"
       ],
       "title": "Liquidify \u00b7 Glass navigation",
-      "description": "AndroidLiquidGlass navigation, mini-player and runtime design settings. Keeps native TIDAL routes and actions. Requires Liquidify Manager 1.0.0 Beta.",
+      "description": "AndroidLiquidGlass navigation, mini-player and runtime design settings. Keeps native TIDAL routes and actions. Requires Liquidify Manager 1.1.0-beta.",
       "default": true,
       "disables": [
         "EnableLegacyUi",
@@ -813,7 +830,11 @@
         "157-square-output-popup.patch",
         "158-square-output-anchor.patch",
         "159-square-linn-provider.patch",
-        "160-square-linn-player.patch"
+        "160-square-linn-player.patch",
+        "175-square-sheet-lifecycle.patch",
+        "176-square-playlist-sort-menu.patch",
+        "177-square-playlist-search.patch",
+        "178-square-compose-sheet-glass.patch"
       ],
       "requires": [
         "LiquidifyCore"
@@ -890,13 +911,15 @@
         }
       ],
       "extensionFiles": [
+        "radiant/HomeBackdrop.smali",
+        "radiant/IsrcCache.smali",
         "radiant/RLAPILyricsHook.smali",
         "radiant/RLAPILyricsWorker.smali",
-        "radiant/IsrcCache.smali",
-        "radiant/WordLyrics.smali",
-        "radiant/WordLyricsTick.smali",
+        "radiant/StickyLyrics.smali",
         "radiant/SylBrush.smali",
-        "radiant/SylLayout.smali"
+        "radiant/SylLayout.smali",
+        "radiant/WordLyrics.smali",
+        "radiant/WordLyricsTick.smali"
       ],
       "advancedOptions": [
         {
@@ -944,6 +967,11 @@
           "requiresOption": "context_aware",
           "token": "RL_CTX"
         }
+      ],
+      "source": "radiantLyrics",
+      "compatibleWith": [
+        "LiquidifyCore",
+        "LiquidifyTheme"
       ]
     },
     {
@@ -952,13 +980,14 @@
       "fileNames": [],
       "title": "Player Backdrop",
       "description": "Swap the player backdrop for the Kawarp shader, or fine-tune TIDAL's own blurred cover",
-      "default": true,
+      "default": false,
       "defaultVariantIndex": 1,
       "variants": [
         {
           "title": "Tidal",
           "fileNames": [
-            "player-backdrop-playback.patch"
+            "player-backdrop-playback.patch",
+            "player-native-backdrop-liquidify.patch"
           ],
           "extensionFiles": [
             "radiant/BackdropFx.smali"
@@ -970,8 +999,8 @@
             "player-backdrop-kawarp.patch"
           ],
           "extensionFiles": [
-            "radiant/Kawarp.smali",
-            "dev/kawarp/KawarpEngine.smali"
+            "dev/kawarp/KawarpEngine.smali",
+            "radiant/Kawarp.smali"
           ],
           "minSdk": 33
         }
@@ -1216,10 +1245,21 @@
           "inline": true,
           "fileNames": [
             "home-backdrop.patch",
-            "collection-backdrop.patch",
+            "collection-backdrop-liquidify.patch",
             "cover-capture.patch"
           ]
         }
+      ],
+      "source": "radiantLyrics",
+      "compatibleWith": [
+        "LiquidifyCore",
+        "LiquidifyTheme"
+      ],
+      "requires": [
+        "LiquidifyTheme"
+      ],
+      "extensionFiles": [
+        "radiant/HomeBackdrop.smali"
       ]
     },
     {
@@ -1645,10 +1685,15 @@
       ],
       "title": "Unlock Debug Menu",
       "description": "Reveals TIDAL's hidden Debug Menu in Settings. (Unlocks Feature Flags & the legacy Debug Options)",
-      "default": false
+      "default": false,
+      "source": "radiantLyrics",
+      "compatibleWith": [
+        "LiquidifyCore",
+        "LiquidifyTheme"
+      ]
     }
   ],
-  "releaseVersion": "1.0.0-beta",
+  "releaseVersion": "1.1.0-beta",
   "name": "Liquidify",
   "editor": "ninocss",
   "compatibility": {

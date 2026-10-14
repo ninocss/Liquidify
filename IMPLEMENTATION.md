@@ -1,5 +1,14 @@
 # Liquidify glass motion and theme-aware navigation
 
+Back navigation no longer performs a synchronous HardwareRenderer/ImageReader
+readback of the outgoing page. Native backdrop capture pauses as soon as a
+Fragment is paused and while FragmentContainerView retains transitioning or
+disappearing children, including children absent from childCount. The two
+private AndroidX transition lists belong to the pinned host; their exact fields
+are checked by a fixture test. Capture resumes only after two stable traversals.
+Native queue/sheet windows retain their own entrance and exit animations without
+an overlapping alpha spring from SurfaceMotion.
+
 Navigation now reads `NativeGlass.dark` for the capsule, glyphs, labels, and
 selection lens. `LiquidBottomTabs` delegates its panel paint to `AccessoryGlass`,
 so navigation and mini-player share the checked light/dark film and the opaque
@@ -7,13 +16,18 @@ first-recording fallback. Glass Off and the navigation component toggle use a
 solid theme surface. The selection lens captures only the panel, with one visible
 icon row and the original TIDAL callbacks.
 
-Interaction feedback uses the vendored AndroidLiquidGlass `InteractiveHighlight`
-and backdrop lens/highlight effects. Settings and legacy favorite feedback use a
-local highlight without sampling the page that contains them, avoiding recursive
-capture. Navigation and Compose player controls can sample the independent
-accessory/player backdrop. Wobbles, glyph rotations, and floating heart particles
-are replaced by elastic glass deformation and light glints. Confirmed favorite
-changes and eligible idle feedback retain their existing guards.
+Navigation, settings, and favorite glyphs use small spring scale feedback without
+painting or capturing backgrounds behind the icons. The legacy favorite transforms
+only the native ImageView while drawing, without adding a ComposeView to its layout.
+The settings touch target stays 48dp with transparent padding. The navigation lens
+uses an 8% press enlargement and the content row only 3%, avoiding clipped glyphs.
+Confirmed favorite changes and eligible idle feedback retain their existing guards.
+
+The portrait player centering hook uses the host's exact
+`Arrangement.getCenter()Arrangement$HorizontalOrVertical` DEX signature. Using a
+`Vertical` return type caused a `NoSuchMethodError` when expanding the mini-player.
+Strict patch validation now also audits all references introduced by native hooks
+against the pinned host and extension; applying a diff alone cannot detect this.
 
 `LiquidMotion` shares the catalog's shape, highlight, and settle spring parameters.
 `LiquidViewMotion` runs those Compose springs for native menu presentation, quick
@@ -449,3 +463,39 @@ track changes with the controller process absent and emulator screen asleep.
 The final Manager-installed APK is bound to the ZIP in `manager-roundtrip.json`.
 See `LINN_OUTPUT.md`, `dist/VALIDATION.md` and `reports/output-qa-alpha22.json` for
 the exact checks and remaining physical-device acceptance.
+
+## Glass, sheet and settings refresh (2026-10-14)
+
+Static refraction is independent of reduced motion. Navigation captures its single
+monochrome icon row and readable glass film for the catalog selection lens; the
+rim exposes more of the captured backdrop without reducing the central text film.
+Native Material and Compose modal sheets retain their authoritative lifecycle,
+callbacks and gesture handling. Context sheets now use one grip and a single native
+action list. The sleep timer uses the same top-rounded, bottom-flush presentation.
+Reused Material dialogs rebuild their capture on the next show, never while the
+native view hierarchy is detaching.
+
+Playlist sorting presents native labels, selection and callbacks in an anchored
+glass dialog. The separate native playlist-search route keeps its query and clear
+listeners with updated field decoration. Settings has TIDAL and Liquidify tabs;
+the extra Output row is removed and existing preference keys are retained.
+
+DebugMenuUnlock, LyricsRlApi and PlayerBackdrop are opt-in Manager choices. Their
+original v1.1.8 sources were checked directly against commit
+`2cb7100baef6f9c05a79a761fa51dfe898708d9b`; no upstream source files are edited.
+Generated metadata declares helper dependencies and two separate compatibility
+diffs retain Collection capture and the optional native player backdrop.
+The build audits 17 optional combinations through the Manager's upstream-context
+algorithm, Smali assembly and introduced-reference linkage before packaging.
+Manager selection and download use the same bundled-versus-remote version rule.
+
+The UI regression fix removes the additional opacity gradients from accessory,
+menu and Compose sheet surfaces and restores the library's default accessory
+highlight. The shared stock accessory clip is removed along with its paints;
+each replacement capsule supplies its own outline. Playlist sorting measures
+only its native rows before the Dialog window attaches. Fullscreen modal sheets
+support RectangleShape refraction and never record their own window as backdrop.
+
+Fullscreen rectangular sheet highlights are disabled. HeaderFade keeps its
+existing bounds and scroll reach, with earlier opacity and a longer, denser
+lower falloff.

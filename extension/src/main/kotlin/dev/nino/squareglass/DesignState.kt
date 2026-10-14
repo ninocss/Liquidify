@@ -16,8 +16,8 @@ object DesignState {
         return GlassEffectConfig(
             globalEnabled = SquareSettings.preset() != 2,
             blurRadius = SquareSettings.blur(),
-            lensHeight = if (SquareSettings.motion()) SquareSettings.refraction() else 0f,
-            lensAmount = if (SquareSettings.motion()) SquareSettings.refraction() else 0f,
+            lensHeight = SquareSettings.refraction(),
+            lensAmount = SquareSettings.refraction(),
             surfaceOpacity = SquareSettings.readableOpacity(SquarePalette.isDark()),
             style = if (SquareSettings.preset() == 1) GlassStyle.BLUR else GlassStyle.LIQUID,
             playerEnabled = SquareSettings.glass("player"),

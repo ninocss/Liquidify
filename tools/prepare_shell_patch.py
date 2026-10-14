@@ -60,6 +60,14 @@ def shell(text: str) -> str:
     move-result-object v2"""
     if text.count(gradient) != 1 or text.count(fill) != 1:
         raise SystemExit("Native accessory surfaces changed")
+    clip = """    invoke-static {v2, v5}, Landroidx/compose/ui/draw/ClipKt;->clip(Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;
+
+    move-result-object v2"""
+    if text.count(clip) != 1:
+        raise SystemExit("Native accessory shell outline changed")
+    # The shared stock rounded rectangle clips both accessories, including their
+    # padding and moving lens. Each replacement capsule owns its own outline.
+    text = text.replace(clip, "")
     text = text.replace(gradient, "    move-object/from16 v2, v33")
     return text.replace(fill, "    invoke-static {v3, v4}, Ldev/nino/squareglass/NativeGlass;->observeHostBackground(J)V")
 

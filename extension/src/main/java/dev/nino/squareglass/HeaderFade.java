@@ -14,7 +14,8 @@ public final class HeaderFade extends Drawable {
     private void shader() {
         Rect b=((Drawable)this).getBounds();int rgb=tone&0xffffff;
         paint.setShader(new LinearGradient(0,b.top,0,Math.max(b.top+1,b.bottom),
-            new int[]{tone,tone,rgb},new float[]{0,.90f,1},Shader.TileMode.CLAMP));
+            new int[]{tone,tone,(rgb|0xfa000000),(rgb|0xd2000000),rgb},
+            new float[]{0,.68f,.88f,.96f,1},Shader.TileMode.CLAMP));
         paint.setAlpha(Math.round(amount*255));
     }
     @Override protected void onBoundsChange(Rect b) { shader(); }

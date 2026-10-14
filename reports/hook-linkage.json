@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "hostClasses": 77879,
+  "extensionClasses": 692,
+  "duplicateClasses": [],
+  "missingTypes": [],
+  "missingMethods": [],
+  "missingFields": [],
+  "introducedReferences": {
+    "types": 43,
+    "methods": 114,
+    "fields": 1
+  },
+  "hooksDexSha256": "4011e705c787a22fedc6345511d613cf2ea46891c4843302682f9857f57ab2cf"
+}

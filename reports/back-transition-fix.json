@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-14",
+  "patchesSha256": "147bb62ac87e649d5c3a5cfc5a98bb07f5889b4c15f97cea30fbc18501679914",
+  "extensionClasses": 677,
+  "strictPatches": 97,
+  "tests": 34,
+  "changes": [
+    "remove synchronous GPU readback during navigation",
+    "guard capture during disappearing Fragment views",
+    "wait for two stable native traversals",
+    "preserve native queue/sheet entrance and exit without extra alpha spring"
+  ],
+  "deviceValidation": "pending; Pixel locked",
+  "installation": "pending"
+}

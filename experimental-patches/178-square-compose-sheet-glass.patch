@@ -1,0 +1,14 @@
+--- a/androidx/compose/material3/ModalBottomSheetKt.smali
++++ b/androidx/compose/material3/ModalBottomSheetKt.smali
+@@ -3100,6 +3100,11 @@
+     move-object v7, v1
+ 
+     .line 56
++    move-object/from16 v0, v17
++    const/4 v1, 0x0
++    invoke-static {v7, v8, v0, v1}, Ldev/nino/squareglass/ComposeSheetGlass;->surface(Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
++    move-result-object v7
++    const-wide/16 v9, 0x0    # Glass modifier owns the sheet's surface paint
+     invoke-static/range {v7 .. v19}, Landroidx/compose/material3/SurfaceKt;->Surface-T9BRK9s(Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;JJFFLandroidx/compose/foundation/BorderStroke;Lam0/p;Landroidx/compose/runtime/Composer;II)V
+ 
+     invoke-static {}, Landroidx/compose/runtime/ComposerKt;->isTraceInProgress()Z

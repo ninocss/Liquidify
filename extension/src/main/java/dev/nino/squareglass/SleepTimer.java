@@ -108,7 +108,7 @@ public final class SleepTimer {
     }
     /** Replaces a menu's contents; never opens another menu over it. */
     public static View content(Context context,LiquidMenuSurface glass,Runnable close) {
-        GlassFrame panel=new GlassFrame(context); glass.paint(panel,30,false);
+        GlassFrame panel=new GlassFrame(context); glass.paint(panel,28,false,true);
         LinearLayout page=new LinearLayout(context); page.setOrientation(LinearLayout.VERTICAL);
         page.setPadding(0,dp(context,8),0,dp(context,24));
         FrameLayout heading=new FrameLayout(context);
@@ -138,7 +138,7 @@ public final class SleepTimer {
                 super.onMeasure(width,View.MeasureSpec.makeMeasureSpec(cap,View.MeasureSpec.AT_MOST));
             }
         };
-        scroll.addView(page,new ScrollView.LayoutParams(-1,-2)); ((android.view.ViewGroup)panel).addView(scroll,new FrameLayout.LayoutParams(-1,-2));
+        scroll.addView(page,new ScrollView.LayoutParams(-1,-2)); SheetChrome.layout(panel,scroll);
         ((View)panel).setOnApplyWindowInsetsListener((view,insets)-> {
             int bottom=insets.getInsets(WindowInsets.Type.systemBars()).bottom;
             page.setPadding(0,dp(context,8),0,Math.max(dp(context,24),bottom+dp(context,8))); return insets;

@@ -11,6 +11,15 @@ def cls(superclass="Ljava/lang/Object;", methods=(), fields=(), interfaces=()):
 
 
 class LinkageTests(unittest.TestCase):
+    def test_center_getter_requires_the_exact_host_return_type(self):
+        owner = 'Landroidx/compose/foundation/layout/Arrangement;'
+        prefix = 'getCenter()Landroidx/compose/foundation/layout/Arrangement$'
+        host = {owner: cls(methods=[prefix+'HorizontalOrVertical;'])}
+        refs = dict(types=[], methods=[owner+'->'+prefix+'Vertical;'], fields=[])
+        self.assertFalse(audit(host, {}, refs)['passed'])
+        refs['methods'] = [owner+'->'+prefix+'HorizontalOrVertical;']
+        self.assertTrue(audit(host, {}, refs)['passed'])
+
     def test_enum_array_clone_and_ioexception_message(self):
         extension = {"LE;": cls("Ljava/lang/Enum;"), "LFault;": cls("Ljava/io/IOException;")}
         refs = dict(types=["[LE;"], methods=["[LE;->clone()Ljava/lang/Object;", "LFault;->getMessage()Ljava/lang/String;"], fields=[])

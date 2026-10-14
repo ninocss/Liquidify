@@ -17,6 +17,7 @@ def main():
     run('prepare_patch_sources.py')
     run('build_design_resources.py')
     run('verify_strict_patches.py')
+    run('verify_upstream_compatibility.py')
     run('package_alpha.py')
     release = json.loads((ROOT / 'release.json').read_text())
     archive = ROOT / 'dist' / f'Liquidify-{release["version"]}-patches.zip'

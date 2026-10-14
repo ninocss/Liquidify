@@ -1,6 +1,6 @@
 --- a/com/tidal/android/feature/appscaffold/ui/composable/i.smali
 +++ b/com/tidal/android/feature/appscaffold/ui/composable/i.smali
-@@ -2595,6 +2595,8 @@
+@@ -2593,6 +2593,8 @@
      const/16 v45, 0x0
  
      .line 189

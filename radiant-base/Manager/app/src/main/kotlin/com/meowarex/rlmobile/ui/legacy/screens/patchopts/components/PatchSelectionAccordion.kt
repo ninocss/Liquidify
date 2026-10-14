@@ -465,6 +465,8 @@ private fun PatchLockDialog(
     onDismiss: () -> Unit,
 ) {
     val (titleRes, msgRes, blockerTitle) = when (lock) {
+        is PatchLock.Unavailable -> Triple(R.string.patch_lock_blocked_title,
+            R.string.patch_lock_unavailable_msg, lock.reason)
         is PatchLock.LockedOn -> Triple(
             R.string.patch_lock_required_title,
             R.string.patch_lock_required_msg,

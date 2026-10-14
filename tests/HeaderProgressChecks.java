@@ -14,7 +14,7 @@ public final class HeaderProgressChecks {
                 check(opacity<=previous);previous=opacity;
             }
             check(previous==0);check(HeaderProgress.opacity(reach,reach)==1);
-            check(HeaderProgress.opacity(reach/2,reach)==.5f);
+            check(HeaderProgress.opacity(reach/2,reach)==.875f);
             check(HeaderProgress.opacity(.01f,reach)<.001f);
         }
         check(HeaderProgress.opacity(-10,64)==0);

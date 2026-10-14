@@ -44,6 +44,8 @@ data class PatchSpec(
      * Radiant patches without a matching id are never included by default.
      */
     val compatibleWith: List<String> = emptyList(),
+    /** Visible upstream option with an audited reason it cannot be selected. */
+    val compatibilityBlockReason: String? = null,
     /** Watchapp shown under an integration. */
     val companionApp: CompanionAppSpec? = null,
 ) {
@@ -254,7 +256,7 @@ fun filterCompatiblePatchSpecs(specs: List<PatchSpec>): List<PatchSpec> {
     var visible = specs
         .filter { patch ->
             patch.isLiquidifyPatch || (patch.isRadiantLyricsPatch &&
-                patch.compatibleWith.any(liquidifyIds::contains))
+                (patch.compatibleWith.any(liquidifyIds::contains) || patch.compatibilityBlockReason != null))
         }
         .map { patch ->
             if (patch.isRadiantLyricsPatch) patch.copy(defaultEnabled = false) else patch

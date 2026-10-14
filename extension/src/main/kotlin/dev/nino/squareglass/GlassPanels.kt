@@ -33,7 +33,7 @@ object GlassPanels {
             override fun DrawScope.drawBackdrop(density: Density,coordinates: LayoutCoordinates?,layerBlock: (GraphicsLayerScope.()->Unit)?) { drawRect(base) }
         }
         return original.drawBackdrop(source,shape={shape},effects={
-            if(SquareSettings.preset()==0 && SquareSettings.motion()) {
+            if(SquareSettings.preset()==0) {
                 val reach=minOf(size.width,size.height)*.2f
                 lens((12*SquareSettings.refraction()).dp.toPx().coerceAtMost(reach),(18*SquareSettings.refraction()).dp.toPx().coerceAtMost(reach))
             }

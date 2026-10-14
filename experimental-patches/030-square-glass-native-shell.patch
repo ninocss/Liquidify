@@ -11,7 +11,7 @@
  
      invoke-interface {v7, v3}, Landroidx/compose/runtime/Composer;->changed(Ljava/lang/Object;)Z
  
-@@ -2338,9 +2336,7 @@
+@@ -2338,14 +2336,10 @@
      sget-object v5, Lcom/tidal/android/feature/appscaffold/ui/composable/a;->c:Landroidx/compose/foundation/shape/RoundedCornerShape;
  
      .line 151
@@ -21,4 +21,10 @@
 +    invoke-static {v3, v4}, Ldev/nino/squareglass/NativeGlass;->observeHostBackground(J)V
  
      .line 152
-     invoke-static {v2, v5}, Landroidx/compose/ui/draw/ClipKt;->clip(Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;
+-    invoke-static {v2, v5}, Landroidx/compose/ui/draw/ClipKt;->clip(Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;
+-
+-    move-result-object v2
++
+ 
+     .line 153
+     sget-object v3, Lkotlin/u;->a:Lkotlin/u;

@@ -30,6 +30,8 @@ def main():
     run(sys.executable, "tools/prepare_motion_patch.py")
     run(sys.executable, "tools/prepare_output_patch.py")
     run(sys.executable, "tools/prepare_linn_patch.py")
+    run(sys.executable, "tools/prepare_sheet_patch.py")
+    run(sys.executable, "tools/prepare_upstream_adapters.py")
 
 if __name__ == "__main__":
     main()

@@ -9,7 +9,7 @@
 Liquidify is an **unofficial, open-source modification of the TIDAL Android app**. It combines a Liquid Glass-inspired interface with patches that preserve TIDAL's native navigation and playback behavior. The included **Liquidify Manager**, based on [Radiant Lyrics](https://github.com/meowarex/rl-mobile), handles patch selection and installation.
 
 > [!IMPORTANT]
-> **Current release: 1.0.0 Beta.** Liquidify patches target **TIDAL 2.200.0 (10004)** on **Android 13 or newer**. The Manager itself supports Android 7 or newer, but that does **not** lower the patched app's Android requirement. Other TIDAL versions are not supported unless explicitly documented.
+> **Current release: 1.1.0 Beta.** Liquidify patches target **TIDAL 2.200.0 (10004)** on **Android 13 or newer**. The Manager itself supports Android 7 or newer, but that does **not** lower the patched app's Android requirement. Other TIDAL versions are not supported unless explicitly documented.
 
 ## Features
 
@@ -36,14 +36,14 @@ Liquidify patches are selected by default. Original Radiant Lyrics patches remai
 
 **[Download Liquidify Manager from GitHub Releases](https://github.com/ninocss/liquidify/releases)**
 
-For the current beta, use the **[Liquidify 1.0.0 Beta release](https://github.com/ninocss/liquidify/releases/tag/v1.0.0-beta)**.
+For the current beta, use the **[Liquidify 1.1.0 Beta release](https://github.com/ninocss/liquidify/releases/tag/v1.1.0-beta)**.
 
-1. Download and install `Liquidify-Manager-1.0.0-beta.apk` from the release assets.
+1. Download and install `Liquidify-Manager-1.1.0-beta.apk` from the release assets.
 2. Open **Liquidify Manager** and provide the supported stock TIDAL APK when prompted, either through the Manager's download flow or by importing a local copy.
 3. Keep the recommended Liquidify patches selected. Review optional compatible patches before enabling them.
 4. Patch and install the resulting app, then sign in to TIDAL as usual.
 
-The Manager uses this repository for patch and beta-release updates. It also bundles the prepared patch payload as a fallback if release metadata is unavailable. Advanced users can import the release's `patches.zip` as a custom patch set.
+The Manager uses this repository for patch and beta-release updates. It uses its bundled patch payload when the remote release is the same version or older, so an older beta archive cannot replace the shipped features. Newer releases remain available automatically. Advanced users can import the release's `patches.zip` as a custom patch set.
 
 > [!NOTE]
 > Patched APKs may require a different app signature from the official TIDAL installation. Back up anything important before replacing an installation; an existing installation signed by another key may need to be uninstalled first. Manager APKs signed with old development keys may likewise require a separate installation.

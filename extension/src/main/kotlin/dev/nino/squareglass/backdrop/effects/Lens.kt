@@ -12,6 +12,7 @@ package dev.nino.squareglass.backdrop.effects
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.util.fastCoerceAtLeast
 import androidx.compose.ui.util.fastCoerceAtMost
@@ -68,8 +69,8 @@ fun BackdropEffectScope.lens(
 }
 
 // Vendored change: support for io.github.kyant0:shapes' RoundedRectangularShape was
-// dropped so the vendored sources have no external dependency; this app only passes
-// CornerBasedShape here.
+// dropped so the vendored sources have no external dependency. Native fullscreen
+// modal sheets also pass RectangleShape, whose four corner radii are zero.
 // Vendored change: radii are brought into the recorded layer's pixel grid.
 //
 // [size] arrives already multiplied by the resolution the backdrop was recorded
@@ -79,6 +80,8 @@ fun BackdropEffectScope.lens(
 // large panel with a fixed corner: the arc swept an inch into the middle of it.
 private val BackdropEffectScope.cornerRadii: FloatArray?
     get() = when (val shape = shape) {
+        RectangleShape -> FloatArray(4)
+
         is AbsoluteRoundedCornerShape -> {
             val size = size
             val maxRadius = size.minDimension / 2f

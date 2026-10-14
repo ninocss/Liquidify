@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-14",
+  "device": "Pixel 8",
+  "installation": "Liquidify Manager custom ZIP import and update; app data retained",
+  "patchesSha256": "3eccced0afc7f122286d94004a1f482c3a184a7af208047dfd1e4490b958847f",
+  "tests": 32,
+  "strictPatches": 97,
+  "extensionClasses": 675,
+  "originalFailure": "NoSuchMethodError: Arrangement.getCenter()Arrangement$Vertical",
+  "correctedSignature": "Arrangement.getCenter()Arrangement$HorizontalOrVertical",
+  "deviceChecks": [
+    "mini-player expansion by tap",
+    "mini-player expansion by upward swipe",
+    "play queue",
+    "Search tab",
+    "Collection tab",
+    "design settings",
+    "light and dark Home/navigation and player inspection"
+  ],
+  "newCrashEntries": 0,
+  "playback": "paused throughout QA",
+  "themeRestored": "System",
+  "installedApkSha256": "4c8f838001237b53b7925ac006f3174cc08169d34a5a551684837b320b0fd337",
+  "installedPriorityDexVerified": {
+    "correctCenterSignature": true,
+    "glyphFeedback": true,
+    "legacyComposeViewRemoved": true
+  }
+}

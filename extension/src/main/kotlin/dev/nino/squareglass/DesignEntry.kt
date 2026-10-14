@@ -12,6 +12,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -25,19 +27,35 @@ import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 
 object DesignEntry {
-    @JvmStatic fun append(scope: LazyListScope,items: List<*>) {
-        if(SquareSettings.themeEnabled()==0) return
-        // The same list renderer also serves every subpage. The pinned Offline
-        // model's callback belongs exclusively to the main Settings page.
-        if(!items.any { it is jm.f.a && it.e?.javaClass?.name==
-            "com.aspiro.wamp.settings.items.profile.SettingsItemOfflineMode\$viewState\$1" }) return
-        scope.item(key="squareglass.output") {
-            val context=LocalContext.current
-            Row("Output", "Choose a device before starting music") {
-                activity(context)?.let { SquareOutput.showFromSettings(it) }
+    @JvmStatic @Composable
+    fun Screen(modifier: Modifier, padding: PaddingValues,
+        nativeContent: LazyListScope.() -> Unit, items: List<*>) {
+        val main = SquareSettings.themeEnabled() != 0 && items.any {
+            it is jm.f.a && it.e?.javaClass?.name ==
+                "com.aspiro.wamp.settings.items.profile.SettingsItemOfflineMode\$viewState\$1"
+        }
+        if (!main) {
+            LazyColumn(modifier, contentPadding = padding, content = nativeContent)
+            return
+        }
+        var selected by rememberSaveable { mutableIntStateOf(0) }
+        val ink = Color(SquarePalette.ink(NativeGlass.dark))
+        Column(modifier.fillMaxSize()) {
+            TabRow(selectedTabIndex = selected, containerColor = Color.Transparent, contentColor = ink) {
+                listOf("TIDAL", "Liquidify").forEachIndexed { index, title ->
+                    Tab(selected = selected == index, onClick = { selected = index },
+                        text = { Label(title) }, selectedContentColor = ink,
+                        unselectedContentColor = ink.copy(alpha = .6f))
+                }
+            }
+            // Separate list identities keep native scroll state out of Liquidify.
+            key(selected) {
+                LazyColumn(Modifier.weight(1f).fillMaxWidth(), contentPadding = padding) {
+                    if (selected == 0) nativeContent(this)
+                    else item(key = "liquidify.preferences") { Entry() }
+                }
             }
         }
-        scope.item(key="squareglass.design.v2") { Entry() }
     }
     private fun activity(context: Context): Activity? = when(context) {
         is Activity->context
@@ -107,10 +125,7 @@ object DesignEntry {
     @Composable private fun Entry() {
         DesignState.revision
         val context=LocalContext.current
-        var expanded by remember { mutableStateOf(false) }
         Column(Modifier.animateContentSize(if(SquareSettings.motion())LiquidMotion.shape() else snap())) {
-            Row("Liquidify",if(expanded) "Hide design & controls" else "Design & controls") { expanded=!expanded }
-            if(expanded) {
                 Section("Appearance")
                 Choice("Color theme",listOf("System","Light","Dark"),SquareSettings.themeMode()) {
                     SquareSettings.put("theme",it); activity(context)?.recreate()
@@ -137,7 +152,6 @@ object DesignEntry {
                 Choice("Swipe right",actions,SquareSettings.integer("swipeRight",1,0,3)) { SquareSettings.put("swipeRight",it) }
                 Choice("Swipe left",actions,SquareSettings.integer("swipeLeft",2,0,3)) { SquareSettings.put("swipeLeft",it) }
                 Row("Reset design") { SquareSettings.reset(); activity(context)?.recreate() }
-            }
         }
     }
 }

@@ -1,6 +1,6 @@
 --- a/com/tidal/android/feature/appscaffold/ui/composable/i.smali
 +++ b/com/tidal/android/feature/appscaffold/ui/composable/i.smali
-@@ -2599,6 +2599,14 @@
+@@ -2597,6 +2597,14 @@
  
      move-result-object v4
  

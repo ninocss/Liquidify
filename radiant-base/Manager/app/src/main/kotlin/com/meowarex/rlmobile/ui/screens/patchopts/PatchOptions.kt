@@ -41,7 +41,7 @@ data class PatchOptions(
 ) : Parcelable {
 
     fun isEnabled(spec: PatchSpec): Boolean =
-        patchStates[spec.id] ?: spec.defaultEnabled
+        spec.compatibilityBlockReason == null && (patchStates[spec.id] ?: spec.defaultEnabled)
 
     fun variantIndex(spec: PatchSpec): Int {
         val stored = (selectedVariants[spec.id] ?: spec.defaultVariantIndex)

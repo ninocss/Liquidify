@@ -125,11 +125,8 @@ object IconMotion {
             if(event>0 && motion) highlight.pulse(Offset(bounds.width / 2f, bounds.height / 2f))
             else highlight.reset()
         }
-        return GlassMotion.feedback(original,highlight,when(key) {
-            in 0..5 -> NativeBackdrop.accessory
-            7 -> NativeBackdrop.active
-            else -> dev.nino.squareglass.backdrop.backdrops.emptyBackdrop()
-        }).then(highlight.gestureModifier).onGloballyPositioned {bounds=it.boundsInWindow()}
+        return GlassMotion.glyph(original,highlight).then(highlight.gestureModifier)
+            .onGloballyPositioned {bounds=it.boundsInWindow()}
             .pointerInput(key) {
                 awaitEachGesture {
                     val down=awaitFirstDown(requireUnconsumed=false,pass=PointerEventPass.Initial)

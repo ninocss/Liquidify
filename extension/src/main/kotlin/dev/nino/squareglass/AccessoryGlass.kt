@@ -36,16 +36,12 @@ object AccessoryGlass {
             else (if (dark) Color(0xFF33343A) else Color.White).copy(alpha = SquareSettings.readableOpacity(dark))
         return original.drawBackdrop(backdrop = backdrop, shape = { shape }, effects = {
             vibrancy()
-            blur(8.dp.toPx())
-            if (SquareSettings.preset() == 0 && SquareSettings.motion()) {
+            blur(SquareSettings.blur().dp.toPx())
+            if (SquareSettings.preset() == 0) {
                 val refraction = SquareSettings.refraction()
-                lens((24 * refraction).dp.toPx(), (32 * refraction).dp.toPx())
+                lens((60 * refraction).dp.toPx(), (60 * refraction).dp.toPx())
             }
-        }, highlight = {
-            // The library's 0.5dp default rim is nearly invisible on these
-            // moving native accessories. Keep a subtle but persistent edge glint.
-            Highlight(width = 1.dp, blurRadius = 2.dp, alpha = 0.8f)
-        }, layerBlock = layer, onDrawSurface = {
+        }, highlight = { Highlight.Default }, layerBlock = layer, onDrawSurface = {
             ProbeDiagnostics.glassDraws++
             if (hasSample) {
                 val now = android.os.SystemClock.uptimeMillis()

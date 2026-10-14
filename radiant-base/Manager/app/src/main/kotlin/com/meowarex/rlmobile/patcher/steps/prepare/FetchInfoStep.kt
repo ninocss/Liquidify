@@ -4,12 +4,15 @@ import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.Stable
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.BuildConfig
 import com.meowarex.rlmobile.manager.CachedReleaseInfo
 import com.meowarex.rlmobile.manager.PathManager
 import com.meowarex.rlmobile.manager.ReleaseInfoCache
 import com.meowarex.rlmobile.network.models.RLBuildInfo
 import com.meowarex.rlmobile.network.services.RadiantLyricsGithubService
 import com.meowarex.rlmobile.network.utils.getOrThrow
+import com.meowarex.rlmobile.network.utils.SemVer
+import com.meowarex.rlmobile.network.utils.preferBundledPatches
 import com.meowarex.rlmobile.patcher.StepRunner
 import com.meowarex.rlmobile.patcher.steps.StepGroup
 import com.meowarex.rlmobile.patcher.steps.base.Step
@@ -59,7 +62,7 @@ class FetchInfoStep(private val localPatches: Boolean = false) : Step(), KoinCom
         }
 
         val cached = ReleaseInfoCache.load(paths, json)
-        if (cached == null) {
+        if (cached == null || preferBundledPatches(SemVer.parse(BuildConfig.VERSION_NAME), cached.data.patchesVersion)) {
             loadBundled(container)
             return
         }
@@ -81,6 +84,10 @@ class FetchInfoStep(private val localPatches: Boolean = false) : Step(), KoinCom
     private suspend fun fetchFromRemote(container: StepRunner) {
         container.log("Fetching latest release from ${RadiantLyricsGithubService.REPO_OWNER}/${RadiantLyricsGithubService.REPO_NAME}")
         val release = github.getLatestRelease(force = true).getOrThrow()
+        if (preferBundledPatches(SemVer.parse(BuildConfig.VERSION_NAME), SemVer.parseOrNull(release.tagName))) {
+            loadBundled(container)
+            return
+        }
 
         val dataJsonUrl = release.assets
             .find { it.name == RadiantLyricsGithubService.DATA_JSON_ASSET_NAME }

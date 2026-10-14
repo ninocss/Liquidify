@@ -110,10 +110,7 @@ object SquareHome {
 
     @JvmStatic
     fun toolbarButton(original: Modifier): Modifier {
-        val dark = SquarePalette.isDark()
-        val film = if (dark) Color(0xFF24272E) else Color.White.copy(alpha = .84f)
-        val edge = if (dark) Color.White.copy(alpha = .12f) else Color.White
         return original.padding(end = 16.dp).sizeIn(minWidth = 48.dp, minHeight = 48.dp)
-            .clip(CircleShape).background(film).border(1.dp, edge, CircleShape).padding(10.dp)
+            .padding(10.dp)
     }
 }

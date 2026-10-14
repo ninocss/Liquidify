@@ -2,7 +2,7 @@
   "package": "dev.nino.tidalglass.test",
   "kind": "local integration test",
   "themeMode": 0,
-  "sha256": "2ff964f8c8897e6fae5fd37871eca85404817931937116989b7a8def4f7d63fc",
+  "sha256": "901e717e1a065d1eaca04ab5bc3456bb0a005033eb96f1a62cc3d119f4107a56",
   "signatureVerified": true,
   "zipAlignmentVerified": true
 }

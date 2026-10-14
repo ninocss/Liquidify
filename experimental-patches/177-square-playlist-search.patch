@@ -1,0 +1,11 @@
+--- a/nj/q.smali
++++ b/nj/q.smali
+@@ -205,6 +205,8 @@
+     .line 90
+     .line 91
+     iput-object p1, p0, Lnj/q;->g:Landroidx/appcompat/widget/SearchView;
++    invoke-static {p1}, Ldev/nino/squareglass/PlaylistSearch;->style(Landroidx/appcompat/widget/SearchView;)V
++
+ 
+     .line 92
+     .line 93

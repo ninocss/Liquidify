@@ -64,7 +64,7 @@ class LiquidMenuSurface(activity: Activity, snapshot: PlayerWindow.Snapshot?) {
         }
     }
 
-    fun paint(container: FrameLayout, radius: Float, emphasized: Boolean) {
+    @JvmOverloads fun paint(container: FrameLayout, radius: Float, emphasized: Boolean, sheet: Boolean = false) {
         // Compose creates its window recomposer at PopupDecorView, above our
         // content. PopupWindow does not install tree owners like a Dialog does.
         // The parent attaches before its Compose children, so supply owners there.
@@ -105,11 +105,12 @@ class LiquidMenuSurface(activity: Activity, snapshot: PlayerWindow.Snapshot?) {
                 if (v.viewTreeObserver.isAlive) v.viewTreeObserver.removeOnPreDrawListener(trackPosition)
             }
         })
-        view.setContent { Pane(backdrop, radius, emphasized) }
+        view.setContent { Pane(backdrop, radius, emphasized, sheet) }
         container.addView(view, 0, FrameLayout.LayoutParams(-1, -1))
         val outline = GradientDrawable().apply {
             setColor(android.graphics.Color.TRANSPARENT)
-            cornerRadius = radius * container.resources.displayMetrics.density
+            val r = radius * container.resources.displayMetrics.density
+            cornerRadii = if (sheet) floatArrayOf(r,r,r,r,0f,0f,0f,0f) else FloatArray(8) { r }
         }
         container.background = outline
         container.clipToOutline = true
@@ -154,10 +155,11 @@ class LiquidMenuSurface(activity: Activity, snapshot: PlayerWindow.Snapshot?) {
     }
 
     @Composable
-    private fun Pane(backdrop: Backdrop, radius: Float, emphasized: Boolean) {
+    private fun Pane(backdrop: Backdrop, radius: Float, emphasized: Boolean, sheet: Boolean) {
         DesignState.revision
         val dark = NativeGlass.dark
-        val shape = RoundedCornerShape(radius.dp)
+        val shape = if (sheet) RoundedCornerShape(topStart = radius.dp, topEnd = radius.dp)
+            else RoundedCornerShape(radius.dp)
         val film = if (dark) Color(0xFF33343A) else Color.White
         val opacity = SquareSettings.readableOpacity(dark)
         val modifier = if (SquareSettings.preset() == 2) {
@@ -168,10 +170,10 @@ class LiquidMenuSurface(activity: Activity, snapshot: PlayerWindow.Snapshot?) {
             effects = {
                 vibrancy()
                 blur(SquareSettings.blur().dp.toPx())
-                if (SquareSettings.preset() == 0 && SquareSettings.motion()) {
-                    val reach = minOf(size.width, size.height) * .2f
-                    lens((12 * SquareSettings.refraction()).dp.toPx().coerceAtMost(reach),
-                        (18 * SquareSettings.refraction()).dp.toPx().coerceAtMost(reach))
+                if (SquareSettings.preset() == 0) {
+                    val reach = minOf(size.width, size.height) * .35f
+                    lens((60 * SquareSettings.refraction()).dp.toPx().coerceAtMost(reach),
+                        (60 * SquareSettings.refraction()).dp.toPx().coerceAtMost(reach))
                 }
             },
             highlight = { Highlight.Default },

@@ -2,12 +2,6 @@
 package dev.nino.squareglass
 
 import android.graphics.RenderNode
-import android.graphics.Bitmap
-import android.graphics.ColorSpace
-import android.graphics.HardwareRenderer
-import android.graphics.PixelFormat
-import android.hardware.HardwareBuffer
-import android.media.ImageReader
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
@@ -36,26 +30,19 @@ class NativeViewBackdrop(private val source: View) : Backdrop, ViewTreeObserver.
     private val node = RenderNode("SquareGlass native TIDAL page")
     private val location = IntArray(2)
     private val inverse = InverseLayerScope()
-    private var transitionPending = false
+    private val capturePolicy = BackdropCapturePolicy()
     private var notifyNextCapture = true
     private var ready = false
-    private var frozen: Bitmap?=null
-    private var frozenTop=0
     var handoverVersion by mutableIntStateOf(0)
         private set
     private val resume=Runnable {source.invalidate()}
-    val hasSample: Boolean get() = ready || frozen != null
+    val hasSample: Boolean get() = ready
     override val isCoordinatesDependent = true
 
     fun transition() {
-        // RenderNode recordings reference their child View render nodes. Removing
-        // a tab empties those children even when this recording is retained.
-        // Resolve the last stable sample into independent GPU pixels BEFORE the
-        // native action; never redraw a transitioning Fragment to take a copy.
-        if(frozen==null && node.hasDisplayList() && source.isAttachedToWindow) freeze()
-        // Give the native transaction one traversal to install its animations.
-        // Subsequent retries follow actual transition state, never a timer.
-        transitionPending = true
+        // Navigation must not synchronously render/read GPU pixels on the UI
+        // thread. Leave the native window in charge of every transition frame.
+        capturePolicy.transition()
         requestCapture()
     }
 
@@ -70,46 +57,6 @@ class NativeViewBackdrop(private val source: View) : Backdrop, ViewTreeObserver.
         source.postOnAnimation(resume)
     }
 
-    private fun freeze() {
-        val width=source.width
-        val height=minOf(source.height,(300*source.resources.displayMetrics.density).toInt())
-        if(width<=0 || height<=0)return
-        val crop=RenderNode("SquareGlass stable accessory sample")
-        val renderer=HardwareRenderer()
-        var reader: ImageReader?=null
-        try {
-            frozenTop=source.height-height
-            crop.setPosition(0,0,width,height)
-            val canvas=crop.beginRecording(width,height)
-            try {canvas.translate(0f,-frozenTop.toFloat());canvas.drawRenderNode(node)} finally {crop.endRecording()}
-            reader=ImageReader.newInstance(width,height,PixelFormat.RGBA_8888,2,
-                HardwareBuffer.USAGE_GPU_SAMPLED_IMAGE or HardwareBuffer.USAGE_GPU_COLOR_OUTPUT)
-            renderer.setSurface(reader.surface)
-            renderer.setContentRoot(crop)
-            renderer.setOpaque(false)
-            renderer.start()
-            ProbeDiagnostics.accessoryRenderStatus=renderer.createRenderRequest().setWaitForPresent(true).syncAndDraw()
-            val image=reader.acquireLatestImage()
-            if(image!=null)try {
-                val buffer=image.hardwareBuffer
-                if(buffer!=null)try {
-                    val wrapped=Bitmap.wrapHardwareBuffer(buffer,ColorSpace.get(ColorSpace.Named.SRGB))
-                    // An ImageReader buffer belongs to its producer queue. Resolve
-                    // it once before closing that queue; no child render node or
-                    // reusable producer buffer remains in the transition sample.
-                    frozen=wrapped?.copy(Bitmap.Config.ARGB_8888,false)
-                    wrapped?.recycle()
-                    frozen?.let {ProbeDiagnostics.accessorySampleAlpha=android.graphics.Color.alpha(it.getPixel(width/2,height/2))}
-                } finally {buffer.close()}
-            } finally {image.close()}
-            if(frozen!=null) {ProbeDiagnostics.accessoryFreezes++;handoverVersion++}
-        } catch (_: RuntimeException) {
-            // A device that cannot allocate the offscreen surface keeps its live
-            // recording and native transitions; it never blocks navigation.
-            if(frozen!=null) {frozen=null;handoverVersion++}
-        } finally {renderer.destroy();reader?.close();crop.discardDisplayList()}
-    }
-
     init {
         source.viewTreeObserver.addOnPreDrawListener(this)
         source.addOnAttachStateChangeListener(this)
@@ -120,9 +67,8 @@ class NativeViewBackdrop(private val source: View) : Backdrop, ViewTreeObserver.
         ProbeDiagnostics.nativeDrawTraversals++
         if (!SquareSettings.glass("nav") && !SquareSettings.glass("mini")) {
             if (node.hasDisplayList()) node.discardDisplayList()
-            if (ready || frozen != null) {
+            if (ready) {
                 ready = false
-                frozen = null
                 handoverVersion++
             }
             return true
@@ -132,12 +78,7 @@ class NativeViewBackdrop(private val source: View) : Backdrop, ViewTreeObserver.
         // real window draw, then expose it again on the next frame. Keep the last
         // glass sample until the native transition owns its final frame.
         if (NativeBackdrop.active === this && source.isShown && source.width > 0 && source.height > 0) {
-            if (transitionPending) {
-                transitionPending = false
-                retryNextFrame()
-                return true
-            }
-            if (transitioning(source)) {
+            if (!capturePolicy.allowCapture(transitioning(source))) {
                 retryNextFrame()
                 return true
             }
@@ -146,9 +87,8 @@ class NativeViewBackdrop(private val source: View) : Backdrop, ViewTreeObserver.
             val canvas = node.beginRecording(source.width, source.height)
             try { source.draw(canvas) } finally { node.endRecording() }
             source.getLocationInWindow(location)
-            val changed = !ready || frozen != null || notifyNextCapture
+            val changed = !ready || notifyNextCapture
             ready = true
-            frozen = null
             notifyNextCapture = false
             if (changed) {
                 handoverVersion++
@@ -163,8 +103,23 @@ class NativeViewBackdrop(private val source: View) : Backdrop, ViewTreeObserver.
         return true
     }
 
+    private companion object {
+        // These are app-owned AndroidX fields from the pinned host, not hidden
+        // Android platform APIs. Resolve once, outside the frame traversal.
+        val fragmentTransitionFields = listOf("transitioningFragmentViews", "disappearingFragmentChildren").mapNotNull { name ->
+            try { androidx.fragment.app.FragmentContainerView::class.java.getDeclaredField(name).apply { isAccessible = true } }
+            catch (_: ReflectiveOperationException) { null }
+        }
+    }
+
     private fun transitioning(view: View): Boolean {
+        // FragmentContainerView retains disappearing children outside childCount.
+        // Check its transition lists even if its current children are hidden.
+        if (view is androidx.fragment.app.FragmentContainerView && fragmentTransitionFields.any {
+                (it.get(view) as? Collection<*>)?.isNotEmpty() == true
+            }) return true
         if (view.visibility != View.VISIBLE) return false
+        if (view.hasTransientState()) return true
         val animation=view.animation
         // Indefinitely animated content (for example a loading spinner) is not
         // a page transition and must not prevent the first backdrop recording.
@@ -185,7 +140,7 @@ class NativeViewBackdrop(private val source: View) : Backdrop, ViewTreeObserver.
     }
 
     override fun DrawScope.drawBackdrop(density: Density, coordinates: LayoutCoordinates?, layerBlock: (GraphicsLayerScope.() -> Unit)?) {
-        // Only a frozen/live handover invalidates sampling surfaces. Per-capture
+        // Only a stable-page handover invalidates sampling surfaces. Per-capture
         // snapshot writes here would form a perpetual capture/redraw feedback loop.
         handoverVersion
         if (coordinates == null || !coordinates.isAttached || !node.hasDisplayList()) return
@@ -200,9 +155,7 @@ class NativeViewBackdrop(private val source: View) : Backdrop, ViewTreeObserver.
         }) {
             drawIntoCanvas { canvas ->
                 if (canvas.nativeCanvas.isHardwareAccelerated) {
-                    val sample=frozen
-                    if(sample!=null)canvas.nativeCanvas.drawBitmap(sample,0f,frozenTop.toFloat(),null)
-                    else canvas.nativeCanvas.drawRenderNode(node)
+                    canvas.nativeCanvas.drawRenderNode(node)
                 }
             }
         }
@@ -215,13 +168,13 @@ class NativeViewBackdrop(private val source: View) : Backdrop, ViewTreeObserver.
         if (source.viewTreeObserver.isAlive) source.viewTreeObserver.removeOnPreDrawListener(this)
         source.removeOnAttachStateChangeListener(this)
         node.discardDisplayList()
-        frozen=null
         ready=false
     }
 
     override fun onViewAttachedToWindow(v: View) {
         source.viewTreeObserver.removeOnPreDrawListener(this)
         source.viewTreeObserver.addOnPreDrawListener(this)
+        capturePolicy.transition()
         requestCapture()
     }
     override fun onViewDetachedFromWindow(v: View) {

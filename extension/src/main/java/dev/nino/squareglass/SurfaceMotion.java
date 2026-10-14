@@ -7,6 +7,9 @@ public final class SurfaceMotion {
     private SurfaceMotion() {}
     public static void enter(View view, boolean menu, boolean nativeSlide) {
         LiquidViewMotion.cancel(view,"enter");
+        // Native sheets/queue already animate their own window. An additional
+        // spring changing alpha can outlive entry and fight a quick Back exit.
+        if(nativeSlide) return;
         if(!SquareSettings.motion()) { reset(view); if(!menu && !nativeSlide)view.setTranslationY(0f); return; }
         view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             public void onViewAttachedToWindow(View v) {}

@@ -1,0 +1,242 @@
+{
+  "upstreamCommit": "2cb7100baef6f9c05a79a761fa51dfe898708d9b",
+  "extensionDexSha256": "4cfdbedf863cab9a0ebc94bb883aee97c679a09e87563eba4c7b7e981830e979",
+  "engine": "Manager upstream fuzzy-context algorithm, assembly and introduced-reference linkage; Liquidify hooks applied",
+  "patchSha256": {
+    "collection-backdrop-liquidify.patch": "96a15cd3a790cbb978cd3b7418d009a729ee492fc2382b4f3162d55fcdada8af",
+    "cover-capture.patch": "66abf11380ce23fa9f8ae8263b8c2bfccf56e5779e864a1338cf0c08d66ed642",
+    "debug-menu-unlock.patch": "cb8059741f04658c1fb865e638e2b8fdc51591e4034bd5c23829dba2cd4ae670",
+    "home-backdrop.patch": "dd4d19cc881196de6b12b9dfc0fb26d2094809b57e3d1888b7e9ee8b797d1596",
+    "lyrics-rl-api-isrc.patch": "57c68deca440fef8f9084aba7d2b1411a2cde9506014fc4e6fcefbe8c7972349",
+    "lyrics-rl-api-observer.patch": "4a28346f821bad55d0653a6944cd350c1f4dd9096f923b862be1bfe9c6a0f763",
+    "lyrics-rl-api-syllable.patch": "bd5e46bcdebf7539fb74f88d9421426d122ff9cd046728cc44cb972bb72d168d",
+    "lyrics-rl-api-word.patch": "e9b809abf2b1b8bf1c075942e50312f2c874f17c3df3fabcf6f1e9b95e432047",
+    "lyrics-rl-api.patch": "71fbded01f5c5e86d1ff776bf790d22bfefeea38ba46f954f73f9c79b11f69f7",
+    "player-backdrop-kawarp.patch": "53106410b89385bbcad9530f11fb09041e56c45920d864a33f00136bcb2df3c6",
+    "player-backdrop-playback.patch": "cf2370e0c11eefced9b91b525a122258d4dd05b98f16c204fefaf241712d1ce8",
+    "player-native-backdrop-liquidify.patch": "522e820713bdd62ea9d0b90e83a9679681f32c1c8ea2ed599101d0346494db88"
+  },
+  "configurations": {
+    "DebugMenuUnlock": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 1 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 692,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "LyricsRlApi-0": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 4 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 701,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "DebugAndLyrics-0": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 5 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 701,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "LyricsRlApi-1": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 5 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 701,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "DebugAndLyrics-1": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 6 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 701,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "LyricsRlApi-2": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 5 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 701,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "DebugAndLyrics-2": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 6 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 701,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "PlayerBackdrop-0": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 4 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 694,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "CoverEverywhere-0": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 10 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 694,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "All-0-0": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 15 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 702,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "All-1-0": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 16 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 702,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "All-2-0": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 16 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 702,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "PlayerBackdrop-1": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 3 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 695,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "CoverEverywhere-1": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 9 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 695,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "All-0-1": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 14 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 703,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "All-1-1": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 15 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 703,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    },
+    "All-2-1": {
+      "passed": true,
+      "detail": "Applied upstream patch plan to 15 native classes",
+      "linkage": {
+        "passed": true,
+        "hostClasses": 77879,
+        "extensionClasses": 703,
+        "duplicateClasses": [],
+        "missingTypes": [],
+        "missingMethods": [],
+        "missingFields": []
+      }
+    }
+  }
+}

@@ -5,6 +5,8 @@ import json
 import re
 import subprocess
 import zipfile
+from upstream_compatibility import restore_specs
+from verify_upstream_compatibility import configurations
 
 ROOT = Path(__file__).resolve().parents[1]
 VERSION = json.loads((ROOT / "release.json").read_text())["version"]
@@ -22,6 +24,20 @@ def main():
     dex = (ROOT / "research/probe-remapped.dex").read_bytes()
     if not report["passed"] or report["sourceDexSha256"] != digest(dex):
         raise SystemExit("Current extension must pass linkage audit")
+    strict=json.loads((ROOT / 'reports/strict-patches-alpha22.json').read_text())
+    patch_hashes={p.name:digest(p.read_bytes()) for p in (ROOT / 'experimental-patches').glob('*.patch')}
+    if (not strict.get('passed') or not strict.get('hookLinkage', {}).get('passed')
+            or strict.get('extensionDexSha256') != digest(dex) or strict.get('patchSha256') != patch_hashes):
+        raise SystemExit('Current native hooks must pass strict application and linkage audit')
+    optional=json.loads((ROOT/'reports/upstream-compatibility.json').read_text())
+    original_paths={p.name:p for p in (ROOT/'radiant-base/patches').rglob('*.patch')}
+    original_paths.update({p.name:p for p in (ROOT/'compatibility-patches').glob('*.patch')})
+    expected={name for names in configurations().values() for name in names}
+    if (optional.get('extensionDexSha256') != digest(dex)
+            or set(optional['configurations']) != set(configurations())
+            or not all(result['passed'] for result in optional['configurations'].values())
+            or optional['patchSha256'] != {name:digest(original_paths[name].read_bytes()) for name in sorted(expected)}):
+        raise SystemExit('Restored upstream combinations must pass current application, assembly and linkage checks')
     upstream = ROOT / "radiant-base/patches"
     manifest = json.loads((upstream / "manifest.json").read_text())
     helpers = sorted(p.relative_to(ROOT / "research/probe-remapped").as_posix()
@@ -32,7 +48,7 @@ def main():
     specs = [
         dict(id="LiquidifyCore", source="liquidify", order=-30, fileNames=core, extensionFiles=helpers,
              title="Liquidify · Glass navigation",
-             description="AndroidLiquidGlass navigation, mini-player and runtime design settings. Keeps native TIDAL routes and actions. Requires Liquidify Manager 1.0.0 Beta.",
+             description=f"AndroidLiquidGlass navigation, mini-player and runtime design settings. Keeps native TIDAL routes and actions. Requires Liquidify Manager {VERSION}.",
              default=True, disables=["EnableLegacyUi", "MiniPlayerRedesign"],
              advancedOptions=[dict(type="choice", key="theme", title="Theme", entries=["System", "Light", "Dark"], values=["0x0", "0x1", "0x2"], defaultIndex=0, token="RL_SQUARE_THEME_MODE", inline=True)]),
         dict(id="LiquidifyTheme", source="liquidify", order=-20, fileNames=theme, requires=["LiquidifyCore"],
@@ -41,7 +57,7 @@ def main():
         dict(id="LiquidifyTypography", source="liquidify", order=-10, fileNames=[], requires=["LiquidifyCore"],
              title="Liquidify · Typography", description="Static Inter font instances, with original labels and accessibility text retained.", default=True),
     ]
-    manifest["patches"] = specs + manifest["patches"]
+    manifest["patches"] = specs + restore_specs(manifest["patches"])
     manifest["releaseVersion"] = VERSION
     manifest["name"] = "Liquidify"
     manifest["editor"] = "ninocss"
@@ -57,6 +73,8 @@ def main():
             payload[p.relative_to(upstream).as_posix()] = p.read_bytes()
     for p in (ROOT / "experimental-patches").glob("*.patch"):
         payload[p.name] = p.read_bytes()
+    for p in (ROOT / "compatibility-patches").glob("*.patch"):
+        payload['compatibility/'+p.name] = p.read_bytes()
     for relative in helpers:
         text = (ROOT / "research/probe-remapped" / relative).read_text()
         if relative == "dev/nino/squareglass/SquareSettings.smali":
@@ -82,7 +100,7 @@ def main():
             info = zipfile.ZipInfo(name, date_time=(2026, 10, 9, 0, 0, 0))
             info.compress_type = zipfile.ZIP_DEFLATED
             out.writestr(info, data)
-    result = dict(file=target.name, sha256=digest(target.read_bytes()), helpers=len(helpers), squarePatches=len(patches), status="1.0.0 Beta; scoped hardware acceptance documented in LINN_OUTPUT.md")
+    result = dict(file=target.name, sha256=digest(target.read_bytes()), helpers=len(helpers), squarePatches=len(patches), status=f"{VERSION.replace('-beta', ' Beta')}; scoped hardware acceptance documented in LINN_OUTPUT.md")
     (ROOT / "reports/package-alpha.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result))
 

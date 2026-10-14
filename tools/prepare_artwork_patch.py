@@ -85,7 +85,9 @@ def player_top_edge(text):
     body = text[start:end]
     top_arrangement = 'invoke-virtual {v8}, Landroidx/compose/foundation/layout/Arrangement;->getTop()Landroidx/compose/foundation/layout/Arrangement$Vertical;'
     assert body.count(top_arrangement) == 1
-    body = body.replace(top_arrangement, 'invoke-virtual {v8}, Landroidx/compose/foundation/layout/Arrangement;->getCenter()Landroidx/compose/foundation/layout/Arrangement$Vertical;')
+    # DEX lookup includes the return type. Center implements both axes, and the
+    # host getter returns HorizontalOrVertical rather than Vertical.
+    body = body.replace(top_arrangement, 'invoke-virtual {v8}, Landroidx/compose/foundation/layout/Arrangement;->getCenter()Landroidx/compose/foundation/layout/Arrangement$HorizontalOrVertical;')
     needle = '    .line 151\n    invoke-static {v10, v3}, Landroidx/compose/ui/ComposedModifierKt;->materializeModifier('
     assert body.count(needle) == 1
     body = body.replace(needle, '''    invoke-static {v3, v10, v12}, Ldev/nino/squareglass/PlayerArtwork;->frame(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;

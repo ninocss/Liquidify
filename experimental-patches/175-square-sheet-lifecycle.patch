@@ -1,0 +1,11 @@
+--- a/com/google/android/material/bottomsheet/BottomSheetDialog.smali
++++ b/com/google/android/material/bottomsheet/BottomSheetDialog.smali
+@@ -1153,6 +1153,8 @@
+     .line 20
+     .line 21
+     :cond_0
++    invoke-static {p0}, Ldev/nino/squareglass/SheetChrome;->opened(Landroid/app/Dialog;)V
++
+     return-void
+ .end method
+ 

@@ -10,6 +10,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import dev.nino.squareglass.backdrop.Backdrop
 import dev.nino.squareglass.backdrop.backdrops.emptyBackdrop
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import dev.nino.squareglass.backdrop.drawBackdrop
 import dev.nino.squareglass.backdrop.effects.blur
@@ -19,6 +20,13 @@ import dev.nino.squareglass.backdrop.highlight.Highlight
 import dev.nino.squareglass.material.InteractiveHighlight
 
 object GlassMotion {
+    /** Animate the glyph itself; small icons must never sample or paint a surface. */
+    fun glyph(original: Modifier, highlight: InteractiveHighlight): Modifier = original.graphicsLayer {
+        val progress = if (SquareSettings.motion()) highlight.pressProgress.coerceIn(0f, 1f) else 0f
+        scaleX = 1f + .06f * progress
+        scaleY = scaleX
+    }
+
     /** Preserve the host's non-composable bounce-press ABI. */
     @JvmStatic fun bounce(original: Modifier): Modifier = original.composed { control(Modifier) }
 

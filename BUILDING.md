@@ -1,4 +1,4 @@
-# Building Liquidify 1.0.0 Beta
+# Building Liquidify 1.1.0 Beta
 
 ## Manager
 
@@ -50,7 +50,7 @@ python -m unittest discover -s tests -v
 ```
 
 The historical packaging script name is retained, but emits
-`dist/Liquidify-1.0.0-beta-patches.zip`. Copy that file to `patches/patches.zip`
+`dist/Liquidify-1.1.0-beta-patches.zip`. Copy that file to `patches/patches.zip`
 and its `manifest.json` to `patches/manifest.json`; run the release validator.
 `host-stubs` contains compile-only native ABI declarations and must not ship.
 Patch builds reuse the host Compose/Kotlin runtime. TIDAL binaries, keys and

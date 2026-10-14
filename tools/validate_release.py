@@ -2,6 +2,7 @@
 from pathlib import Path
 import hashlib,json,zipfile
 import xml.etree.ElementTree as ET
+from upstream_compatibility import restore_specs
 ROOT=Path(__file__).resolve().parents[1]
 def validate():
     release=json.loads((ROOT/'release.json').read_text())
@@ -23,7 +24,7 @@ def validate():
         assert {p['id'] for p in own}=={'LiquidifyCore','LiquidifyTheme','LiquidifyTypography'}
         assert all(p['title'].startswith('Liquidify') and p['default'] for p in own)
         upstream=json.loads((ROOT/'radiant-base/patches/manifest.json').read_text())['patches']
-        assert [p for p in manifest['patches'] if p.get('source')!='liquidify']==upstream
+        assert [p for p in manifest['patches'] if p.get('source')!='liquidify']==restore_specs(upstream)
         for original in (ROOT/'radiant-base/patches').rglob('*'):
             if original.is_file() and original.name!='manifest.json':
                 name=original.relative_to(ROOT/'radiant-base/patches').as_posix()

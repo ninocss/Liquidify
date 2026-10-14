@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-14",
+  "pythonJavaTests": {
+    "passed": true,
+    "tests": 34
+  },
+  "managerTests": {
+    "tests": 7,
+    "failures": 0
+  },
+  "strictPatches": 101,
+  "extensionClasses": 692,
+  "hostLinkagePassed": true,
+  "optionalPatchCombinations": 17,
+  "optionalPatchCombinationsPassed": true,
+  "originalUpstreamFilesVerified": 24,
+  "upstreamCommit": "2cb7100baef6f9c05a79a761fa51dfe898708d9b",
+  "patches": {
+    "file": "Liquidify-1.0.0-beta-patches.zip",
+    "sha256": "3d55e912d1b10e5db05186d5478de72df7632dfcd5a9979cd580536a4b8d5334"
+  },
+  "manager": {
+    "file": "Liquidify-Manager-1.0.0-beta-ui-refresh-debug.apk",
+    "signing": "debug",
+    "sha256": "c39c459bc27c27ca326d27ac3eadbc1c40aea502229a4ba8f5f34b4125e1de82"
+  },
+  "ui": {
+    "managerInstalledAndOptionsVerified": true,
+    "restoredPatchTitles": [
+      "Radiant Lyrics API - WIP",
+      "Player Backdrop",
+      "Unlock Debug Menu"
+    ],
+    "defaultSelection": "3 of 6 enabled",
+    "separateTidalTestApp": "installed; reaches initial consent screen; no AndroidRuntime crash observed",
+    "authenticatedTidalAcceptance": "pending; separate test installation has no signed-in session",
+    "physicalPhoneAcceptance": "pending; no physical phone connected",
+    "approvalReview": "extracting/reusing installed APK signing keystore rejected; operation not performed; original emulator TIDAL preserved"
+  }
+}

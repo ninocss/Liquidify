@@ -68,10 +68,10 @@ class DesignContrast(unittest.TestCase):
         self.assertNotIn('ColorFilter.tint',source)
         self.assertNotIn('accentColor',source)
         self.assertIn('rememberCombinedBackdrop(backdrop, tabsBackdrop)',source)
-        # The captured layer contains the glass panel only, so the selection
-        # lens cannot project a second row of animated/tinted tab glyphs.
-        captured=source[source.index('.layerBackdrop(tabsBackdrop)'):source.index('// Capture only')]
-        self.assertNotIn('content = content',captured)
+        # Capture the single live row before projecting it through the lens.
+        # No duplicate composable callbacks or icon animations are created.
+        captured=source[source.index('// Record the one live'):source.index('// The original catalog')]
+        self.assertEqual(captured.count('content = content'),1)
 
     def test_navigation_labels_during_selection_on_extreme_artwork(self):
         # The selection lens and highlight compose on the same contrast-checked

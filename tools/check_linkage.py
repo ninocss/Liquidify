@@ -21,7 +21,14 @@ PLATFORM_INHERITED = {"Ljava/lang/Enum;": {"ordinal()I", "name()Ljava/lang/Strin
                       # Public View APIs referenced through app-defined subclasses.
                       "Landroid/view/View;": {"getWidth()I", "getHeight()I",
                           "getResources()Landroid/content/res/Resources;",
-                          "setImportantForAccessibility(I)V"}}
+                          "setImportantForAccessibility(I)V",
+                          "onAttachedToWindow()V", "onDetachedFromWindow()V",
+                          "dispatchTouchEvent(Landroid/view/MotionEvent;)Z"},
+                      "Landroid/view/ViewGroup;": {"drawChild(Landroid/graphics/Canvas;Landroid/view/View;J)Z",
+                          "onAttachedToWindow()V", "onDetachedFromWindow()V",
+                          "dispatchTouchEvent(Landroid/view/MotionEvent;)Z"},
+                      "Landroid/app/Activity;": {"dispatchTouchEvent(Landroid/view/MotionEvent;)Z"},
+                      "Landroid/app/Dialog;": {"show()V"}}
 
 
 def audit(host: dict, extension: dict, refs: dict) -> dict:

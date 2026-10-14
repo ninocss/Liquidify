@@ -55,7 +55,7 @@ object NativeGlass {
             shape = { shape },
             effects = {
                 vibrancy(); blur(SquareSettings.blur().dp.toPx())
-                if (SquareSettings.motion() && SquareSettings.preset() == 0)
+                if (SquareSettings.preset() == 0)
                     lens((24 * SquareSettings.refraction()).dp.toPx(), (32 * SquareSettings.refraction()).dp.toPx())
             },
             highlight = { Highlight.Default },

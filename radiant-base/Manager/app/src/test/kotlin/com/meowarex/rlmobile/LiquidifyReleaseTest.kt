@@ -1,6 +1,7 @@
 package com.meowarex.rlmobile
 
 import com.meowarex.rlmobile.network.utils.SemVer
+import com.meowarex.rlmobile.network.utils.preferBundledPatches
 import com.meowarex.rlmobile.ui.screens.patchopts.*
 import com.meowarex.rlmobile.ui.screens.componentopts.PatchComponent
 import org.junit.Assert.*
@@ -52,5 +53,24 @@ class LiquidifyReleaseTest {
         assertTrue(SemVer.parse("1.0.0-beta.2") < SemVer.parse("1.0.0-beta.10"))
         assertTrue(beta > SemVer.parse("0.1.9-alpha1"))
         assertNull(SemVer.parseOrNull("1.0.0-"))
+    }
+
+    @Test fun unavailableUpstreamPatchStaysVisibleAndCannotEnterThePlan() {
+        val blocked = PatchSpec("PlayerBackdrop", title = "Player Backdrop", source = "radiantLyrics",
+            compatibilityBlockReason = "Native backdrop conflicts with the installed player")
+        val visible = filterCompatiblePatchSpecs(listOf(core, blocked))
+        assertEquals(2, visible.size)
+        val options = PatchOptions.Default.copy(patchStates = mapOf(blocked.id to true))
+        assertFalse(options.isEnabled(blocked))
+        assertTrue(options.enabledExtensionFiles(listOf(blocked)).isEmpty())
+    }
+
+    @Test fun bundledBetaWinsOverEqualOrOlderReleaseButAcceptsNewerUpdates() {
+        val bundled = SemVer.parse("1.0.0-beta")
+        assertTrue(preferBundledPatches(bundled, SemVer.parse("1.0.0-beta")))
+        assertTrue(preferBundledPatches(bundled, SemVer.parse("0.1.9-alpha1")))
+        assertTrue(preferBundledPatches(bundled, null))
+        assertFalse(preferBundledPatches(bundled, SemVer.parse("1.0.0-beta.2")))
+        assertFalse(preferBundledPatches(bundled, SemVer.parse("1.0.0")))
     }
 }

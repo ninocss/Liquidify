@@ -20,6 +20,8 @@ import com.meowarex.rlmobile.manager.download.IDownloadManager
 import com.meowarex.rlmobile.manager.download.KtorDownloadManager
 import com.meowarex.rlmobile.network.services.RadiantLyricsGithubService
 import com.meowarex.rlmobile.network.utils.getOrThrow
+import com.meowarex.rlmobile.network.utils.SemVer
+import com.meowarex.rlmobile.network.utils.preferBundledPatches
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import java.io.File
@@ -112,9 +114,10 @@ class PatchOptionsModel(
             .coerceIn(0, spec.variants.lastIndex.coerceAtLeast(0))
 
     fun isPatchEnabled(spec: PatchSpec): Boolean =
-        !isBlockedByPackageName(spec) && (patchStates[spec.id] ?: spec.defaultEnabled)
+        spec.compatibilityBlockReason == null && !isBlockedByPackageName(spec) && (patchStates[spec.id] ?: spec.defaultEnabled)
 
     fun setPatchEnabled(spec: PatchSpec, enabled: Boolean) {
+        if (enabled && spec.compatibilityBlockReason != null) return
         val byId = specs.associateBy { it.id }
         fun closure(seed: PatchSpec, step: (PatchSpec) -> List<PatchSpec>): Set<PatchSpec> =
             buildSet {
@@ -237,6 +240,7 @@ class PatchOptionsModel(
     )
 
     fun lockState(spec: PatchSpec): PatchLock {
+        spec.compatibilityBlockReason?.let { return PatchLock.Unavailable(it) }
         if (isBlockedByPackageName(spec)) return PatchLock.RequiresDefaultPackage
 
         val byId = specs.associateBy { it.id }
@@ -335,7 +339,9 @@ class PatchOptionsModel(
         val url = release.assets
             .find { it.name == RadiantLyricsGithubService.PATCHES_ASSET_NAME }
             ?.browserDownloadUrl
-        if (url == null) {
+        if (preferBundledPatches(SemVer.parse(BuildConfig.VERSION_NAME), SemVer.parseOrNull(release.tagName))) {
+            builtinSpecs
+        } else if (url == null) {
             Log.w(BuildConfig.TAG, "Latest release ${release.tagName} has no patches.zip asset; using built-in list")
             null
         } else {
@@ -361,7 +367,9 @@ class PatchOptionsModel(
 
     private fun loadCachedReleaseManifestSpecs(): List<PatchSpec>? =
         paths.cacheDownloadDir
-            .listFiles { f -> f.name.startsWith("manifest-") && f.name.endsWith(".zip") }
+            .listFiles { f -> f.name.startsWith("manifest-") && f.name.endsWith(".zip") &&
+                !preferBundledPatches(SemVer.parse(BuildConfig.VERSION_NAME),
+                    SemVer.parseOrNull(f.name.removePrefix("manifest-").removeSuffix(".zip"))) }
             ?.maxByOrNull { it.lastModified() }
             ?.let { loadManifestSpecs(it) }
             ?.also { Log.i(BuildConfig.TAG, "Loaded ${it.size} patches from cached release manifest (offline)") }
@@ -461,6 +469,7 @@ enum class PackageNameState {
 }
 
 sealed class PatchLock {
+    data class Unavailable(val reason: String) : PatchLock()
     data object Free : PatchLock()
     data class LockedOn(val by: PatchSpec) : PatchLock()
     data class LockedOff(val by: PatchSpec) : PatchLock()

@@ -36,6 +36,7 @@ public final class SquareMenus {
     private static long touchedAt;
     private static boolean moved, completedTap;
     public static boolean hasOpenMenu() {return !open.isEmpty();}
+    public static boolean owns(Dialog dialog) { return open.containsKey(dialog); }
 
     public static void touch(Activity activity, MotionEvent event) {
         IconMotion.touch(event);
@@ -57,6 +58,9 @@ public final class SquareMenus {
 
     public static void show(Dialog dialog, Activity activity, View root, RecyclerView.Adapter<?> adapter) {
         if (SquareSettings.themeEnabled() == 0) { dialog.show(); return; }
+        Presentation previous = open.remove(dialog);
+        if (previous != null) previous.release();
+        for (Dialog other : new java.util.ArrayList<>(open.keySet())) other.dismiss();
         Presentation state = new Presentation(dialog, activity, root, adapter);
         open.put(dialog, state);
         state.start();
@@ -116,8 +120,8 @@ public final class SquareMenus {
         if (SquareSettings.themeEnabled() == 0) return;
         int ink = SquarePalette.ink(SquarePalette.isDark());
         styleChildren(row, actionColor(row, textResource, ink), actionColor(row, iconResource, ink), enabled);
-        row.setMinimumHeight(dp(row, 52));
-        row.setPaddingRelative(dp(row, 8), dp(row, 2), dp(row, 8), dp(row, 2));
+        row.setMinimumHeight(dp(row, 56));
+        row.setPaddingRelative(dp(row, 16), dp(row, 8), dp(row, 16), dp(row, 8));
         row.setBackground(new RippleDrawable(ColorStateList.valueOf((ink & 0xffffff) | 0x16000000), null,
                 surface(row, Color.WHITE)));
     }
@@ -276,11 +280,10 @@ public final class SquareMenus {
             activity.getWindow().getDecorView().removeCallbacks(afterUpdates);
             if (activity.isFinishing() || activity.isDestroyed()) { dialog.dismiss(); return; }
             View handle = root.findViewById(0x7f0b064a);
-            if (handle != null) handle.setVisibility(handleVisibility);
+            if (handle != null) handle.setVisibility(View.GONE);
             makeShell(true);
-            songMenu = SquareSongMenu.install(root, adapter, glass, playerSnapshot != null);
             dialog.show();
-            SurfaceMotion.enter(shell,false,true);
+            // BottomSheetBehavior is the sole owner of the sheet's enter/drag motion.
             bars = SystemBarTheme.installWindow(dialog.getWindow());
             if (playerSnapshot != null) {
                 ViewGroup decor=(ViewGroup)dialog.getWindow().getDecorView();
@@ -301,8 +304,12 @@ public final class SquareMenus {
                 parent.addView(shell, index, params);
                 parent.setBackgroundColor(Color.TRANSPARENT);
             }
-            glass.paint(shell, sheet ? 30f : 24f, false);
-            shell.addView(root, new FrameLayout.LayoutParams(-1, -2));
+            glass.paint(shell, sheet ? 28f : 24f, false, sheet);
+            if (sheet) {
+                android.widget.LinearLayout column = SheetChrome.layout(shell, root);
+                if (playerSnapshot != null) column.addView(SleepTimer.button(activity,glass),
+                    new android.widget.LinearLayout.LayoutParams(-1,dp(root,56)));
+            } else shell.addView(root, new FrameLayout.LayoutParams(-1, -2));
         }
 
         void unavailable() {
@@ -314,6 +321,8 @@ public final class SquareMenus {
         void release() {
             if (released) return;
             released = true;
+            open.remove(dialog);
+            if (shell != null) LiquidViewMotion.cancel(shell,"enter");
             activity.getWindow().getDecorView().removeCallbacks(timeout);
             activity.getWindow().getDecorView().removeCallbacks(afterUpdates);
             adapter.unregisterAdapterDataObserver(this);

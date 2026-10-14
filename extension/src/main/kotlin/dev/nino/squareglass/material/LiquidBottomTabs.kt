@@ -141,7 +141,9 @@ fun LiquidBottomTabs(
             }
         }
 
-        Box(
+        // Record the one live monochrome row and its readable glass film.
+        // The lens samples this layer without composing another icon/action row.
+        Row(
             Modifier
                 .layerBackdrop(tabsBackdrop)
                 .graphicsLayer {
@@ -159,11 +161,12 @@ fun LiquidBottomTabs(
                 .then(interactiveHighlight.modifier)
                 .height(64f.dp)
                 .fillMaxWidth()
-                .padding(4f.dp)
+                .padding(4f.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            content = content
         )
 
-        // Capture only the catalog's glass panel, never a second icon row.
-        // Glyphs and their existing animations are composed once above it.
+        // The original catalog selection lens sits above the recorded glyphs.
         Box(
             Modifier
                 .padding(horizontal = 4f.dp)
@@ -177,7 +180,7 @@ fun LiquidBottomTabs(
                     shape = { Capsule() },
                     effects = {
                         val progress = dampedDragAnimation.pressProgress
-                        if (SquareSettings.glass("nav") && SquareSettings.motion()) lens(
+                        if (SquareSettings.glass("nav") && SquareSettings.preset() == 0) lens(
                             10f.dp.toPx() * progress,
                             14f.dp.toPx() * progress,
                             chromaticAberration = true
@@ -214,22 +217,6 @@ fun LiquidBottomTabs(
                 .height(56f.dp)
                 .fillMaxWidth(1f / tabsCount)
         )
-
-        CompositionLocalProvider(
-            LocalLiquidBottomTabScale provides {
-                lerp(1f, 1.2f, dampedDragAnimation.pressProgress)
-            }
-        ) {
-            Row(
-                Modifier
-                    .graphicsLayer { translationX = panelOffset }
-                    .height(64.dp)
-                    .fillMaxWidth()
-                    .padding(4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                content = content
-            )
-        }
 
         // Keep the original indicator hit area above the clickable tabs. This
         // layer handles dragging only; it never draws or captures tab content.

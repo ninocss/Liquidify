@@ -1,0 +1,12 @@
+--- a/ua/k1.smali
++++ b/ua/k1.smali
+@@ -151,5 +151,9 @@
+     move-result-object p1
+ 
+     .line 62
++    iget-object v0, p0, Lua/k1;->b:[Ljava/lang/String;
++    iget v1, p0, Lua/k1;->c:I
++    invoke-static {p0, p1, v0, v1}, Ldev/nino/squareglass/PlaylistSortMenu;->create(Landroidx/fragment/app/DialogFragment;Landroid/app/Dialog;[Ljava/lang/String;I)Landroid/app/Dialog;
++    move-result-object p1
+     return-object p1
+ .end method

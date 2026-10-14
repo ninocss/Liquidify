@@ -1,0 +1,21 @@
+--- a/com/tidal/wave2/foundation/WaveScaffoldKt.smali
++++ b/com/tidal/wave2/foundation/WaveScaffoldKt.smali
+@@ -895,6 +895,9 @@
+ 
+     move-result-object v9
+ 
++    const/4 v0, 0x0
++    invoke-static {v1, v0}, Lradiant/HomeBackdrop;->render(Landroidx/compose/runtime/Composer;I)V
++
+     new-instance v0, Lcom/tidal/wave2/foundation/WaveScaffoldKt$WaveScaffold$2;
+ 
+     .line 388
+@@ -997,7 +1000,7 @@
+ 
+     .line 436
+     .line 437
+-    move-wide v15, v10
++    const-wide/16 v15, 0x0    # transparent containerColor
+ 
+     .line 438
+     const/4 v11, 0x0

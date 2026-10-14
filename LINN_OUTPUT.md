@@ -1,4 +1,4 @@
-# Linn OpenHome output — Liquidify 1.0.0 Beta
+# Linn OpenHome output — Liquidify 1.1.0 Beta
 
 ## 2026-10-13 responsiveness revision — physical acceptance pending
 

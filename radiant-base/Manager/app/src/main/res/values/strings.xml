@@ -1,4 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+  <string name="patch_lock_unavailable_msg">%1$s</string>
   <string name="app_name">Liquidify Manager</string>
   <string name="app_description">A patcher for the TIDAL Android App</string>
   <string name="about_fork_credit">Liquidify is edited by ninocss and is a fork of Radiant Lyrics by meowarex and its contributors. Compatible Radiant Lyrics patches retain their original authorship and remain optional.</string>

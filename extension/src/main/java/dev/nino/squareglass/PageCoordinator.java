@@ -55,6 +55,7 @@ public final class PageCoordinator {
         android.util.Log.d("SquareGlass","Page lifecycle installed");
         FragmentManager manager=((FragmentActivity)activity).getSupportFragmentManager();
         manager.registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
+            @Override public void onFragmentPaused(FragmentManager fm,Fragment fragment) { NativeBackdrop.transition(); }
             @Override public void onFragmentViewCreated(FragmentManager fm,Fragment fragment,View view,Bundle state) { NativeBackdrop.transition();bind(fragment,view); }
             @Override public void onFragmentResumed(FragmentManager fm,Fragment fragment) {
                 NativeBackdrop.transition();
@@ -121,7 +122,7 @@ public final class PageCoordinator {
                     lists.add(list);list.addOnChildAttachStateChangeListener(this);
                     if(title!=null && primary==null) {
                         primary=list;
-                        if(!title.equals("Playlists")) {hero=new HeroDecoration(this);configureHero();}
+                        hero=new HeroDecoration(this);configureHero();
                         list.setClipToPadding(false);
                     }
                     for(int i=0;i<((ViewGroup)list).getChildCount();i++) onChildViewAttachedToWindow(((ViewGroup)list).getChildAt(i));

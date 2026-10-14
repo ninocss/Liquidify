@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-14",
+  "device": "Pixel 8",
+  "phoneCrashCauses": [
+    "PlaylistSortMenu measures ComposeView before Dialog window attachment",
+    "ComposeSheetGlass passes RectangleShape to a rounded-corner-only refraction shader"
+  ],
+  "fixes": [
+    "Uniform surface film; library default highlight",
+    "Remove shared stock accessory outline; replacement capsules own clipping",
+    "Measure only native sort option rows before window attachment",
+    "Support RectangleShape refraction; preserve arbitrary host outline with blur fallback",
+    "Never record the fullscreen sheet own window"
+  ],
+  "validation": {
+    "unitTests": 34,
+    "emulatorSortOpenCloseCycles": 3,
+    "emulatorFullscreenRectangleSurface": "attached and drawn",
+    "phoneAcceptance": "passed on updated Pixel 8",
+    "strictPatches": 101,
+    "optionalConfigurations": 17,
+    "managerBundledPatchesVerified": true,
+    "phoneInstallTime": "2026-10-14 17:41:20",
+    "phoneChecks": [
+      "Fullscreen opened repeatedly from Home and Playlist, playback paused",
+      "Playlist sort menu opens, selects Alphabetical and persists choice",
+      "Original Custom order restored; original first tracks verified",
+      "Uniform accessory/menu film visually inspected",
+      "Player bottom sheet opens with one grip and closes"
+    ],
+    "newTidalCrashesSinceInstall": 0,
+    "installedApkReadbackVerified": true
+  },
+  "patchesSha256": "211bdad2002c48e424e5f2c062694e9ac17ccfd79cc3b0dc94e63782d4b9b9de",
+  "installedApkSha256": "2fdaa6fb8c2be2ef7c18936548508cc50facac67b11d772c51753c818d12259b",
+  "managerApkSha256": "fece84559e856970e7112665a5652c3d6105dfff78158c49399d1a9603d35037",
+  "installation": "Existing Liquidify Manager local ZIP import; Play Protect warning confirmed manually on phone"
+}
