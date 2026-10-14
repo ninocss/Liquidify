@@ -17,5 +17,16 @@ public final class LinnQueueChecks {
         check(!LinnQueuePlan.sequenceNewer(10,10));
         check(!LinnQueuePlan.sequenceNewer(10,9));
         check(LinnQueuePlan.sequenceNewer(10,11));
+        LinnQueuePlan.stagingCapacity(1000,1000,0,1000);
+        Map<String,Long> known=new HashMap<>();List<Long> original=new ArrayList<>();
+        for(int i=0;i<8;i++){known.put("occ"+i,(long)i+1);original.add((long)i+1);}
+        Random random=new Random(7);
+        for(int sample=0;sample<100;sample++){
+            List<String> desired=new ArrayList<>(known.keySet());Collections.shuffle(desired,random);
+            int[] lengths=new int[desired.size()];int longest=0;
+            for(int i=0;i<desired.size();i++){lengths[i]=1;for(int j=0;j<i;j++)if(known.get(desired.get(j))<known.get(desired.get(i)))lengths[i]=Math.max(lengths[i],lengths[j]+1);longest=Math.max(longest,lengths[i]);}
+            Map<String,Long> retained=LinnQueuePlan.retained(desired,known,original);check(retained.size()==longest);
+            long last=0;for(String key:desired)if(retained.containsKey(key)){check(retained.get(key)>last);last=retained.get(key);}
+        }
     }
 }

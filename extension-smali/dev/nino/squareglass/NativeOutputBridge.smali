@@ -45,13 +45,33 @@
 .end method
 
 .method public static select(Ljava/lang/Object;)V
-    .locals 1
+    .locals 2
 
     invoke-static {}, Lcom/aspiro/wamp/broadcast/m;->a()Lcom/aspiro/wamp/broadcast/h;
     move-result-object v0
     invoke-static {p0}, Ldev/nino/squareglass/LinnProvider;->prepareSelection(Ljava/lang/Object;)V
+    invoke-static {p0}, Ldev/nino/squareglass/LinnProvider;->directSelection(Ljava/lang/Object;)Z
+    move-result v1
+    if-nez v1, :done
     check-cast p0, Lp2/a;
     invoke-interface {v0, p0}, Lcom/aspiro/wamp/broadcast/h;->j(Lp2/a;)V
+    :done
+    return-void
+.end method
+
+.method public static confirmSelection(Ljava/lang/Object;)V
+    .locals 2
+
+    invoke-static {}, Lcom/aspiro/wamp/broadcast/m;->a()Lcom/aspiro/wamp/broadcast/h;
+    move-result-object v0
+    invoke-static {p0}, Ldev/nino/squareglass/LinnProvider;->canRestoreSelection(Ljava/lang/Object;)Z
+    move-result v1
+    if-eqz v1, :done
+    check-cast v0, Lcom/aspiro/wamp/broadcast/v;
+    check-cast p0, Lp2/a;
+    iput-object p0, v0, Lcom/aspiro/wamp/broadcast/v;->c:Lp2/a;
+    invoke-virtual {v0}, Lcom/aspiro/wamp/broadcast/v;->c()V
+    :done
     return-void
 .end method
 
@@ -61,7 +81,11 @@
     invoke-static {}, Lcom/aspiro/wamp/broadcast/m;->a()Lcom/aspiro/wamp/broadcast/h;
     move-result-object v0
     instance-of v1, p0, Lp2/c;
+    if-nez v1, :restore
+    invoke-static {p0}, Ldev/nino/squareglass/LinnProvider;->canRestoreSelection(Ljava/lang/Object;)Z
+    move-result v1
     if-eqz v1, :done
+    :restore
     check-cast v0, Lcom/aspiro/wamp/broadcast/v;
     iget-object v1, v0, Lcom/aspiro/wamp/broadcast/v;->c:Lp2/a;
     instance-of v1, v1, Ldev/nino/squareglass/LinnProvider$Device;

@@ -31,9 +31,18 @@ public final class SquareOutput {
     private SquareOutput() {}
     public static void anchor(View view,int l,int t,int r,int b) { anchors.put(view,new Rect(l,t,r,b)); }
     public static void clearAnchor(View view) { anchors.remove(view); }
-    public static void changed() { main.post(() -> {if(current!=null) current.schedule();}); }
+    public static void changed() { main.post(() -> {if(current!=null){current.linnSnapshot();current.draw();current.fit();current.schedule();}}); }
+    public static void linnDevicesChanged(){main.post(() -> {if(current!=null){current.linnSnapshot();current.draw();current.fit();}});}
+    private static volatile String pendingLinnMessage="";
+    private static final java.util.concurrent.atomic.AtomicBoolean linnProgressQueued=new java.util.concurrent.atomic.AtomicBoolean();
     public static void linnFailure(String message) {main.post(() -> {if(current!=null){current.selection.failed();current.message=message;current.draw();current.fit();}});}
-    public static void linnProgress(String message) {main.post(() -> {if(current!=null && current.selection.target()!=null){current.selection.begin(current.selection.target(),SystemClock.uptimeMillis());current.message=message;current.draw();current.fit();}});}
+    public static void linnProgress(String message) {
+        pendingLinnMessage=message;
+        if(linnProgressQueued.compareAndSet(false,true))main.postDelayed(() -> {
+            linnProgressQueued.set(false);
+            if(current!=null && current.selection.target()!=null){current.message=pendingLinnMessage;current.linnSnapshot();current.draw();current.fit();}
+        },80);
+    }
     public static void result(Object token,Object value,boolean error) {
         Request request=(Request)token;
         main.post(() -> request.session.received(request.revision,value,error));
@@ -130,6 +139,19 @@ public final class SquareOutput {
             draw();fit();SurfaceMotion.enter(shell,true,false);refresh();
         }
         void schedule() {if(!closed) {main.removeCallbacks(poll);main.postDelayed(poll,100);}}
+        void linnSnapshot(){
+            if(closed)return;
+            LinnProvider linn=LinnProvider.instance;if(linn==null)return;
+            devices.removeIf(device -> device instanceof LinnProvider.Device);devices.addAll(linn.snapshot());
+            String pending=selection.target();
+            if(pending!=null){
+                if(pending.startsWith("LINN_") && linn.connecting)selection.deadline(pending,SystemClock.uptimeMillis(),java.util.concurrent.TimeUnit.NANOSECONDS.toMillis(linn.attemptExpires-System.nanoTime()));
+                Object active=NativeOutputBridge.active();
+                int result=selection.observe(active==null?null:NativeOutputBridge.id(active),SystemClock.uptimeMillis());
+                if(result==1){message="";retryDevice=null;}
+                if(result==-1)message="Connection was not confirmed. Tap here to retry.";
+            }
+        }
         void refresh() {request(true);}
         void request(boolean visible) {
             if(closed)return;
@@ -149,10 +171,11 @@ public final class SquareOutput {
             LinkedHashMap<String,Object> unique=new LinkedHashMap<>();
             for(Object item:(List<?>)value) if(item!=null) unique.put(NativeOutputBridge.id(item),item);
             devices.clear();devices.addAll(unique.values());
+            linnSnapshot();
             Object active=NativeOutputBridge.active();
             LinnProvider linn=LinnProvider.instance;
             if(linn!=null && linn.connecting && selection.target()!=null && selection.target().startsWith("LINN_")){
-                selection.begin(selection.target(),SystemClock.uptimeMillis());message=linn.status;
+                selection.deadline(selection.target(),SystemClock.uptimeMillis(),java.util.concurrent.TimeUnit.NANOSECONDS.toMillis(linn.attemptExpires-System.nanoTime()));message=linn.status;
             }
             int result=selection.observe(active==null?null:NativeOutputBridge.id(active),SystemClock.uptimeMillis());
             if(result==1) {message="";retryDevice=null;}
@@ -241,6 +264,10 @@ public final class SquareOutput {
             });rows.addView(manual);
             String pending=selection.target();
             status.setText(!message.isEmpty()?message:pending!=null?"Connecting…":searching?"Searching…":"");
+            if(pending!=null && pending.startsWith("LINN_") && LinnProvider.instance!=null && LinnProvider.instance.connecting){
+                TextView cancel=text("Verbindung abbrechen",14);cancel.setMinHeight(dp(48));cancel.setFocusable(true);
+                cancel.setOnClickListener(v -> LinnProvider.instance.cancelPending());rows.addView(cancel);
+            }
             status.setVisibility(status.getText().length()==0?View.GONE:View.VISIBLE);
             status.setFocusable(!message.isEmpty());
             rows.post(() -> {if(!closed)scroll.scrollTo(0,oldScroll);});
