@@ -2,7 +2,7 @@
 package dev.nino.squareglass
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
+import dev.nino.squareglass.material.LiquidMotion
 import androidx.compose.animation.core.snap
 import androidx.compose.runtime.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,7 +16,7 @@ object SliderMotion {
         DesignState.revision
         val motion=SquareSettings.motion()
         return animateFloatAsState(if(motion)target else 1f,
-            if(motion)spring(dampingRatio=.85f,stiffness=700f) else snap(),label="slider thumb")
+            if(motion)LiquidMotion.shape() else snap(),label="slider thumb")
     }
     @Composable fun thumb(original: Modifier,source: MutableInteractionSource): Modifier {
         val pressed by source.collectIsPressedAsState()

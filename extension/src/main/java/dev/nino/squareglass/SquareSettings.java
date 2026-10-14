@@ -26,7 +26,7 @@ public final class SquareSettings {
     public static int preset() { return integer("preset", 0, 0, 2); }
     public static float blur() { return integer("blur", preset() == 1 ? 16 : 8, 0, 24); }
     public static float opacity() { return integer("opacity", preset() == 1 ? 65 : 50, 20, 90) / 100f; }
-    public static float readableOpacity(boolean dark) { return Math.max(opacity(), dark ? .78f : .64f); }
+    public static float readableOpacity(boolean dark) { return Math.max(opacity(), dark ? .82f : .64f); }
     public static void reset() { if (preferences != null) preferences.edit().clear().apply(); }
     public static float refraction() { return integer("lens", preset() == 1 ? 0 : 40, 0, 100) / 100f; }
     public static void preset(int value) {
