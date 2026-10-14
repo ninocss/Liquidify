@@ -7,18 +7,13 @@ import android.os.SystemClock
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsets
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.tween
+import dev.nino.squareglass.material.InteractiveHighlight
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.withTransform
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.boundsInWindow
@@ -26,7 +21,6 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import kotlin.math.*
 
 object IconMotion {
     private class Entry(val available: () -> Boolean,val fire: (Int) -> Unit)
@@ -89,15 +83,15 @@ object IconMotion {
         DesignState.revision
         val view=LocalView.current
         val lifecycle=LocalLifecycleOwner.current.lifecycle
-        val progress=remember {Animatable(1f)}
+        val scope=rememberCoroutineScope()
+        val highlight=remember(scope) {InteractiveHighlight(scope)}
         var event by remember {mutableIntStateOf(0)}
-        var kind by remember {mutableIntStateOf(0)}
         var bounds by remember {mutableStateOf(Rect.Zero)}
         var lastTap by remember {mutableStateOf(-20000L)}
         var previousLike by remember {mutableStateOf(liked)}
         var previousPulse by remember {mutableIntStateOf(pulse)}
         val motion=SquareSettings.motion()
-        val fire: (Int)->Unit = {if(SquareSettings.motion()) {kind=it;event++}}
+        val fire: (Int)->Unit = {if(SquareSettings.motion()) {event++}}
         val latestFire=rememberUpdatedState(fire)
         val latestBounds=rememberUpdatedState(bounds)
         DisposableEffect(view,lifecycle,key) {
@@ -128,17 +122,18 @@ object IconMotion {
             }
         }
         LaunchedEffect(event,motion) {
-            if(event>0 && motion) {
-                progress.snapTo(0f)
-                progress.animateTo(1f,tween(if(kind==2)620 else 460))
-            } else progress.snapTo(1f)
+            if(event>0 && motion) highlight.pulse(Offset(bounds.width / 2f, bounds.height / 2f))
+            else highlight.reset()
         }
-        return original.onGloballyPositioned {bounds=it.boundsInWindow()}
+        return GlassMotion.feedback(original,highlight,when(key) {
+            in 0..5 -> NativeBackdrop.accessory
+            7 -> NativeBackdrop.active
+            else -> dev.nino.squareglass.backdrop.backdrops.emptyBackdrop()
+        }).then(highlight.gestureModifier).onGloballyPositioned {bounds=it.boundsInWindow()}
             .pointerInput(key) {
                 awaitEachGesture {
                     val down=awaitFirstDown(requireUnconsumed=false,pass=PointerEventPass.Initial)
                     interacted(true)
-                    fire(1)
                     var moved=false
                     var cancelled=false
                     var pressed=true
@@ -151,31 +146,6 @@ object IconMotion {
                     }} finally {interacted(false)}
                     if(!moved && !cancelled) {
                         lastTap=SystemClock.uptimeMillis()
-                    }
-                }
-            }.drawWithContent {
-                val t=if(SquareSettings.motion())progress.value else 1f
-                val wave=sin(PI.toFloat()*t)
-                val scale=when(kind) {3->1f-.12f*wave;5->1f+.12f*abs(sin(t*PI.toFloat()*2f))*(1f-t);else->1f+.15f*wave*(1f-t)}
-                val angle=when(kind) {2,3,5->0f;4->sin(t*PI.toFloat()*2f)*(1f-t)*10f;else->sin(t*PI.toFloat()*4f)*(1f-t)*7f}
-                val shift=-wave*2.5f*density
-                withTransform({
-                    translate(0f,shift)
-                    rotate(angle,center);scale(scale,scale,center)
-                }) {this@drawWithContent.drawContent()}
-                if(kind==2 && t<1f) {
-                    val color=Color(0xFFFF6899).copy(alpha=(1f-t).coerceIn(0f,1f))
-                    for(i in 0 until 6) {
-                        val a=(i*60f-90f)*PI.toFloat()/180f
-                        val radius=(12f+24f*t)*density
-                        val x=center.x+cos(a)*radius
-                        val y=center.y+sin(a)*radius-8f*density*t
-                        val r=(2.5f+1.5f*wave)*density
-                        val path=Path().apply {
-                            moveTo(x,y+r);cubicTo(x-r*2,y-r*.3f,x-r,y-r*2,x,y-r*.7f)
-                            cubicTo(x+r,y-r*2,x+r*2,y-r*.3f,x,y+r);close()
-                        }
-                        drawPath(path,color)
                     }
                 }
             }

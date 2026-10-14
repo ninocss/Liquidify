@@ -74,7 +74,7 @@ object NativeGlass {
 
     @JvmStatic
     @Composable
-    fun playerButton(original: Modifier): Modifier = original
+    fun playerButton(original: Modifier): Modifier = GlassMotion.control(original)
 
     @JvmStatic
     @Composable

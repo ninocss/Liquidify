@@ -1,8 +1,6 @@
 /* Square Glass for TIDAL. GPL-3.0-or-later. */
 package dev.nino.squareglass
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding

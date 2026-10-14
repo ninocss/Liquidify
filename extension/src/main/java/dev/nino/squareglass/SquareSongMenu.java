@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Gravity;
 import android.view.WindowInsets;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.*;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -190,12 +189,10 @@ final class SquareSongMenu extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             button.setFocusable(true); button.setEnabled(model.a()); content.setAlpha(model.a() ? 1f : .45f);
             button.setOnClickListener(v -> holder.itemView.performClick());
             button.setOnTouchListener((view,event) -> {
-                if (SquareSettings.motion()) {
-                    boolean pressed = event.getActionMasked() == android.view.MotionEvent.ACTION_DOWN;
-                    if (pressed || event.getActionMasked() == android.view.MotionEvent.ACTION_UP || event.getActionMasked() == android.view.MotionEvent.ACTION_CANCEL)
-                        view.animate().scaleX(pressed ? .97f : 1f).scaleY(pressed ? .97f : 1f)
-                                .setDuration(pressed ? 90 : 180).setInterpolator(new DecelerateInterpolator()).start();
-                }
+                int action=event.getActionMasked();
+                if(action==android.view.MotionEvent.ACTION_DOWN || action==android.view.MotionEvent.ACTION_UP ||
+                        action==android.view.MotionEvent.ACTION_CANCEL)
+                    LiquidViewMotion.press(view,action==android.view.MotionEvent.ACTION_DOWN);
                 return false;
             });
             GridLayout.LayoutParams params = new GridLayout.LayoutParams(); params.width = 0; params.height = -2;

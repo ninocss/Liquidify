@@ -6,9 +6,8 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.widget.Toast
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
+import dev.nino.squareglass.material.LiquidMotion
 import androidx.compose.animation.core.snap
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -109,7 +108,7 @@ object DesignEntry {
         DesignState.revision
         val context=LocalContext.current
         var expanded by remember { mutableStateOf(false) }
-        Column(Modifier.animateContentSize(if(SquareSettings.motion())tween(220,easing=FastOutSlowInEasing) else snap())) {
+        Column(Modifier.animateContentSize(if(SquareSettings.motion())LiquidMotion.shape() else snap())) {
             Row("Liquidify",if(expanded) "Hide design & controls" else "Design & controls") { expanded=!expanded }
             if(expanded) {
                 Section("Appearance")

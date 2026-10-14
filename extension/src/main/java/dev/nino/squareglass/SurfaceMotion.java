@@ -1,28 +1,32 @@
-/* GPL-3.0-or-later. One-shot presentation motion; no native action interception. */
+/* GPL-3.0-or-later. AndroidLiquidGlass spring presentation; no action interception. */
 package dev.nino.squareglass;
 
 import android.view.View;
-import android.view.animation.PathInterpolator;
 
 public final class SurfaceMotion {
     private SurfaceMotion() {}
     public static void enter(View view, boolean menu, boolean nativeSlide) {
-        view.animate().cancel();
-        if(!SquareSettings.motion()) { reset(view); return; }
-        view.setAlpha(nativeSlide ? .85f : 0f);
-        if(menu) { view.setScaleX(.965f); view.setScaleY(.965f); }
-        // Material already owns its sheet drag/dismiss translation.
-        else if(!nativeSlide)view.setTranslationY(18*view.getResources().getDisplayMetrics().density);
+        LiquidViewMotion.cancel(view,"enter");
+        if(!SquareSettings.motion()) { reset(view); if(!menu && !nativeSlide)view.setTranslationY(0f); return; }
         view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             public void onViewAttachedToWindow(View v) {}
             public void onViewDetachedFromWindow(View v) {
-                v.animate().cancel(); reset(v);v.removeOnAttachStateChangeListener(this);
+                LiquidViewMotion.cancel(v,"enter"); reset(v);if(!menu && !nativeSlide)v.setTranslationY(0f);v.removeOnAttachStateChangeListener(this);
             }
         });
-        view.animate().alpha(1f).scaleX(1f).scaleY(1f).translationY(0f)
-            .setDuration(menu?220:260).setInterpolator(new PathInterpolator(.2f,0f,0f,1f)).start();
+        final float travel=18*view.getResources().getDisplayMetrics().density;
+        // Material owns a sheet's drag/dismiss translation. Only custom panels move.
+        LiquidViewMotion.animate(view,"enter",0f,1f,false,progress -> {
+            view.setAlpha(Math.max(0f,Math.min(1f,nativeSlide ? .85f+.15f*progress : progress)));
+            if(menu) {
+                view.setScaleX(.965f+.035f*progress);
+                view.setScaleY(.98f+.02f*progress);
+            }
+            if(!menu && !nativeSlide)view.setTranslationY(travel*(1f-progress));
+        },() -> { reset(view); if(!menu && !nativeSlide)view.setTranslationY(0f); });
     }
     public static void reset(View view) {
-        view.setAlpha(1f);view.setScaleX(1f);view.setScaleY(1f);view.setTranslationY(0f);
+        view.setAlpha(1f);view.setScaleX(1f);view.setScaleY(1f);
+        // Do not overwrite native BottomSheetBehavior translation.
     }
 }

@@ -1,0 +1,42 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/anim/BouncePressKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/anim/BouncePressKt.smali
+@@ -5,37 +5,9 @@
+ 
+ # direct methods
+ .method public static final a(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+-    .locals 3
+-
+-    .line 1
+-    invoke-virtual {p0}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+-
+-    .line 2
+-    .line 3
+-    .line 4
+-    new-instance v0, Lcom/tidal/android/feature/playerscreen/ui/composables/anim/a;
+-
+-    .line 5
+-    .line 6
+-    invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+-
+-    .line 7
+-    .line 8
+-    .line 9
+-    const/4 v1, 0x1
+-
+-    .line 10
+-    const/4 v2, 0x0
+-
+-    .line 11
+-    invoke-static {p0, v2, v0, v1, v2}, Landroidx/compose/ui/ComposedModifierKt;->composed$default(Landroidx/compose/ui/Modifier;Lam0/l;Lkotlin/jvm/functions/Function3;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+-
+-    .line 12
+-    .line 13
+-    .line 14
++    .locals 0
++    invoke-static {p0}, Ldev/nino/squareglass/GlassMotion;->bounce(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+     move-result-object p0
+-
+-    .line 15
+     return-object p0
+ .end method
+ 

@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.Toast;
 import android.view.ViewGroup;
-import android.animation.ValueAnimator;
 import java.util.WeakHashMap;
 
 /** Horizontal row gestures enter the row's native context action pipeline. */
@@ -28,7 +27,6 @@ public final class SquareGestures implements View.OnTouchListener, View.OnAttach
     private float downX, downY;
     private boolean dragging, vertical;
     private boolean armed;
-    private ValueAnimator returning;
     private ViewGroup surface;
     private int previewAction;
     private float restingX;
@@ -118,20 +116,15 @@ public final class SquareGestures implements View.OnTouchListener, View.OnAttach
         preview=null; surface=null;
     }
     private void reset(View row, boolean animate) {
-        if(returning!=null) { returning.cancel(); returning=null; clear(row); }
+        LiquidViewMotion.cancel(row,"swipeReturn");
         boolean wasDragging=dragging;
         dragging=false; armed=false; previewAction=0;
         if(wasDragging && animate && SquareSettings.motion()) {
-            returning=ValueAnimator.ofFloat(row.getTranslationX(),restingX);
-            returning.setDuration(200); returning.setInterpolator(new android.view.animation.DecelerateInterpolator(1.5f));
-            returning.addUpdateListener(value -> {
-                row.setTranslationX((Float)value.getAnimatedValue());
+            LiquidViewMotion.animate(row,"swipeReturn",row.getTranslationX(),restingX,false,value -> {
+                row.setTranslationX(value);
                 if(preview!=null) preview.update(row,preview.action,preview.progress);
-            });
-            returning.addListener(new android.animation.AnimatorListenerAdapter() {
-                @Override public void onAnimationEnd(android.animation.Animator animation) { clear(row); returning=null; }
-            }); returning.start();
-        } else if(wasDragging) clear(row);
+            },() -> clear(row));
+        } else if(wasDragging || preview!=null) clear(row);
         if(row.getParent()!=null) row.getParent().requestDisallowInterceptTouchEvent(false);
     }
     @Override public void onViewAttachedToWindow(View view) {}

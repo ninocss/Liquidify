@@ -1,7 +1,6 @@
 /* Square Glass for TIDAL. GPL-3.0-or-later. */
 package dev.nino.squareglass;
 
-import android.animation.ValueAnimator;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;

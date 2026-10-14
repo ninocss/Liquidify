@@ -1,3 +1,34 @@
+# Liquidify glass motion and theme-aware navigation
+
+Navigation now reads `NativeGlass.dark` for the capsule, glyphs, labels, and
+selection lens. `LiquidBottomTabs` delegates its panel paint to `AccessoryGlass`,
+so navigation and mini-player share the checked light/dark film and the opaque
+first-recording fallback. Glass Off and the navigation component toggle use a
+solid theme surface. The selection lens captures only the panel, with one visible
+icon row and the original TIDAL callbacks.
+
+Interaction feedback uses the vendored AndroidLiquidGlass `InteractiveHighlight`
+and backdrop lens/highlight effects. Settings and legacy favorite feedback use a
+local highlight without sampling the page that contains them, avoiding recursive
+capture. Navigation and Compose player controls can sample the independent
+accessory/player backdrop. Wobbles, glyph rotations, and floating heart particles
+are replaced by elastic glass deformation and light glints. Confirmed favorite
+changes and eligible idle feedback retain their existing guards.
+
+`LiquidMotion` shares the catalog's shape, highlight, and settle spring parameters.
+`LiquidViewMotion` runs those Compose springs for native menu presentation, quick
+action presses, and swipe return. Its Android UI coroutine context includes a
+frame clock; jobs cancel on replacement and detach. Native sheet translation and
+TIDAL's page/player routing still belong to the host. Settings expansion, filter
+colors, artwork color settling, and slider thumb feedback use the same spring
+family. Reduce motion and Android animation disabling restore static feedback;
+authoritative slider values and native click handlers remain immediate.
+
+The new `157-square-liquid-press-motion.patch` redirects TIDAL's shared player
+bounce modifier through a non-composable ABI bridge into the library feedback.
+The library is already vendored because the extension must compile against the
+host's exact Compose versions; no second Compose/Kotlin runtime is bundled.
+
 # SquareGlass alpha20 implementation
 
 ## Alpha20 navigation icons and accessory readiness

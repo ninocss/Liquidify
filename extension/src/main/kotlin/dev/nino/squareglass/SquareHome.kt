@@ -2,7 +2,8 @@
 package dev.nino.squareglass
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
+import dev.nino.squareglass.material.LiquidMotion
+import androidx.compose.animation.core.snap
 import androidx.compose.foundation.background
 import android.content.Context
 import android.content.ContextWrapper
@@ -79,9 +80,9 @@ object SquareHome {
         val ink = Color(SquarePalette.ink(dark))
         val base = Color(SquarePalette.base(dark))
         val surface = Color(SquarePalette.surface(dark))
-        val duration = if (SquareSettings.motion()) 220 else 0
-        val fill by animateColorAsState(if (selected) ink else surface, tween(duration), label = "homeFilterFill")
-        val text by animateColorAsState(if (selected) base else ink, tween(duration), label = "homeFilterInk")
+        val motion = SquareSettings.motion()
+        val fill by animateColorAsState(if (selected) ink else surface, if (motion) LiquidMotion.settle() else snap(), label = "homeFilterFill")
+        val text by animateColorAsState(if (selected) base else ink, if (motion) LiquidMotion.settle() else snap(), label = "homeFilterInk")
         val action = rememberUpdatedState(onClick)
         Box(
             Modifier.sizeIn(minHeight = 48.dp)

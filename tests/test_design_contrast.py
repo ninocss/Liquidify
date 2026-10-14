@@ -59,7 +59,10 @@ class DesignContrast(unittest.TestCase):
     def test_library_navigation_has_one_animated_icon_row(self):
         tabs=(ROOT/'extension/src/main/kotlin/dev/nino/squareglass/NativeTabs.kt').read_text()
         source=(ROOT/'extension/src/main/kotlin/dev/nino/squareglass/material/LiquidBottomTabs.kt').read_text()
-        self.assertIn('val iconInk = Color.Black',tabs)
+        self.assertIn('SquarePalette.ink(dark)',tabs)
+        self.assertIn('val dark = NativeGlass.dark',tabs)
+        self.assertIn('val iconInk = ink',tabs)
+        self.assertIn('AccessoryGlass.surface(',source)
         self.assertIn('IconMotion.icon(',tabs)
         self.assertEqual(source.count('content = content'),1)
         self.assertNotIn('ColorFilter.tint',source)
@@ -69,6 +72,23 @@ class DesignContrast(unittest.TestCase):
         # lens cannot project a second row of animated/tinted tab glyphs.
         captured=source[source.index('.layerBackdrop(tabsBackdrop)'):source.index('// Capture only')]
         self.assertNotIn('content = content',captured)
+
+    def test_navigation_labels_during_selection_on_extreme_artwork(self):
+        # The selection lens and highlight compose on the same contrast-checked
+        # accessory film. Include black/white artwork and the pressed state.
+        settings=(JAVA/'SquareSettings.java').read_text()
+        match=re.search(r"readableOpacity\(boolean dark\).*?dark \? ([.\d]+)f : ([.\d]+)f",settings,re.S)
+        for dark, (ink, film, opacity) in enumerate(zip(self.colors('ink'),
+                ((51,52,58),(255,255,255)), map(float,match.groups()))):
+            for value in range(256):
+                surface=composite(film,(value,)*3,opacity)
+                for selection in (0, .03, .10):
+                    selected=composite(ink,surface,selection)
+                    # InteractiveHighlight uses BlendMode.Plus. Its two dark
+                    # glints can add at most (.015 + .02) * 255 per channel.
+                    for glint in (0, .035 if dark == 0 else .23):
+                        lit=tuple(min(255,c+255*glint) for c in selected)
+                        self.assertGreaterEqual(contrast(ink,lit),4.5,(dark,value,selection,glint))
 
     def test_static_muted_labels_on_all_native_surfaces(self):
         rows={parts[1]:parts for line in (ROOT/'mappings/resource-palette.tsv').read_text().splitlines()
