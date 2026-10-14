@@ -87,6 +87,18 @@ def slider_thumb(text):
     return text.replace(marker,'''    const/4 v6, 0x0
     invoke-static {v0, v5, v6}, Ldev/nino/squareglass/SliderMotion;->nativeScale(FLandroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/State;''')
 
+def bounce_press(text):
+    signature='.method public static final a(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;'
+    assert text.count(signature)==1
+    start=text.index(signature)
+    end=text.index('.end method',start)+len('.end method')
+    return text[:start]+signature+"""
+    .locals 0
+    invoke-static {p0}, Ldev/nino/squareglass/GlassMotion;->bounce(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+    move-result-object p0
+    return-object p0
+.end method"""+text[end:]
+
 if __name__=='__main__':
     save('com/tidal/android/feature/search/ui/composables/a0.smali','smali_classes12','150-square-search-input-container.patch',search_container)
     save('com/tidal/android/feature/search/ui/composables/c0.smali','smali_classes12','151-square-search-input-cursor.patch',search_cursor)
@@ -95,4 +107,5 @@ if __name__=='__main__':
     save('com/aspiro/wamp/mycollectionscreen/presentation/MyCollectionScreenKt.smali','smali_classes20','154-square-collection-settings-motion.patch',collection_settings,hooked=True)
     save('com/aspiro/wamp/widgets/SecondaryActionButton.smali','smali_classes21','155-square-native-favorite-motion.patch',legacy_favorite)
     save('com/tidal/android/feature/playerscreen/ui/composables/z4.smali','smali_classes10','156-square-slider-thumb-motion.patch',slider_thumb,hooked=True)
+    save('com/tidal/android/feature/playerscreen/ui/composables/anim/BouncePressKt.smali','smali_classes10','157-square-liquid-press-motion.patch',bounce_press)
     print('Prepared native search input, confirmed favorite state and decorative settings icon motion')

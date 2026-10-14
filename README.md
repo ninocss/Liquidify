@@ -15,10 +15,10 @@ Liquidify is an **unofficial, open-source modification of the TIDAL Android app*
 
 ### A redesigned TIDAL experience
 
-- **Liquid Glass-inspired navigation and mini-player** with translucent surfaces and a moving selection indicator.
+- **Theme-aware Liquid Glass navigation and mini-player** with translucent surfaces and a moving selection lens.
 - **Refined native menus, sheets, search, and detail screens**, while retaining the original TIDAL interactions.
 - **Light, dark, and system themes**, plus configurable glass effects, component settings, and motion preferences.
-- **Player and library refinements**, including contextual gestures, native playback controls, and reduced-motion support.
+- **Library-based glass interaction feedback**, elastic menu/press/slider motion, contextual gestures, native playback controls, and reduced-motion support.
 
 ### Optional Linn OpenHome output
 

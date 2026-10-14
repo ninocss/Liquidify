@@ -326,7 +326,7 @@ public final class SquareMenus {
             if(playerSnapshot!=null) { playerSnapshot.release(); playerSnapshot=null; }
             activity.getApplication().unregisterActivityLifecycleCallbacks(this);
             if (popup != null) {
-                shell.animate().cancel();
+                LiquidViewMotion.cancel(shell,"enter");
                 popup.setOnDismissListener(null);
                 popup.dismiss();
                 popup = null;

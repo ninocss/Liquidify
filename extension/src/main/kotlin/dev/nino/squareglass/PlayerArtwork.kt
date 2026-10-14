@@ -36,7 +36,8 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
+import dev.nino.squareglass.material.LiquidMotion
+import androidx.compose.animation.core.snap
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -149,7 +150,7 @@ object PlayerArtwork {
             catch (unavailable: Exception) { android.util.Log.d("SquareGlass", "Cover palette unavailable") }
         }
         val target = Color(CoverColors.playerSurface(sampled ?: (nativeColor ushr 32).toInt(), NativeGlass.dark))
-        val color by animateColorAsState(target, tween(if (SquareSettings.motion()) 240 else 0), label = "artwork surface")
+        val color by animateColorAsState(target, if (SquareSettings.motion()) LiquidMotion.settle() else snap(), label = "artwork surface")
         SideEffect { surface = color }
         // This same flat tone meets the final pixel of the cover's fade.
         Box(NativeBackdrop.capturePlayer(original).fillMaxSize().background(color))

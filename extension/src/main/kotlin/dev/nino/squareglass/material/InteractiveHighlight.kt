@@ -28,6 +28,7 @@ import dev.nino.squareglass.backdrop.RuntimeShader
 import dev.nino.squareglass.backdrop.asComposeShader
 import dev.nino.squareglass.backdrop.isRuntimeShaderSupported
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class InteractiveHighlight(
@@ -46,6 +47,25 @@ class InteractiveHighlight(
         Animatable(Offset.Zero, Offset.VectorConverter, Offset.VisibilityThreshold)
 
     private var startPosition = Offset.Zero
+    private var pulseJob: Job? = null
+    private var pressJob: Job? = null
+
+    private fun animatePress(target: Float) {
+        pulseJob?.cancel()
+        pressJob?.cancel()
+        pressJob = animationScope.launch {
+            if (dev.nino.squareglass.SquareSettings.motion())
+                pressProgressAnimation.animateTo(target, pressProgressAnimationSpec)
+            else pressProgressAnimation.snapTo(0f)
+        }
+    }
+
+    fun reset() {
+        pulseJob?.cancel()
+        pressJob?.cancel()
+        pressJob = animationScope.launch { pressProgressAnimation.snapTo(0f) }
+    }
+
     val pressProgress: Float get() = pressProgressAnimation.value
     val offset: Offset get() = positionAnimation.value - startPosition
 
@@ -70,17 +90,22 @@ half4 main(float2 coord) {
 
     val modifier: Modifier =
         Modifier.drawWithContent {
-            val progress = pressProgressAnimation.value
+            val progress = pressProgressAnimation.value.coerceIn(0f, 1f)
+            // Additive white glints must stay below the dark navigation text's
+            // contrast budget, including bright artwork and the selection film.
+            val dark = dev.nino.squareglass.SquarePalette.isDark()
+            val washAlpha = if (dark) .015f else .08f
+            val lightAlpha = if (dark) .02f else .15f
             if (progress > 0f && dev.nino.squareglass.SquareSettings.motion()) {
                 if (shader != null) {
                     drawRect(
-                        Color.White.copy(0.08f * progress),
+                        Color.White.copy(washAlpha * progress),
                         blendMode = BlendMode.Plus
                     )
                     shader.apply {
                         val position = position(size, positionAnimation.value)
                         setFloatUniform("size", size.width, size.height)
-                        setColorUniform("color", Color.White.copy(0.15f * progress))
+                        setColorUniform("color", Color.White.copy(lightAlpha * progress))
                         setFloatUniform("radius", size.minDimension * 1.5f)
                         setFloatUniform(
                             "position",
@@ -94,7 +119,7 @@ half4 main(float2 coord) {
                     )
                 } else {
                     drawRect(
-                        Color.White.copy(0.25f * progress),
+                        Color.White.copy((washAlpha + lightAlpha) * progress),
                         blendMode = BlendMode.Plus
                     )
                 }
@@ -103,25 +128,37 @@ half4 main(float2 coord) {
             drawContent()
         }
 
+    fun pulse(at: Offset = Offset.Zero) {
+        pulseJob?.cancel()
+        pressJob?.cancel()
+        pulseJob = animationScope.launch {
+            if (!dev.nino.squareglass.SquareSettings.motion()) return@launch
+            startPosition = at
+            positionAnimation.snapTo(at)
+            pressProgressAnimation.animateTo(1f, pressProgressAnimationSpec)
+            pressProgressAnimation.animateTo(0f, pressProgressAnimationSpec)
+        }
+    }
+
     val gestureModifier: Modifier =
         Modifier.pointerInput(animationScope) {
             inspectDragGestures(
                 onDragStart = { down ->
                     startPosition = down.position
                     if(dev.nino.squareglass.SquareSettings.motion())animationScope.launch {
-                        launch { pressProgressAnimation.animateTo(1f, pressProgressAnimationSpec) }
+                        animatePress(1f)
                         launch { positionAnimation.snapTo(startPosition) }
                     }
                 },
                 onDragEnd = {
                     animationScope.launch {
-                        launch { pressProgressAnimation.animateTo(0f, pressProgressAnimationSpec) }
+                        animatePress(0f)
                         launch { positionAnimation.animateTo(startPosition, positionAnimationSpec) }
                     }
                 },
                 onDragCancel = {
                     animationScope.launch {
-                        launch { pressProgressAnimation.animateTo(0f, pressProgressAnimationSpec) }
+                        animatePress(0f)
                         launch { positionAnimation.animateTo(startPosition, positionAnimationSpec) }
                     }
                 }

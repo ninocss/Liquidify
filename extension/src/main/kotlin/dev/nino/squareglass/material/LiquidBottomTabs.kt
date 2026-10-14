@@ -35,12 +35,8 @@ import dev.nino.squareglass.backdrop.Backdrop
 import dev.nino.squareglass.backdrop.backdrops.layerBackdrop
 import dev.nino.squareglass.backdrop.backdrops.rememberCombinedBackdrop
 import dev.nino.squareglass.backdrop.backdrops.rememberLayerBackdrop
-import dev.nino.squareglass.material.DampedDragAnimation
-import dev.nino.squareglass.material.InteractiveHighlight
 import dev.nino.squareglass.backdrop.drawBackdrop
 import dev.nino.squareglass.backdrop.effects.lens
-import dev.nino.squareglass.backdrop.effects.blur
-import dev.nino.squareglass.backdrop.effects.vibrancy
 import dev.nino.squareglass.backdrop.highlight.Highlight
 import dev.nino.squareglass.backdrop.shadow.InnerShadow
 import dev.nino.squareglass.backdrop.shadow.Shadow
@@ -60,9 +56,8 @@ fun LiquidBottomTabs(
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit
 ) {
-    // Use the catalog's light material in both themes for the requested black
-    // icons. Its blue, captured duplicate content layer is deliberately omitted.
-    val containerColor = Color(0xFFFAFAFA).copy(0.4f)
+    val dark = dev.nino.squareglass.NativeGlass.dark
+    val selectionColor = Color(dev.nino.squareglass.SquarePalette.ink(dark))
     val tabsBackdrop = rememberLayerBackdrop()
     BoxWithConstraints(
         modifier,
@@ -74,7 +69,7 @@ fun LiquidBottomTabs(
         }
 
         val offsetAnimation = remember { Animatable(0f) }
-        val panelOffset by remember(density) {
+        val panelOffset by remember(density, constraints.maxWidth) {
             derivedStateOf {
                 val fraction = (offsetAnimation.value / constraints.maxWidth).fastCoerceIn(-1f, 1f)
                 with(density) {
@@ -85,7 +80,7 @@ fun LiquidBottomTabs(
 
         val isLtr = LocalLayoutDirection.current == LayoutDirection.Ltr
         val animationScope = rememberCoroutineScope()
-        val dampedDragAnimation = remember(animationScope) {
+        val dampedDragAnimation = remember(animationScope, tabsCount, tabWidth, isLtr) {
             DampedDragAnimation(
                 animationScope = animationScope,
                 initialValue = selectedTabIndex().toFloat(),
@@ -117,14 +112,14 @@ fun LiquidBottomTabs(
                 }
             )
         }
-        LaunchedEffect(selectedTabIndex) {
+        LaunchedEffect(selectedTabIndex, dampedDragAnimation) {
             snapshotFlow { selectedTabIndex() }
                 .collectLatest { index ->
                     dampedDragAnimation.animateToValue(index.toFloat())
                 }
         }
 
-        val interactiveHighlight = remember(animationScope) {
+        val interactiveHighlight = remember(animationScope, dampedDragAnimation, tabWidth, isLtr) {
             InteractiveHighlight(
                 animationScope = animationScope,
                 position = { size, offset ->
@@ -137,34 +132,30 @@ fun LiquidBottomTabs(
             )
         }
 
+        val motion = SquareSettings.motion()
+        LaunchedEffect(motion, dampedDragAnimation, interactiveHighlight) {
+            if (!motion) {
+                interactiveHighlight.reset()
+                dampedDragAnimation.resetMotion()
+                offsetAnimation.snapTo(0f)
+            }
+        }
+
         Box(
             Modifier
                 .layerBackdrop(tabsBackdrop)
                 .graphicsLayer {
                     translationX = panelOffset
                 }
-                .drawBackdrop(
-                    backdrop = backdrop,
-                    shape = { Capsule() },
-                    effects = {
-                        vibrancy()
-                        blur(8f.dp.toPx())
-                        if (SquareSettings.motion() && SquareSettings.preset() == 0) {
-                            val refraction = SquareSettings.refraction()
-                            lens((24f * refraction).dp.toPx(), (32f * refraction).dp.toPx())
-                        }
-                    },
-                    highlight = {
-                        Highlight(width = 1.dp, blurRadius = 2.dp, alpha = 0.8f)
-                    },
-                    layerBlock = {
+                .then(dev.nino.squareglass.AccessoryGlass.surface(
+                    Modifier, backdrop, SquareSettings.glass("nav"), component = "nav",
+                    layer = {
                         val progress = dampedDragAnimation.pressProgress
                         val scale = lerp(1f, 1f + 16f.dp.toPx() / size.width, progress)
                         scaleX = scale
                         scaleY = scale
-                    },
-                    onDrawSurface = { drawRect(containerColor) }
-                )
+                    }
+                ))
                 .then(interactiveHighlight.modifier)
                 .height(64f.dp)
                 .fillMaxWidth()
@@ -186,7 +177,7 @@ fun LiquidBottomTabs(
                     shape = { Capsule() },
                     effects = {
                         val progress = dampedDragAnimation.pressProgress
-                        lens(
+                        if (SquareSettings.glass("nav") && SquareSettings.motion()) lens(
                             10f.dp.toPx() * progress,
                             14f.dp.toPx() * progress,
                             chromaticAberration = true
@@ -194,17 +185,17 @@ fun LiquidBottomTabs(
                     },
                     highlight = {
                         val progress = dampedDragAnimation.pressProgress
-                        Highlight.Default.copy(alpha = progress)
+                        Highlight.Default.copy(alpha = if (SquareSettings.glass("nav")) progress else 0f)
                     },
                     shadow = {
                         val progress = dampedDragAnimation.pressProgress
-                        Shadow(alpha = progress)
+                        Shadow(alpha = if (SquareSettings.glass("nav")) progress else 0f)
                     },
                     innerShadow = {
                         val progress = dampedDragAnimation.pressProgress
                         InnerShadow(
                             radius = 8f.dp * progress,
-                            alpha = progress
+                            alpha = if (SquareSettings.glass("nav")) progress else 0f
                         )
                     },
                     layerBlock = {
@@ -216,8 +207,8 @@ fun LiquidBottomTabs(
                     },
                     onDrawSurface = {
                         val progress = dampedDragAnimation.pressProgress
-                        drawRect(Color.Black.copy(0.1f), alpha = 1f - progress)
-                        drawRect(Color.Black.copy(alpha = 0.03f * progress))
+                        drawRect(selectionColor.copy(0.1f), alpha = 1f - progress)
+                        drawRect(selectionColor.copy(alpha = 0.03f * progress))
                     }
                 )
                 .height(56f.dp)

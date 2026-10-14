@@ -69,7 +69,8 @@ class DampedDragAnimation(
     private val velocityTracker = VelocityTracker()
 
     val value: Float get() = valueAnimation.value
-    val progress: Float get() = (value - valueRange.start) / (valueRange.endInclusive - valueRange.start)
+    val progress: Float get() = if (valueRange.endInclusive == valueRange.start) 0f else
+        (value - valueRange.start) / (valueRange.endInclusive - valueRange.start)
     val targetValue: Float get() = valueAnimation.targetValue
     val pressProgress: Float get() = if(dev.nino.squareglass.SquareSettings.motion())pressProgressAnimation.value else 0f
     val scaleX: Float get() = if(dev.nino.squareglass.SquareSettings.motion())scaleXAnimation.value else initialScale
@@ -97,8 +98,18 @@ class DampedDragAnimation(
         }
     }
 
+    fun resetMotion() {
+        animationScope.launch {
+            pressProgressAnimation.snapTo(0f)
+            scaleXAnimation.snapTo(initialScale)
+            scaleYAnimation.snapTo(initialScale)
+            velocityAnimation.snapTo(0f)
+            valueAnimation.snapTo(targetValue)
+        }
+    }
+
     fun press() {
-        if(!dev.nino.squareglass.SquareSettings.motion())return
+        if(!dev.nino.squareglass.SquareSettings.motion()) { resetMotion(); return }
         velocityTracker.resetTracking()
         animationScope.launch {
             launch { pressProgressAnimation.animateTo(1f, pressProgressAnimationSpec) }
@@ -108,11 +119,11 @@ class DampedDragAnimation(
     }
 
     fun release() {
-        if(!dev.nino.squareglass.SquareSettings.motion())return
+        if(!dev.nino.squareglass.SquareSettings.motion()) { resetMotion(); return }
         animationScope.launch {
             awaitFrame()
             if (value != targetValue) {
-                val threshold = (valueRange.endInclusive - valueRange.start) * 0.025f
+                val threshold = maxOf(visibilityThreshold, (valueRange.endInclusive - valueRange.start) * 0.025f)
                 snapshotFlow { valueAnimation.value }
                     .filter { abs(it - valueAnimation.targetValue) < threshold }
                     .first()
@@ -157,7 +168,8 @@ class DampedDragAnimation(
             android.os.SystemClock.uptimeMillis(),
             Offset(value, 0f)
         )
-        val targetVelocity = velocityTracker.calculateVelocity().x / (valueRange.endInclusive - valueRange.start)
+        val range = valueRange.endInclusive - valueRange.start
+        val targetVelocity = if (range == 0f) 0f else velocityTracker.calculateVelocity().x / range
         animationScope.launch { velocityAnimation.animateTo(targetVelocity, velocityAnimationSpec) }
     }
 }
